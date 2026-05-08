@@ -406,23 +406,28 @@ const FIREBASE_CONFIG = {
   appId:             "1:929372243665:web:d3d61e4ba7087cc70f67f0"
 };
 
-/* ── Check if Firebase has been configured ─────────────────── */
-const FB_CONFIGURED = !Object.values(FIREBASE_CONFIG).some(v => v.includes('PASTE_YOUR'));
-
+const FB_CONFIGURED = true;
 let db = null, auth = null, storage = null;
 
-if(FB_CONFIGURED){
+function initFirebase(){
+  if(typeof firebase === 'undefined'){
+    console.warn('Firebase SDK not loaded yet, retrying...');
+    setTimeout(initFirebase, 500);
+    return;
+  }
   try {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    db      = firebase.firestore();
-    auth    = firebase.auth();
-    storage = firebase.storage();
-    console.log('✅ Firebase connected');
+    if(!firebase.apps.length){
+      firebase.initializeApp(FIREBASE_CONFIG);
+    }
+    db   = firebase.firestore();
+    auth = firebase.auth();
+    console.log('✅ Firebase connected:', FIREBASE_CONFIG.projectId);
+    /* Trigger auth observer now that Firebase is ready */
+    if(typeof setupAuthObserver === 'function') setupAuthObserver();
+    if(typeof loadProps === 'function') loadProps();
   } catch(e){
     console.warn('Firebase init error:', e.message);
   }
-} else {
-  console.warn('⚠️ Firebase not configured — using local storage mode');
 }
 </script>
 <canvas id="galaxyCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block"></canvas>
@@ -3349,7 +3354,7 @@ function showSetupGuide(){
 document.addEventListener('DOMContentLoaded', () => {
   loadProps();
   showPage('home');
-  setupAuthObserver();
+  /* setupAuthObserver called by initFirebase */
   /* Show setup guide banner if Firebase not configured */
   if(!FB_CONFIGURED){
     const el=document.getElementById('devModeNote');
