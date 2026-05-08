@@ -2714,8 +2714,8 @@ function resetAdminLogin(){
 
 /* ── Firebase Auth state observer ─────────────────────────── */
 function setupAuthObserver(){
-  if(!FB_CONFIGURED || !auth) return;
-  auth.onAuthStateChanged(user => {
+  if(typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) return;
+  firebase.auth().onAuthStateChanged(user => {
     const onAdminPage = document.getElementById('page-admin')?.classList.contains('active');
     if(user){
       if(onAdminPage) showAdminDash();
@@ -2732,43 +2732,43 @@ async function doLogin(){
   const email   = (emailEl ? emailEl.value : '').trim();
   const pwd     = (pwdEl   ? pwdEl.value   : '').trim();
 
-  if(FB_CONFIGURED && auth){
-    /* Firebase Auth login */
+  /* Try Firebase first — check if SDK is loaded and ready */
+  const firebaseReady = (typeof firebase !== 'undefined') && firebase.apps && firebase.apps.length > 0;
+
+  if(firebaseReady){
     if(!email){ showToast('Please enter your email address.','error'); return; }
     if(!pwd)  { showToast('Please enter your password.','error'); return; }
     const btn = document.querySelector('#adminLogin .btn-gold');
     if(btn){ btn.textContent='Signing in…'; btn.disabled=true; }
     try {
-      await auth.signInWithEmailAndPassword(email, pwd);
-      /* onAuthStateChanged handles the rest */
+      await firebase.auth().signInWithEmailAndPassword(email, pwd);
+      /* onAuthStateChanged handles showing the dashboard */
     } catch(err){
       const msgs = {
-        'auth/user-not-found':  'No account found with that email.',
-        'auth/wrong-password':  'Incorrect password. Please try again.',
-        'auth/invalid-email':   'Please enter a valid email address.',
+        'auth/user-not-found':   'No account found with that email.',
+        'auth/wrong-password':   'Incorrect password. Please try again.',
+        'auth/invalid-credential':'Incorrect email or password.',
+        'auth/invalid-email':    'Please enter a valid email address.',
         'auth/too-many-requests':'Too many attempts — please wait a moment.',
       };
       showToast(msgs[err.code] || 'Login failed: ' + err.message, 'error');
     } finally {
       if(btn){ btn.textContent='Sign In'; btn.disabled=false; }
     }
+  } else if(pwd === 'admin2000'){
+    /* Local dev fallback */
+    showAdminDash();
   } else {
-    /* Fallback: hardcoded password for local dev */
-    if(pwd === 'admin2000'){
-      showAdminDash();
-    } else {
-      showToast('Incorrect password. Dev mode: admin2000','error');
-    }
+    showToast('Incorrect password.','error');
   }
 }
 
 function doLogout(){
-  if(FB_CONFIGURED && auth){
-    auth.signOut();
-  } else {
-    resetAdminLogin();
-    showPage('home');
+  if(typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length){
+    firebase.auth().signOut();
   }
+  resetAdminLogin();
+  showPage('home');
 }
 
 function showAdminDash(){
