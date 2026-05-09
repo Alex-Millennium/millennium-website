@@ -313,27 +313,41 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 /* ============================================================
    WHATSAPP FLOAT
 ============================================================ */
-.wa-btn{
+.contact-fab-group{
   position:fixed;bottom:28px;right:28px;
-  width:58px;height:58px;
-  background:#25D366;border-radius:50%;
+  display:flex;flex-direction:column;gap:12px;
+  align-items:center;z-index:200;
+}
+.fab-btn{
+  width:56px;height:56px;
+  border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;z-index:200;
-  box-shadow:0 4px 20px rgba(37,211,102,.4);
-  transition:var(--trans);text-decoration:none;
+  cursor:pointer;text-decoration:none;
+  transition:var(--trans);
+  position:relative;
 }
-.wa-btn:hover{transform:scale(1.1);box-shadow:0 8px 30px rgba(37,211,102,.6)}
-.wa-btn svg{width:28px;height:28px}
-.wa-tip{
-  position:absolute;right:68px;
-  background:rgba(0,0,0,.85);color:#fff;
-  font-size:.78rem;font-weight:600;
-  padding:7px 13px;border-radius:8px;
+.fab-btn:hover{transform:scale(1.1)}
+.wa-fab{
+  background:#25D366;
+  box-shadow:0 4px 20px rgba(37,211,102,.45);
+}
+.wa-fab:hover{box-shadow:0 8px 30px rgba(37,211,102,.65)}
+.email-fab{
+  background:linear-gradient(135deg,var(--gold-500),var(--gold-dark));
+  box-shadow:0 4px 20px rgba(240,180,41,.4);
+}
+.email-fab:hover{box-shadow:0 8px 30px rgba(240,180,41,.6)}
+.fab-tooltip{
+  position:absolute;right:66px;
+  background:rgba(4,2,16,0.92);
+  color:#fff;
+  font-size:.75rem;font-weight:600;
+  padding:5px 11px;border-radius:6px;
   white-space:nowrap;opacity:0;
-  pointer-events:none;transition:opacity .2s;
-  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:var(--trans);pointer-events:none;
+  border:1px solid rgba(255,255,255,0.1);
 }
-.wa-btn:hover .wa-tip{opacity:1}
+.fab-btn:hover .fab-tooltip{opacity:1}
 
 /* ============================================================
    FOOTER
@@ -542,7 +556,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 /* Apply Now floating button */
 .apply-now-fab{
   position:fixed;
-  bottom:100px;right:28px;
+  bottom:175px;right:28px;
   background:linear-gradient(135deg,var(--gold-500),var(--gold-dark));
   color:var(--navy-800);
   font-weight:800;font-size:.82rem;
@@ -1241,7 +1255,89 @@ function initFirebase(){
     </div>
   </section>
 
-  <!-- PRICING TABLE -->
+  
+  <!-- GALLAGHER INSURANCE SECTION -->
+  <section class="section bg-dark" id="gallagherSection">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Free Insurance</div>
+        <h2 class="sec-title">Collect Your Free <span class="gold-text">Contents Insurance</span></h2>
+        <p class="sec-sub">In association with Gallagher — your belongings are already covered. Simply sign up to activate your free policy.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;max-width:900px;margin:0 auto">
+        <!-- Info -->
+        <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+            <div style="background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);border-radius:10px;padding:10px">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:800;font-size:1rem">Gallagher Student Insurance</div>
+              <div style="font-size:.78rem;color:rgba(255,255,255,.5)">In association with Millennium Investments</div>
+            </div>
+          </div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px">
+            <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.8)"><span style="color:#34d399;font-weight:700">✓</span> 100% Free — no cost to you</li>
+            <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.8)"><span style="color:#34d399;font-weight:700">✓</span> Covers your room contents &amp; belongings</li>
+            <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.8)"><span style="color:#34d399;font-weight:700">✓</span> Upgrade anytime for extra cover</li>
+            <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.8)"><span style="color:#34d399;font-weight:700">✓</span> Manage your cover online</li>
+            <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.8)"><span style="color:#34d399;font-weight:700">✓</span> Claim perks included</li>
+          </ul>
+          <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.08)">
+            <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:14px">Tap below or scan the QR code with your phone to sign up:</p>
+            <a href="https://gallagherassist.ajg.com/forest-road-houses" target="_blank" rel="noopener" id="gallagherLink"
+               style="display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1d4ed8,#1e40af);color:#fff;font-weight:700;font-size:.88rem;padding:13px 24px;border-radius:10px;text-decoration:none;box-shadow:0 4px 16px rgba(29,78,216,0.4);transition:var(--trans)"
+               onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Collect Your Free Insurance
+            </a>
+          </div>
+        </div>
+        <!-- QR Code -->
+        <div style="text-align:center">
+          <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px;display:inline-block">
+            <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:16px">📱 Scan with your phone camera:</p>
+            <div style="background:#fff;border-radius:12px;padding:12px;display:inline-flex;align-items:center;justify-content:center;width:180px;height:180px">
+              <div id="gallagherQRContainer" style="width:160px;height:160px;border-radius:8px;overflow:hidden;background:#fff"></div>
+            <script>
+            (function(){
+              function buildQR(){
+                const el = document.getElementById('gallagherQRContainer');
+                if(!el) return;
+                if(typeof QRCode !== 'undefined'){
+                  new QRCode(el, {
+                    text: 'https://gallagherassist.ajg.com/forest-road-houses',
+                    width: 160,
+                    height: 160,
+                    colorDark: '#1d4ed8',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                  });
+                } else {
+                  /* Load QRCode.js from CDN then retry */
+                  const s = document.createElement('script');
+                  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+                  s.onload = buildQR;
+                  document.head.appendChild(s);
+                }
+              }
+              /* Run after page load */
+              if(document.readyState === 'loading'){
+                document.addEventListener('DOMContentLoaded', buildQR);
+              } else {
+                buildQR();
+              }
+            })();
+            </script>
+            </div>
+            <p style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:14px">Point your phone camera at the QR code<br>to open the sign-up page instantly</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- PRICING TABLE -->
   <section class="section bg-dark">
     <div class="sec-in">
       <div class="sec-hd">
@@ -1886,12 +1982,24 @@ function initFirebase(){
 <!-- ============================================================
      WHATSAPP FLOATING BUTTON
 ============================================================ -->
-<a class="wa-btn" href="https://wa.me/447984642813" target="_blank" rel="noopener" title="Chat on WhatsApp">
-  <div class="wa-tip">Chat with us on WhatsApp</div>
-  <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.004 2a10 10 0 1 0 0 20.001A10 10 0 0 0 12.004 2"/>
-  </svg>
-</a>
+<!-- WhatsApp + Email floating buttons -->
+<div class="contact-fab-group">
+  <!-- WhatsApp -->
+  <a class="fab-btn wa-fab" href="https://wa.me/447872428232" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <div class="fab-tooltip">WhatsApp Us</div>
+    <svg viewBox="0 0 24 24" fill="white" width="26" height="26">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.004 2a10 10 0 1 0 0 20.001A10 10 0 0 0 12.004 2"/>
+    </svg>
+  </a>
+  <!-- Email -->
+  <a class="fab-btn email-fab" href="mailto:enquiries@forestrd.co.uk" aria-label="Email us">
+    <div class="fab-tooltip">Email Us</div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+    </svg>
+  </a>
+</div>
 
 
 
@@ -2065,7 +2173,7 @@ const DEFAULT_PROPS = [
     location:'colchester', address:'Forest Road, Colchester, CO4 3XA',
     bedrooms:1, price:101.54, priceUnit:'pw',
     description:'Our newest student accommodation complex on Forest Road — contemporary en-suite rooms with all the features you need for a comfortable university life.',
-    features:['Bills Included','No Deposit','Free WiFi','24/7 Support','Free Insurance','Communal Cleaning','Free Summer Storage','First Refusal'],
+    features:['Bills Included','No Deposit','Free WiFi','24/7 Support','Free Insurance','Free Summer Storage','First Refusal'],
     images:[
       'https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=800&q=80',
       'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
@@ -2178,18 +2286,19 @@ const PRIVATE_FEATURES = [
 ];
 
 const STUD_FEATURES = [
-  {icon:'🏦', title:'No Tenancy Deposit', desc:'Save hundreds — we do not require a deposit when you move in.'},
-  {icon:'⚡', title:'All Bills Included', desc:'Gas, electric, water, internet — all covered. No utility bond required.'},
-  {icon:'📡', title:'100Mb Free WiFi', desc:'High-speed broadband throughout every room and communal area.'},
-  {icon:'🔒', title:'24hr HD CCTV', desc:'Safe and secure environment with high-definition CCTV across all properties.'},
-  {icon:'👥', title:'24/7 On-Site Support', desc:'Our team is present on-site 24 hours a day, every day of the year.'},
-  {icon:'🚗', title:'Free On-Site Parking', desc:'Free parking available plus a secure bike shed for cyclists.'},
-  {icon:'❤️', title:'Free Contents Insurance', desc:'Your belongings are protected with complimentary contents insurance.'},
-  {icon:'📋', title:'No Agency Fees', desc:'Zero admin or agency fees — what you see is what you pay.'},
-  {icon:'📦', title:'Free Summer Storage', desc:'Store up to 4 items free over summer — available to all returning students.'},
-  {icon:'✅', title:'1 Month Free (Year 2)', desc:"Return for your 2nd year and receive one month rent-free when paying termly."},
-  {icon:'🧹', title:'Communal Cleaning', desc:'All shared areas are professionally cleaned — no cleaning rota for you.'},
-  {icon:'🔑', title:'First Refusal for Returners', desc:'Returning students get priority booking — no waiting lists, ever.'},
+  {icon:'🏦', title:'No Tenancy Deposit',        desc:'Save hundreds — we do not require a deposit when you move in.'},
+  {icon:'⚡', title:'All Bills Included',         desc:'Gas, electric, water, internet — all covered. No utility bond required.'},
+  {icon:'📡', title:'100 Mbps Free WiFi',         desc:'Fast 100 Mbps broadband throughout every room and communal area — included in your rent.'},
+  {icon:'📹', title:'4K CCTV Security',           desc:'State-of-the-art 4K CCTV cameras across all properties for your safety and peace of mind.'},
+  {icon:'👥', title:'24/7 On-Site Support',       desc:'Our team is present on-site 24 hours a day, every day of the year.'},
+  {icon:'🚗', title:'Free On-Site Parking',       desc:'Free parking available plus a secure bike shed for cyclists.'},
+  {icon:'🛡️', title:'Free Contents Insurance',    desc:'Complimentary contents insurance via Gallagher — fully free. Click to sign up instantly.',link:'https://gallagherassist.ajg.com/forest-road-houses'},
+  {icon:'📋', title:'No Agency Fees',             desc:'Zero admin or agency fees — what you see is what you pay.'},
+  {icon:'📦', title:'4 Free Storage Boxes',       desc:'Four medium-size storage boxes provided free — perfect for keeping your room tidy or storing over summer.'},
+  {icon:'🎁', title:'1 Month Free',               desc:'Receive one month rent-free when paying monthly or annually. A great saving across your tenancy.'},
+  {icon:'💸', title:'5% Annual Discount',         desc:'Pay your rent annually and save 5% on your total rent — reducing your costs even further.'},
+  {icon:'🔒', title:'Rates Frozen Since 2024',    desc:'Our rent rates have been frozen since 2024 — no unexpected increases, just consistent affordable pricing.'},
+  {icon:'🔑', title:'First Refusal for Returners',desc:'Returning students get priority booking — no waiting lists, ever.'},
 ];
 
 /* ============================================================
@@ -2446,12 +2555,16 @@ function resetFilters(){
 function renderFeats(gridId, data){
   const grid = document.getElementById(gridId);
   if(!grid) return;
-  grid.innerHTML = data.map((f,i) => `
-<div class="fcard fade-in stagger-${i%4}">
+  grid.innerHTML = data.map((f,i) => {
+    const inner = `
   <div class="ficon">${f.icon}</div>
   <div class="ftitle">${f.title}</div>
-  <div class="fdesc">${f.desc}</div>
-</div>`).join('');
+  <div class="fdesc">${f.desc}${f.link ? ' <span style="color:var(--gold-400);font-size:.75rem;font-weight:700">↗ Sign up free</span>' : ''}</div>`;
+    if(f.link){
+      return `<a class="fcard fade-in stagger-${i%4}" href="${f.link}" target="_blank" rel="noopener" style="text-decoration:none;cursor:pointer">${inner}</a>`;
+    }
+    return `<div class="fcard fade-in stagger-${i%4}">${inner}</div>`;
+  }).join('');
 }
 
 /* ============================================================
