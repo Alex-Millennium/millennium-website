@@ -354,7 +354,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 ============================================================ */
 .footer{background:rgba(4,2,16,0.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(160,80,255,0.18);padding:60px 24px 24px;position:relative;z-index:2}
 .foot-in{max-width:1280px;margin:0 auto}
-.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:40px}
 .foot-logo img{height:64px;margin-bottom:14px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5));}
 .foot-social{display:flex;gap:9px}
 .foot-social a{
@@ -594,6 +594,79 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 @media(max-width:560px){
   .apply-choice-cards{grid-template-columns:1fr}
   .apply-choice-box{padding:28px 20px}
+}
+
+/* ============================================================
+   PRICING TABS
+============================================================ */
+.ptab-row{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;
+}
+.ptab{
+  background:rgba(240,180,41,0.08);
+  border:1.5px solid rgba(240,180,41,0.2);
+  color:rgba(255,255,255,.55);
+  padding:10px 22px;border-radius:10px;
+  font-size:.88rem;font-weight:700;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:var(--trans);
+}
+.ptab:hover{border-color:rgba(240,180,41,0.45);color:rgba(255,255,255,.85)}
+.ptab.active{
+  background:linear-gradient(135deg,var(--gold-500),var(--gold-dark));
+  border-color:var(--gold-500);
+  color:var(--navy-800);
+}
+.ptab-panel{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.price-tbl{
+  width:100%;border-collapse:collapse;font-size:.875rem;
+  min-width:640px;
+}
+.price-tbl thead tr{
+  background:rgba(240,180,41,0.1);
+  border-bottom:2px solid rgba(240,180,41,0.3);
+}
+.price-tbl th{
+  padding:12px 16px;text-align:left;
+  font-size:.7rem;font-weight:700;
+  color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;
+  white-space:nowrap;
+}
+.price-tbl td{
+  padding:13px 16px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  color:rgba(255,255,255,.75);
+  vertical-align:middle;
+}
+.price-tbl tr:last-child td{border-bottom:none}
+.price-tbl tr:hover td{background:rgba(240,180,41,.04)}
+.room-name{font-weight:600;color:#fff}
+.price-pw{font-weight:800;color:var(--gold-400);font-size:1rem}
+.price-total{font-weight:700;color:#34d399}
+
+/* ── LOCATION PANELS ─────────────────────────────────────── */
+.loc-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:28px;align-items:start;
+}
+.loc-img-wrap{
+  border-radius:14px;overflow:hidden;height:220px;
+}
+.loc-img-wrap img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .5s;
+}
+.loc-img-wrap:hover img{transform:scale(1.04)}
+.loc-map-wrap{
+  border-radius:14px;overflow:hidden;height:420px;
+  border:1px solid rgba(160,80,255,0.2);
+}
+.loc-map-wrap iframe{width:100%;height:100%;border:none}
+.loc-panel{animation:fadeIn .3s ease}
+@media(max-width:900px){
+  .loc-grid{grid-template-columns:1fr}
+  .loc-map-wrap{height:280px}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1256,6 +1329,140 @@ function initFirebase(){
   </section>
 
   
+  <!-- LOCATIONS SECTION -->
+  <section class="section bg-base" id="locationsSection">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Our Locations</div>
+        <h2 class="sec-title">Three <span class="gold-text">Prime Complexes</span></h2>
+        <p class="sec-sub">All our student complexes are in Colchester — within easy reach of the University of Essex campus and the town centre. Click each complex to view on the map.</p>
+      </div>
+
+      <!-- Location Tab Buttons -->
+      <div class="ptab-row" style="justify-content:center">
+        <button class="ptab active" onclick="switchLocTab('loc-frh',this)">📍 Forest Road House</button>
+        <button class="ptab" onclick="switchLocTab('loc-can',this)">📍 Candan House</button>
+        <button class="ptab" onclick="switchLocTab('loc-grn',this)">📍 Greenstead House</button>
+      </div>
+
+      <!-- Forest Road House -->
+      <div class="loc-panel" id="loc-frh">
+        <div class="loc-grid">
+          <div class="loc-info">
+            <div class="loc-img-wrap">
+              <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80" alt="Forest Road House" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80'">
+            </div>
+            <h3 style="font-size:1.15rem;font-weight:800;margin:18px 0 8px">Forest Road House</h3>
+            <p style="font-size:.85rem;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:14px">Our main student accommodation complex situated on Forest Road. A well-established property offering a range of room types — from standard singles to en-suite doubles.</p>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:.83rem">
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="color:var(--gold-400);min-width:20px">📍</span>
+                <span style="color:rgba(255,255,255,.65)">Forest Road House, Forest Road, Colchester, Essex, CO4 3XA</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">🎓</span>
+                <span style="color:rgba(255,255,255,.65)">~15 minutes from University of Essex campus</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">💷</span>
+                <span style="color:rgba(255,255,255,.65)">From <strong style="color:var(--gold-400)">£96.92/pw</strong> — all bills included</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">🚗</span>
+                <span style="color:rgba(255,255,255,.65)">Free on-site parking available</span>
+              </div>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-gold btn-sm" onclick="applyForType('student')">Apply Now</button>
+              <button class="btn btn-ghost btn-sm" onclick="enquireAbout('Forest Road House')">Enquire</button>
+            </div>
+          </div>
+          <div class="loc-map-wrap">
+            <iframe src="https://maps.google.com/maps?q=Forest+Road+House,+Forest+Road,+Colchester,+CO4+3XA,+UK&output=embed&hl=en" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Forest Road House Location"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Candan House -->
+      <div class="loc-panel hidden" id="loc-can">
+        <div class="loc-grid">
+          <div class="loc-info">
+            <div class="loc-img-wrap">
+              <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80" alt="Candan House">
+            </div>
+            <h3 style="font-size:1.15rem;font-weight:800;margin:18px 0 8px">Candan House</h3>
+            <p style="font-size:.85rem;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:14px">Our newest student accommodation complex, also located on Forest Road. A short walk from Forest Road House, Candan House offers modern en-suite rooms in a welcoming environment.</p>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:.83rem">
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="color:var(--gold-400);min-width:20px">📍</span>
+                <span style="color:rgba(255,255,255,.65)">Candan House, Forest Road, Colchester, Essex, CO4 3XA</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">🎓</span>
+                <span style="color:rgba(255,255,255,.65)">~15 minutes from University of Essex campus</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">💷</span>
+                <span style="color:rgba(255,255,255,.65)">From <strong style="color:var(--gold-400)">£101.54/pw</strong> — all bills included</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">⭐</span>
+                <span style="color:rgba(255,255,255,.65)">Newest complex — modern fittings throughout</span>
+              </div>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-gold btn-sm" onclick="applyForType('student')">Apply Now</button>
+              <button class="btn btn-ghost btn-sm" onclick="enquireAbout('Candan House')">Enquire</button>
+            </div>
+          </div>
+          <div class="loc-map-wrap">
+            <iframe src="https://maps.google.com/maps?q=Forest+Road,+Colchester,+CO4+3XA,+UK&output=embed&hl=en" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Candan House Location"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Greenstead House -->
+      <div class="loc-panel hidden" id="loc-grn">
+        <div class="loc-grid">
+          <div class="loc-info">
+            <div class="loc-img-wrap">
+              <img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=600&q=80" alt="Greenstead House">
+            </div>
+            <h3 style="font-size:1.15rem;font-weight:800;margin:18px 0 8px">Greenstead House</h3>
+            <p style="font-size:.85rem;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:14px">Located on Greenstead Road — a short walk from a major supermarket and excellent transport links into Colchester town centre and the university.</p>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:.83rem">
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="color:var(--gold-400);min-width:20px">📍</span>
+                <span style="color:rgba(255,255,255,.65)">Greenstead House, Greenstead Road, Colchester, Essex, CO4</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">🎓</span>
+                <span style="color:rgba(255,255,255,.65)">~15 minutes from University of Essex campus</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">💷</span>
+                <span style="color:rgba(255,255,255,.65)">From <strong style="color:var(--gold-400)">£106.15/pw</strong> — all bills included</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <span style="color:var(--gold-400);min-width:20px">🛒</span>
+                <span style="color:rgba(255,255,255,.65)">Walking distance to supermarket &amp; local amenities</span>
+              </div>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-gold btn-sm" onclick="applyForType('student')">Apply Now</button>
+              <button class="btn btn-ghost btn-sm" onclick="enquireAbout('Greenstead House')">Enquire</button>
+            </div>
+          </div>
+          <div class="loc-map-wrap">
+            <iframe src="https://maps.google.com/maps?q=Greenstead+Road,+Colchester,+CO4,+Essex,+UK&output=embed&hl=en" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Greenstead House Location"></iframe>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
   <!-- GALLAGHER INSURANCE SECTION -->
   <section class="section bg-dark" id="gallagherSection">
     <div class="sec-in">
@@ -1337,57 +1544,77 @@ function initFirebase(){
     </div>
   </section>
 
-<!-- PRICING TABLE -->
+<!-- PRICING TABLE — TABBED -->
   <section class="section bg-dark">
     <div class="sec-in">
       <div class="sec-hd">
-        <div class="sec-tag">Pricing</div>
+        <div class="sec-tag">2025/26 Pricing</div>
         <h2 class="sec-title">Transparent <span class="gold-text">Pricing</span></h2>
-        <p class="sec-sub">All prices are per week, per person. No extras, no surprises.</p>
+        <p class="sec-sub">All prices include bills, contents insurance and maintenance. No deposit. No hidden fees.<br>
+          <span style="font-size:.82rem;color:rgba(255,255,255,.45)">Save 5% when paying annually &nbsp;·&nbsp; 1 month free on monthly or annual payments</span>
+        </p>
       </div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:.9rem">
-          <thead>
-            <tr style="background:rgba(240,180,41,.1);border-bottom:2px solid rgba(240,180,41,.3)">
-              <th style="padding:14px 20px;text-align:left;font-weight:700;color:var(--gold-400)">Complex</th>
-              <th style="padding:14px 20px;text-align:center;font-weight:700;color:var(--gold-400)">From (Per Week)</th>
-              <th style="padding:14px 20px;text-align:center;font-weight:700;color:var(--gold-400)">Room Type</th>
-              <th style="padding:14px 20px;text-align:center;font-weight:700;color:var(--gold-400)">Bills</th>
-              <th style="padding:14px 20px;text-align:center;font-weight:700;color:var(--gold-400)">Deposit</th>
-              <th style="padding:14px 20px;text-align:center;font-weight:700;color:var(--gold-400)">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
-              <td style="padding:14px 20px;font-weight:700">Forest Road House</td>
-              <td style="padding:14px 20px;text-align:center;color:var(--gold-500);font-weight:800">£96.92</td>
-              <td style="padding:14px 20px;text-align:center;color:rgba(255,255,255,.6)">En-suite &amp; Studio</td>
-              <td style="padding:14px 20px;text-align:center"><span style="color:#34d399;font-weight:700">✓ Included</span></td>
-              <td style="padding:14px 20px;text-align:center"><span style="color:#34d399;font-weight:700">None</span></td>
-              <td style="padding:14px 20px;text-align:center"><button class="btn btn-sm btn-gold" onclick="enquireAbout('Forest Road House')">Enquire</button></td>
-            </tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
-              <td style="padding:14px 20px;font-weight:700">Candan House</td>
-              <td style="padding:14px 20px;text-align:center;color:var(--gold-500);font-weight:800">£101.54</td>
-              <td style="padding:14px 20px;text-align:center;color:rgba(255,255,255,.6)">En-suite Rooms</td>
-              <td style="padding:14px 20px;text-align:center"><span style="color:#34d399;font-weight:700">✓ Included</span></td>
-              <td style="padding:14px 20px;text-align:center"><span style="color:#34d399;font-weight:700">None</span></td>
-              <td style="padding:14px 20px;text-align:center"><button class="btn btn-sm btn-gold" onclick="enquireAbout('Candan House')">Enquire</button></td>
-            </tr>
-            <tr>
-              <td style="padding:14px 20px;font-weight:700">Greenstead House</td>
-              <td style="padding:14px 20px;text-align:center;color:var(--gold-500);font-weight:800">£106.15</td>
-              <td style="padding:14px 20px;text-align:center;color:rgba(255,255,255,.6)">En-suite Rooms</td>
-              <td style="padding:14px 20px;text-align:center"><span style="color:#34d399;font-weight:700">✓ Included</span></td>
-              <td style="padding:14px 20px;text-align:center"><span style="color:#34d399;font-weight:700">None</span></td>
-              <td style="padding:14px 20px;text-align:center"><button class="btn btn-sm btn-gold" onclick="enquireAbout('Greenstead House')">Enquire</button></td>
-            </tr>
-          </tbody>
-        </table>
+
+      <!-- Tab buttons -->
+      <div class="ptab-row">
+        <button class="ptab active" onclick="switchPriceTab('frh',this)">🏠 Forest Road House</button>
+        <button class="ptab" onclick="switchPriceTab('can',this)">🏠 Candan House</button>
+        <button class="ptab" onclick="switchPriceTab('grn',this)">🏠 Greenstead House</button>
+      </div>
+
+      <!-- Forest Road House -->
+      <div class="ptab-panel" id="ptab-frh">
+        <p style="font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:16px">Forest Road, Colchester, CO4 3XA &nbsp;·&nbsp; 2025/26 academic year</p>
+        <div style="overflow-x:auto">
+          <table class="price-tbl">
+            <thead><tr><th>Room Type</th><th>Per Week</th><th>Monthly</th><th>1st Term</th><th>2nd Term</th><th>3rd Term</th><th>Total (11 mo)</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="room-name">Single Room</td><td class="price-pw">£96.92</td><td>£420</td><td>£1,450</td><td>£1,450</td><td>£1,300</td><td class="price-total">£4,620</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Forest Road House — Single Room')">Enquire</button></td></tr>
+              <tr><td class="room-name">G Room (Large Single)</td><td class="price-pw">£110.77</td><td>£480</td><td>£1,650</td><td>£1,650</td><td>£1,500</td><td class="price-total">£5,280</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Forest Road House — G Room')">Enquire</button></td></tr>
+              <tr><td class="room-name">Single Room with En-suite Bathroom</td><td class="price-pw">£129.23</td><td>£560</td><td>£1,950</td><td>£1,950</td><td>£1,700</td><td class="price-total">£6,160</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Forest Road House — En-suite Room')">Enquire</button></td></tr>
+              <tr><td class="room-name">Double Room with En-suite Bathroom</td><td class="price-pw">£147.69</td><td>£640</td><td>£2,200</td><td>£2,200</td><td>£2,000</td><td class="price-total">£7,040</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Forest Road House — Double En-suite')">Enquire</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Candan House -->
+      <div class="ptab-panel hidden" id="ptab-can">
+        <p style="font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:16px">Forest Road, Colchester, CO4 3XA &nbsp;·&nbsp; 2025/26 academic year</p>
+        <div style="overflow-x:auto">
+          <table class="price-tbl">
+            <thead><tr><th>Room Type</th><th>Per Week</th><th>Monthly</th><th>1st Term</th><th>2nd Term</th><th>3rd Term</th><th>Total (11 mo)</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="room-name">Single Room</td><td class="price-pw">£101.54</td><td>£440</td><td>£1,550</td><td>£1,550</td><td>£1,300</td><td class="price-total">£4,840</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Candan House — Single Room')">Enquire</button></td></tr>
+              <tr><td class="room-name">Single Room with En-suite Bathroom</td><td class="price-pw">£129.23</td><td>£560</td><td>£1,950</td><td>£1,950</td><td>£1,700</td><td class="price-total">£6,160</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Candan House — En-suite Room')">Enquire</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Greenstead House -->
+      <div class="ptab-panel hidden" id="ptab-grn">
+        <p style="font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:16px">Greenstead Road, Colchester, CO4 &nbsp;·&nbsp; 2025/26 academic year</p>
+        <div style="overflow-x:auto">
+          <table class="price-tbl">
+            <thead><tr><th>Room Type</th><th>Per Week</th><th>Monthly</th><th>1st Term</th><th>2nd Term</th><th>3rd Term</th><th>Total (11 mo)</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="room-name">Single Room</td><td class="price-pw">£106.15</td><td>£460</td><td>£1,650</td><td>£1,650</td><td>£1,300</td><td class="price-total">£5,060</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Greenstead House — Single Room')">Enquire</button></td></tr>
+              <tr><td class="room-name">Single Room with En-suite Bathroom</td><td class="price-pw">£129.23</td><td>£560</td><td>£1,950</td><td>£1,950</td><td>£1,700</td><td class="price-total">£6,160</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Greenstead House — En-suite Room')">Enquire</button></td></tr>
+              <tr><td class="room-name">Large Single Room with En-suite Bathroom</td><td class="price-pw">£136.15</td><td>£590</td><td>£2,050</td><td>£2,050</td><td>£1,800</td><td class="price-total">£6,490</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Greenstead House — Large En-suite')">Enquire</button></td></tr>
+              <tr><td class="room-name">Double Room with En-suite Bathroom</td><td class="price-pw">£147.69</td><td>£640</td><td>£2,200</td><td>£2,200</td><td>£2,000</td><td class="price-total">£7,040</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Greenstead House — Double En-suite')">Enquire</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding:14px 20px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:10px;font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.7">
+        💡 All prices include gas, electric, water, 100Mbps WiFi, contents insurance and maintenance. No tenancy deposit required.
+        A <strong style="color:var(--gold-400)">5% discount</strong> applies when paying annually.
+        <strong style="color:var(--gold-400)">1 month free</strong> when paying monthly or annually.
       </div>
     </div>
   </section>
-
 
 </div><!-- end page-student -->
 
@@ -1782,7 +2009,7 @@ function initFirebase(){
             </div>
           </div>
           <div class="map-wrap">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1231.2645026973335!2d0.9309769!3d51.8878095!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761d46f4961ed5%3A0x4b70146c627f35d6!2sForest+Road+House+Student+Accomodation!5e0!3m2!1sen!2suk!4v1475777315527" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Forest Road House Location"></iframe>
+            <iframe src="https://maps.google.com/maps?q=Forest+Road+House,+Forest+Road,+Colchester,+CO4+3XA,+UK&output=embed&hl=en" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Forest Road House Location"></iframe>
           </div>
         </div>
 
@@ -1926,7 +2153,7 @@ function initFirebase(){
         <div class="foot-logo">
           <img src="data:image/png;base64,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" alt="Millennium Investments 2000 Ltd">
         </div>
-        <p class="foot-tagline">Premium student accommodation and private rentals across Colchester and Ipswich. Transparent pricing, no hidden fees, and exceptional support since 2000.</p>
+        <p class="foot-tagline">Budget friendly student accommodation and private rentals across Colchester and Ipswich. Transparent pricing, no hidden fees, trusted since 2000.</p>
         <div class="foot-social">
           <a href="#" aria-label="Facebook" title="Facebook">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -1939,15 +2166,7 @@ function initFirebase(){
           </a>
         </div>
       </div>
-      <div>
-        <div class="foot-col-title">Properties</div>
-        <ul class="foot-links">
-          <li><a onclick="showPage('student')">Student Accommodation</a></li>
-          <li><a onclick="showPage('private')">Private Rentals</a></li>
-          <li><a onclick="showPage('private')">Colchester Properties</a></li>
-          <li><a onclick="showPage('private')">Ipswich Properties</a></li>
-        </ul>
-      </div>
+
       <div>
         <div class="foot-col-title">Company</div>
         <ul class="foot-links">
@@ -1962,7 +2181,6 @@ function initFirebase(){
         <div class="foot-col-title">Contact</div>
         <ul class="foot-links" style="list-style:none">
           <li style="margin-bottom:9px"><a href="tel:01206500202">📞 01206 500202</a></li>
-          <li style="margin-bottom:9px"><a href="tel:07984642813">📱 07984 642813</a></li>
           <li style="margin-bottom:9px"><a href="mailto:enquiries@forestrd.co.uk">✉️ enquiries@forestrd.co.uk</a></li>
           <li style="color:rgba(255,255,255,.38);font-size:.82rem;line-height:1.65">Forest Road House,<br>Forest Road, Colchester,<br>Essex, CO4 3XA</li>
         </ul>
@@ -4022,6 +4240,29 @@ async function submitStudentApp(e){
   form.style.display='none';
   const s=document.getElementById('studAppSuccess'); if(s) s.style.display='block';
   showToast('Application submitted! We will contact you within 24 hours.','success');
+}
+
+
+/* ── LOCATION TABS ───────────────────────────────────────── */
+function switchLocTab(id, btn){
+  document.querySelectorAll('.loc-panel').forEach(p=>p.classList.add('hidden'));
+  /* Get all ptab buttons in the locations section only */
+  if(btn){
+    const row = btn.closest('.ptab-row');
+    if(row) row.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const panel = document.getElementById(id);
+  if(panel) panel.classList.remove('hidden');
+}
+
+/* ── PRICING TABS ─────────────────────────────────────────── */
+function switchPriceTab(id, btn){
+  document.querySelectorAll('.ptab-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+  const panel = document.getElementById('ptab-'+id);
+  if(panel) panel.classList.remove('hidden');
+  if(btn) btn.classList.add('active');
 }
 
 /* ============================================================
