@@ -668,6 +668,129 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   .loc-grid{grid-template-columns:1fr}
   .loc-map-wrap{height:280px}
 }
+
+/* ============================================================
+   FAQ PAGE
+============================================================ */
+.faq-category{margin-bottom:36px}
+.faq-cat-title{
+  font-size:.72rem;font-weight:700;color:var(--gold-400);
+  letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(240,180,41,0.18);
+}
+.faq-item{
+  background:rgba(8,4,24,0.45);
+  border:1px solid rgba(160,80,255,0.16);
+  border-radius:12px;margin-bottom:10px;
+  overflow:hidden;transition:var(--trans);
+}
+.faq-item:hover{border-color:rgba(240,180,41,0.25)}
+.faq-item.open{border-color:rgba(240,180,41,0.35)}
+.faq-q{
+  width:100%;background:none;border:none;
+  padding:18px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  cursor:pointer;text-align:left;
+  font-family:"Plus Jakarta Sans",sans-serif;
+  font-size:.92rem;font-weight:600;color:#fff;
+  transition:var(--trans);
+}
+.faq-q:hover{color:var(--gold-400)}
+.faq-item.open .faq-q{color:var(--gold-400)}
+.faq-chevron{
+  flex-shrink:0;width:20px;height:20px;
+  border:1.5px solid rgba(255,255,255,.25);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;transition:transform .25s;
+}
+.faq-item.open .faq-chevron{transform:rotate(180deg);border-color:var(--gold-400)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s ease, padding .25s;
+  padding:0 22px;
+}
+.faq-item.open .faq-a{
+  max-height:500px;
+  padding:0 22px 18px;
+}
+.faq-a p{
+  font-size:.875rem;color:rgba(255,255,255,.65);
+  line-height:1.8;
+}
+.faq-a a{color:var(--gold-400)}
+
+/* ── GYM COMING SOON BANNER ─────────────────────────────── */
+.gym-banner{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,rgba(196,30,58,0.25) 0%,rgba(10,22,40,0.8) 50%,rgba(240,180,41,0.15) 100%);
+  border:1px solid rgba(196,30,58,0.35);
+  border-radius:20px;padding:48px 44px;
+  display:flex;align-items:center;justify-content:space-between;gap:40px;
+}
+.gym-banner-glow{
+  position:absolute;top:-60px;right:200px;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(196,30,58,0.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.gym-banner-content{flex:1;position:relative;z-index:1}
+.gym-coming-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(196,30,58,0.2);
+  border:1px solid rgba(196,30,58,0.45);
+  color:#F07080;font-size:.72rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 14px;border-radius:100px;margin-bottom:18px;
+  animation:hbpulse 2.5s infinite;
+}
+.gym-title{
+  font-size:clamp(1.5rem,3.5vw,2.4rem);
+  font-weight:800;line-height:1.1;
+  margin-bottom:14px;
+}
+.gym-sub{
+  font-size:.92rem;color:rgba(255,255,255,.65);
+  line-height:1.75;max-width:520px;margin-bottom:22px;
+}
+.gym-features{
+  display:flex;flex-wrap:wrap;gap:12px;
+}
+.gym-feat{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:7px 14px;border-radius:100px;
+  font-size:.82rem;font-weight:600;color:rgba(255,255,255,.85);
+}
+.gym-feat-icon{font-size:1rem}
+.gym-icons{
+  display:flex;flex-direction:column;align-items:center;
+  gap:16px;position:relative;z-index:1;flex-shrink:0;
+}
+.gym-icon-big{
+  font-size:6rem;line-height:1;
+  filter:drop-shadow(0 0 24px rgba(196,30,58,0.5));
+  animation:floatGym 3s ease-in-out infinite;
+}
+.gym-icon-sm{
+  font-size:3rem;line-height:1;
+  filter:drop-shadow(0 0 14px rgba(240,180,41,0.4));
+  animation:floatGym 3s ease-in-out infinite 1.5s;
+}
+@keyframes floatGym{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+@media(max-width:768px){
+  .gym-banner{flex-direction:column;padding:32px 24px;text-align:center}
+  .gym-features{justify-content:center}
+  .gym-icons{flex-direction:row}
+  .gym-icon-big{font-size:4rem}
+  .gym-icon-sm{font-size:2.5rem}
+  .gym-sub{max-width:100%}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -1073,6 +1196,35 @@ function initFirebase(){
     </div>
   </div>
 
+
+  <!-- GYM COMING SOON BANNER -->
+  <section class="section bg-dark" style="padding:40px 24px">
+    <div class="sec-in">
+      <div class="gym-banner fade-in">
+        <div class="gym-banner-glow"></div>
+        <div class="gym-banner-content">
+          <div class="gym-coming-pill">🚧 Coming Soon</div>
+          <h2 class="gym-title">Boxing Gym &amp; <span class="gold-text">Fitness Centre</span></h2>
+          <p class="gym-sub">Brand new state-of-the-art boxing gym and gym facilities being built exclusively for our tenants at Forest Road House (Block 1 &amp; Block 2) and Candan House. Train harder. Live better.</p>
+          <div class="gym-features">
+            <div class="gym-feat"><span class="gym-feat-icon">🥊</span><span>Boxing Gym</span></div>
+            <div class="gym-feat"><span class="gym-feat-icon">🏋️</span><span>Fitness Centre</span></div>
+            <div class="gym-feat"><span class="gym-feat-icon">🏠</span><span>On-Site — No Commute</span></div>
+            <div class="gym-feat"><span class="gym-feat-icon">✅</span><span>Exclusive to Tenants</span></div>
+          </div>
+          <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-gold" onclick="showPage('student')">View Student Rooms →</button>
+            <button class="btn btn-ghost" onclick="showPage('contact')">Register Interest</button>
+          </div>
+        </div>
+        <div class="gym-icons">
+          <div class="gym-icon-big">🥊</div>
+          <div class="gym-icon-sm">🏋️</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- STUDENT PROPERTIES -->
   <section class="section bg-dark">
     <div class="sec-in">
@@ -1135,6 +1287,8 @@ function initFirebase(){
       <div class="feat-grid" id="homePrivFeatGrid"><!-- JS rendered --></div>
     </div>
   </section>
+
+
 
   <!-- TESTIMONIALS -->
   <section class="section bg-dark">
@@ -1548,7 +1702,6 @@ function initFirebase(){
   <section class="section bg-dark">
     <div class="sec-in">
       <div class="sec-hd">
-        <div class="sec-tag">2025/26 Pricing</div>
         <h2 class="sec-title">Transparent <span class="gold-text">Pricing</span></h2>
         <p class="sec-sub">All prices include bills, contents insurance and maintenance. No deposit. No hidden fees.<br>
           <span style="font-size:.82rem;color:rgba(255,255,255,.45)">Save 5% when paying annually &nbsp;·&nbsp; 1 month free on monthly or annual payments</span>
@@ -1981,7 +2134,6 @@ function initFirebase(){
               <div>
                 <div class="cdet-lbl">Phone</div>
                 <div class="cdet-val"><a href="tel:01206500202">01206 500202</a></div>
-                <div class="cdet-val"><a href="tel:07984642813">07984 642813</a></div>
                 <div class="cdet-val"><a href="tel:07872428232">07872 428232</a></div>
               </div>
             </div>
@@ -2172,9 +2324,9 @@ function initFirebase(){
         <ul class="foot-links">
           <li><a onclick="showPage('about')">About Us</a></li>
           <li><a onclick="showPage('contact')">Contact Us</a></li>
-          <li><a href="https://www.forestrd.co.uk/faq/" target="_blank" rel="noopener">FAQs</a></li>
-          <li><a href="https://www.forestrd.co.uk/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a></li>
-          <li><a href="https://www.forestrd.co.uk/terms-conditions/" target="_blank" rel="noopener">Terms &amp; Conditions</a></li>
+          <li><a href="#" onclick="event.preventDefault();showPage('faq')">FAQs</a></li>
+          <li><a href="#" onclick="event.preventDefault();openPrivacy()">Privacy Policy</a></li>
+          <li><a href="#" onclick="event.preventDefault();openTerms()">Terms &amp; Conditions</a></li>
         </ul>
       </div>
       <div>
@@ -2188,7 +2340,7 @@ function initFirebase(){
     </div>
     <div class="foot-bottom">
       <div class="foot-copy">© 2026 Millennium Investments 2000 Ltd. All Rights Reserved.</div>
-      <div style="display:flex;gap:16px;align-items:center">
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
         <span class="foot-copy">Registered in England &amp; Wales</span>
         <button class="foot-admin-link" onclick="showPage('admin')">Admin</button>
       </div>
@@ -4243,6 +4395,50 @@ async function submitStudentApp(e){
 }
 
 
+
+
+
+
+/* ── FAQ ACCORDION ───────────────────────────────────────── */
+function toggleFaq(btn){
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  /* Close all */
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  /* Open clicked if it was closed */
+  if(!isOpen) item.classList.add('open');
+}
+
+/* ── PRIVACY POLICY MODAL ───────────────────────────────── */
+function openPrivacy(){
+  document.getElementById('privacyModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePrivacy(){
+  document.getElementById('privacyModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ── TERMS & CONDITIONS MODAL ───────────────────────────── */
+function openTerms(){
+  document.getElementById('termsModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeTerms(){
+  document.getElementById('termsModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ── DISCLAIMER MODAL ───────────────────────────────────── */
+function openDisclaimer(){
+  document.getElementById('disclaimerModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDisclaimer(){
+  document.getElementById('disclaimerModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
 /* ── LOCATION TABS ───────────────────────────────────────── */
 function switchLocTab(id, btn){
   document.querySelectorAll('.loc-panel').forEach(p=>p.classList.add('hidden'));
@@ -4670,6 +4866,325 @@ document.addEventListener('DOMContentLoaded', () => {
     </form>
   </div>
 </div>
+
+
+<!-- ============================================================
+     DISCLAIMER MODAL
+============================================================ -->
+<div class="apply-choice-ov" id="disclaimerModal" style="z-index:700;overflow-y:auto;align-items:flex-start;padding:20px">
+  <div class="apply-choice-box" style="max-width:680px;text-align:left;padding:36px;margin:auto">
+    <button class="apply-choice-close" onclick="closeDisclaimer()">✕</button>
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:1.5rem;margin-bottom:8px">⚖️</div>
+      <h2 style="font-size:1.2rem;font-weight:800">Disclaimer &amp; Copyright Notice</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:4px">Millennium Investments 2000 Ltd</p>
+    </div>
+    <div style="font-size:.875rem;color:rgba(255,255,255,.7);line-height:1.85;display:flex;flex-direction:column;gap:16px">
+      <p>Millennium Investments 2000 Ltd makes all reasonable efforts to ensure that the contents of its website are accurate and up-to-date, but can accept no responsibility for omissions, errors or subsequent changes. Information on the website regarding accommodation or booking is provided for information and guidance purposes only and is not intended to form part of the contract between you and the company.</p>
+      <p>It is the responsibility of the user to check the accuracy of relevant information before entering into any commitment and Millennium Investments 2000 Ltd accepts no liability for any loss or damage resulting directly or indirectly from inaccuracies in the information held on its website.</p>
+      <p>Millennium Investments 2000 Ltd would appreciate it if users would report any inaccuracies they might find. For further information please email <a href="mailto:enquiries@forestrd.co.uk" style="color:var(--gold-400)">enquiries@forestrd.co.uk</a>.</p>
+      <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:16px">
+        <p>Unless expressly stated to the contrary, all text, images, design and other content is copyright &copy; Millennium Investments 2000 Ltd and all rights are reserved, although individuals may download, retain and copy website content for their personal use only. Requests for any other reproduction of website content should be made using the contact methods stated under <a href="#" onclick="closeDisclaimer();showPage('contact')" style="color:var(--gold-400)">Contact Us</a>.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <button class="btn btn-gold" onclick="closeDisclaimer()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     TERMS & CONDITIONS MODAL
+============================================================ -->
+<div class="apply-choice-ov" id="termsModal" style="z-index:700;overflow-y:auto;align-items:flex-start;padding:20px">
+  <div class="apply-choice-box" style="max-width:700px;text-align:left;padding:36px;margin:auto">
+    <button class="apply-choice-close" onclick="closeTerms()">✕</button>
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:1.5rem;margin-bottom:8px">📋</div>
+      <h2 style="font-size:1.2rem;font-weight:800">Terms &amp; Conditions</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:4px">Millennium Investments 2000 Ltd</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px;font-size:.875rem;color:rgba(255,255,255,.72);line-height:1.85">
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Occupants</h3>
+        <p>All occupants must be in full time education.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Bookings</h3>
+        <p>Late bookings will be accepted, if places are available. Should the property you wish be full, then we will hold a first come first served waiting list.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Additional Charges</h3>
+        <p>In the event that rent remains unpaid for a period of more than 14 days from the date on which the same is due, a fee will be charged which is equal to 3% above the Bank of England's base rate of the rental amount that is overdue. This fee will continue to accrue until the date on which payment is made.</p>
+        <div style="margin-top:14px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:10px;overflow:hidden">
+          <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+            <thead>
+              <tr style="background:rgba(240,180,41,0.12);border-bottom:1px solid rgba(240,180,41,0.2)">
+                <th style="padding:10px 16px;text-align:left;color:var(--gold-400);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase">Charge</th>
+                <th style="padding:10px 16px;text-align:right;color:var(--gold-400);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase">Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+                <td style="padding:10px 16px;color:rgba(255,255,255,.75)">False Alarm Call-Out</td>
+                <td style="padding:10px 16px;text-align:right;font-weight:700;color:#fff">£25</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+                <td style="padding:10px 16px;color:rgba(255,255,255,.75)">Lock-Out Charge (Out of Office Hours)</td>
+                <td style="padding:10px 16px;text-align:right;font-weight:700;color:#fff">£10</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;color:rgba(255,255,255,.75)">Replacement Key Charge</td>
+                <td style="padding:10px 16px;text-align:right;font-weight:700;color:#fff">£10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Miscellaneous</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <p>Monthly room inspections will be carried out by the Landlord or his representatives.</p>
+          <p>Millennium Investments 2000 Ltd reserves the right to charge a payment in respect of damages for breach of the tenancy agreement, if it is so breached.</p>
+          <p>Please note that whilst network and internet services are available, the equipment and services belong to and are the responsibility of Glide — therefore any complaints, problems or issues must be taken up with Glide directly. Millennium Investments 2000 Ltd accept no responsibility or liability whatsoever from any issues which arise from or by the use of the service. Please contact them directly on <a href="tel:03331230115" style="color:var(--gold-400)">0333 123 0115</a>. In the event of a dispute with the internet service, the liability of Millennium Investments 2000 Ltd is limited to the pro-rata rate it pays to the service provider.</p>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:18px">
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Disclaimer</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <p>Millennium Investments 2000 Ltd makes all reasonable efforts to ensure that the contents of its website are accurate and up-to-date, but can accept no responsibility for omissions, errors or subsequent changes. Information on the website regarding accommodation or booking is provided for information and guidance purposes only and is not intended to form part of the contract between you and the company.</p>
+          <p>It is the responsibility of the user to check the accuracy of relevant information before entering into any commitment and Millennium Investments 2000 Ltd accepts no liability for any loss or damage resulting directly or indirectly from inaccuracies in the information held on its website.</p>
+          <p>Millennium Investments 2000 Ltd would appreciate it if users would report any inaccuracies they might find. For further information please email <a href="mailto:enquiries@forestrd.co.uk" style="color:var(--gold-400)">enquiries@forestrd.co.uk</a>.</p>
+          <p>Unless expressly stated to the contrary, all text, images, design and other content is copyright &copy; Millennium Investments 2000 Ltd and all rights are reserved, although individuals may download, retain and copy website content for their personal use only. Requests for any other reproduction of website content should be made using the contact methods stated under <a href="#" onclick="closeTerms();showPage('contact')" style="color:var(--gold-400)">Contact Us</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:28px">
+      <button class="btn btn-gold" onclick="closeTerms()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     PRIVACY POLICY MODAL
+============================================================ -->
+<div class="apply-choice-ov" id="privacyModal" style="z-index:700;overflow-y:auto;align-items:flex-start;padding:20px">
+  <div class="apply-choice-box" style="max-width:700px;text-align:left;padding:36px;margin:auto">
+    <button class="apply-choice-close" onclick="closePrivacy()">✕</button>
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:1.5rem;margin-bottom:8px">🔒</div>
+      <h2 style="font-size:1.2rem;font-weight:800">Privacy Policy</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:4px">Millennium Investments 2000 Ltd</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px;font-size:.875rem;color:rgba(255,255,255,.72);line-height:1.85">
+
+      <p>Our privacy policy sets out how we use and protect any information that you give us when you use our services, website, or contact us.</p>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Our Commitment</h3>
+        <p>We are committed to ensuring that your privacy is protected. Should we ask you to provide certain information by which you can be identified when using this website, then you can be assured that it will only be used in accordance with this privacy statement.</p>
+        <p style="margin-top:10px">Millennium Investments 2000 Ltd reserves the right to make changes to this privacy policy from time to time by updating this page. You should check this page from time to time to ensure that you are happy with any changes.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">What we Collect</h3>
+        <p style="margin-bottom:10px">We may collect the following information when you fill out an application form or a form on our website:</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Name</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Contact information including email address and phone number</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Information related to your degree</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Identification documents</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Demographic information such as postcode, preferences and interests</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">What we do with the Information we Gather</h3>
+        <p style="margin-bottom:10px">We require this information to understand your needs and provide you with a better service, and in particular for the following reasons:</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Allocating rooms to tenants</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Internal record keeping</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>We may use the information to improve our products and services</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>So we can verify you are a student</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>So we can verify you have the right to be in the UK</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">How we Protect your Information</h3>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>We use regular Malware and Anti-Virus Scanning on our systems</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>We only provide articles and information on our website</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>We never ask for information like credit card numbers on our website</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">How we Use Cookies</h3>
+        <p style="margin-bottom:10px">Cookies are small files that a site transfers to your device through your Web browser (if you allow) that enables the site to recognise your browser and capture and remember certain information. They are also used to help us understand your preferences based on previous or current site activity, which enables us to provide you with improved services.</p>
+        <p style="margin-bottom:10px">We use cookies to:</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>Compile aggregate data about site traffic and site interactions in order to offer better site experiences and tools in the future. We may also use trusted third-party services that track this information on our behalf.</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>You can choose to have your device warn you each time a cookie is being sent, or you can choose to turn off all cookies through your browser settings.</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>If you turn cookies off, it won't affect your experience on this website.</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Your Personal Information</h3>
+        <p style="margin-bottom:10px">You may choose to restrict the collection or use of your personal information in the following ways:</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>If you have previously agreed to us using your personal information for direct marketing purposes, you may change your mind at any time by <a href="#" onclick="closePrivacy();showPage('contact')" style="color:var(--gold-400)">contacting us</a>.</span></li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gold-400);flex-shrink:0">›</span><span>You can <a href="#" onclick="closePrivacy();showPage('contact')" style="color:var(--gold-400)">contact us</a> at any time to request details of personal information which we hold about you, or to have your personal data erased under Article 17 of the GDPR 2018. This will be free of charge.</span></li>
+        </ul>
+        <p style="margin-bottom:10px">We will not sell, distribute or lease your personal information to third parties unless we have your permission or are required by law to do so.</p>
+        <p style="margin-bottom:10px">We may use your personal information to send you promotional information about third parties which we think you may find interesting if you tell us that you wish this to happen.</p>
+        <p>If you believe that any information we are holding on you is incorrect or incomplete, please <a href="#" onclick="closePrivacy();showPage('contact')" style="color:var(--gold-400)">write to or email us</a> as soon as possible. We will promptly correct any information found to be incorrect.</p>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:28px">
+      <button class="btn btn-gold" onclick="closePrivacy()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     FAQ PAGE
+============================================================ -->
+<div class="page" id="page-faq">
+
+  <div class="page-hero">
+    <div class="ph-inner">
+      <div class="breadcrumb">
+        <a onclick="showPage('home')">Home</a>
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="cur">FAQs</span>
+      </div>
+      <h1 class="ph-title">Frequently Asked <span class="gold-text">Questions</span></h1>
+      <p class="ph-sub">Can't find your answer below? <a onclick="showPage('contact')" style="color:var(--gold-400);cursor:pointer">Contact us</a> and we'll be happy to help.</p>
+    </div>
+  </div>
+
+  <section class="section bg-dark">
+    <div class="sec-in" style="max-width:820px;margin:0 auto">
+
+      <!-- APPLYING -->
+      <div class="faq-category">
+        <div class="faq-cat-title">🎓 Applying</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I live with my friend or group of friends?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, you will need to let us know who you'll be staying with — so it's best that you come and register with your friend or group of friends. Providing we have availability, we will always try to help keep friends together.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need a UK-based guarantor?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, a guarantor is not required.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is my advanced rent refundable?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The circumstances in which the advanced rent (equal to one month's rent) will be required to be refunded are defined by the Tenant Fees Act 2019 and Renters' Rights Act 2025. If we intend to withhold your advanced rent from you, we will always notify you in writing of this intention.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How much advanced rent do I need to pay?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The exact advanced rent is made up of an amount equal to one month's rent of the room type of your choice.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you offer single or mixed sex accommodation?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Provided we have availability, we offer both single and mixed sex accommodation.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you offer 1st year-only undergraduate accommodation?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We can offer 1st year-only undergraduate accommodation, subject to availability.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you offer PhD-only accommodation?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We can offer PhD-only accommodation, subject to availability.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you offer en-suite rooms?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, we do have a limited supply of en-suite rooms — booking early will avoid disappointment.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Will you share my information with anyone?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We reserve the right to share information submitted in your application with the University of Essex.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to be in full-time education?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, you need to be a full-time student to stay in our student accommodation.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What do I need to provide?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You'll need to provide a completed application form as well as ID showing that you have the right to be in the UK.</p></div></div>
+      </div>
+
+      <!-- PAYMENTS -->
+      <div class="faq-category">
+        <div class="faq-cat-title">💷 Payments &amp; Charges</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay for gas, electricity, and water?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, all utility bills are included in the rent.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay for broadband or internet?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, this is fully included in the rent.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you tell me more about the rent-free 12th month offer?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The rent-free 12th month offer is available to all returning students who have chosen to stay with us for the following academic year. This offer only applies to termly paying students and to those that have paid the full 11 month rent in advance (in one payment). Please note, this offer is not available to students that have chosen to pay monthly.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When is the rent due?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>After the September rent has been paid, our rents are due termly as follows: Autumn term rent is due by 1st October; Spring term rent is due by 15th January; Summer rent is due by 23rd April.</p></div></div>
+      </div>
+
+      <!-- MY ACCOMMODATION -->
+      <div class="faq-category">
+        <div class="faq-cat-title">🏠 My Accommodation</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I smoke in my room?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, you cannot smoke anywhere inside the property. However, you may smoke outside the building.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to buy a TV licence?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>If you wish to watch TV in your room, you will need a TV licence. See <a href="https://www.tvlicensing.co.uk" target="_blank" rel="noopener">www.tvlicensing.co.uk</a> for further details.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay council tax?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, as a full-time student you are exempt from paying council tax.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I park my car there?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We offer free car parking at our properties, subject to availability. A free parking permit can be obtained from the administration office.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I bring my bicycle?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, we have a secure bike shed and a free key for the bike shed may be obtained from the administration office.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need insurance?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We provide a free basic level of contents insurance to all tenants via Gallagher. We always recommend additional cover if it is not covered by the included policy, or if the policy is not entirely suitable for your needs.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I bring a pet?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No pets are allowed within the accommodation.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Where do I collect my mail or parcels?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We deliver mail to your flat's kitchen daily. Parcels and recorded letters will need to be collected from the office — a note will be left in your flat's kitchen to notify you of their arrival.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Who is responsible for cleaning?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Our staff carry out a general clean of all communal areas once a week. However, tenants are responsible for cleaning any shared facility after each use. Bin bags must be removed by tenants and disposed of in the 1100-litre bins located outside the property.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you do regular inspections?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, we (the landlord or his representatives) carry out monthly room inspections for health and safety reasons.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is there a laundrette available?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>On the ground floor of each block, there is a laundry room with coin-operated washing machines and drying machines available for use.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What health and safety features does each room have?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Each room has a smoke detector, a half-hour fire door with intumescent strip surround, as well as heavy duty hinges and door closures. All furniture supplied conforms with the Furniture and Furnishings (Fire) (Safety) Regulations 1988.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is there a vending machine available?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>For your convenience there are vending machines located on the ground floor of Block 2, Forest Road House, where various soft drinks, chocolates and crisps are available for purchase.</p></div></div>
+      </div>
+
+      <!-- MOVING IN/OUT -->
+      <div class="faq-category">
+        <div class="faq-cat-title">🔑 Moving In / Moving Out</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When can I move in?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>In some instances it is possible to move in before your contract start date of 1st September. Please check with the administration office prior to moving in.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Where do I collect my keys?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Keys can be collected from the on-site office at Forest Road, by the car park.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How long will you reserve my room?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The reservation period starts from the date on which we take the advanced rent and runs for 15 days, including the day the advanced rent is taken. If no agreement has been entered into by the expiry of the 15th day, the reservation will be deemed cancelled. This applies subject to prior arrangements having been made to extend the 15-day period.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you provide storage?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, we offer free storage to all students with confirmed bookings.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>I'm returning next year — can I keep my room?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, you can keep the same room. Please make sure that you inform us at your earliest convenience. You will need to go through the booking procedure and confirm your booking.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>I no longer want to stay — can I leave?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>If you have signed the Tenancy Agreement, then you are bound by this agreement.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When can I move out?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You may move out at any point, but please note that the rent will continue to become due for the entire term of the tenancy, irrespective of when you decide to move out. Your liability to pay the rent will also continue until the expiry of the term.</p></div></div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin-top:16px;padding:28px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:14px">
+        <p style="font-size:.95rem;font-weight:600;margin-bottom:14px">Still have a question?</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="showPage('contact')">Contact Us →</button>
+          <a class="btn btn-ghost" href="tel:01206500202">📞 01206 500202</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- end page-faq -->
 
 </body>
 </html>
