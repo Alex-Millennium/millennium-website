@@ -617,11 +617,14 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   border-color:var(--gold-500);
   color:var(--navy-800);
 }
-.ptab-panel{animation:fadeIn .3s ease}
+.ptab-panel{animation:fadeIn .3s ease;background:rgba(4,2,20,0.7);border-radius:14px;padding:20px;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .price-tbl{
   width:100%;border-collapse:collapse;font-size:.875rem;
   min-width:640px;
+  background:rgba(4,2,20,0.82);
+  border-radius:12px;
+  overflow:hidden;
 }
 .price-tbl thead tr{
   background:rgba(240,180,41,0.1);
@@ -635,8 +638,9 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 .price-tbl td{
   padding:13px 16px;
-  border-bottom:1px solid rgba(255,255,255,.05);
-  color:rgba(255,255,255,.75);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.9);
+  background:rgba(4,2,20,0.6);
   vertical-align:middle;
 }
 .price-tbl tr:last-child td{border-bottom:none}
@@ -791,6 +795,103 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   .gym-icon-sm{font-size:2.5rem}
   .gym-sub{max-width:100%}
 }
+
+/* ── ADMIN TABS ──────────────────────────────────────────── */
+.admin-tabs{
+  display:flex;gap:6px;flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  margin-bottom:22px;padding-bottom:0;
+}
+.admin-tab{
+  background:none;border:none;
+  padding:10px 18px;border-radius:8px 8px 0 0;
+  font-family:"Plus Jakarta Sans",sans-serif;
+  font-size:.85rem;font-weight:600;
+  color:rgba(255,255,255,.45);cursor:pointer;
+  transition:var(--trans);border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+}
+.admin-tab:hover{color:rgba(255,255,255,.8)}
+.admin-tab.active{
+  color:var(--gold-400);
+  border-bottom-color:var(--gold-400);
+  background:rgba(240,180,41,.05);
+}
+.admin-tab-panel{animation:fadeIn .25s ease}
+
+/* ── ADMIN PROPERTY CARDS ────────────────────────────────── */
+.admin-pcard{
+  background:rgba(8,4,24,.7);
+  border:1px solid rgba(160,80,255,.18);
+  border-radius:14px;overflow:hidden;
+  transition:var(--trans);
+}
+.admin-pcard:hover{border-color:rgba(240,180,41,.3);transform:translateY(-2px)}
+.admin-pcard-img{
+  height:160px;overflow:hidden;position:relative;
+  background:rgba(10,6,30,.8);
+}
+.admin-pcard-img img{
+  width:100%;height:100%;object-fit:cover;
+}
+.admin-pcard-img-placeholder{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;opacity:.3;
+}
+.admin-pcard-body{padding:14px 16px}
+.admin-pcard-title{
+  font-size:.92rem;font-weight:700;
+  margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.admin-pcard-meta{
+  font-size:.75rem;color:rgba(255,255,255,.45);
+  margin-bottom:10px;
+}
+.admin-pcard-price{
+  font-size:1rem;font-weight:800;
+  color:var(--gold-400);margin-bottom:10px;
+}
+.admin-pcard-actions{
+  display:flex;gap:6px;flex-wrap:wrap;
+}
+.admin-pcard-actions button{
+  flex:1;min-width:60px;
+  padding:7px 10px;font-size:.75rem;font-weight:700;
+  border-radius:7px;border:none;cursor:pointer;
+  font-family:"Plus Jakarta Sans",sans-serif;
+  transition:var(--trans);
+}
+.acard-edit{background:rgba(240,180,41,.15);color:var(--gold-400);border:1px solid rgba(240,180,41,.25)!important}
+.acard-edit:hover{background:rgba(240,180,41,.28)}
+.acard-toggle{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.25)!important}
+.acard-toggle.let{background:rgba(196,30,58,.12);color:#F07080;border-color:rgba(196,30,58,.3)!important}
+.acard-del{background:rgba(196,30,58,.12);color:#F07080;border:1px solid rgba(196,30,58,.25)!important}
+.acard-del:hover{background:rgba(196,30,58,.25)}
+.acard-photos{background:rgba(99,102,241,.12);color:#a5b4fc;border:1px solid rgba(99,102,241,.25)!important}
+.acard-photos:hover{background:rgba(99,102,241,.25)}
+
+/* photo manager */
+.pm-card{
+  position:relative;border-radius:10px;overflow:hidden;
+  aspect-ratio:4/3;background:rgba(10,6,30,.8);
+  border:1px solid rgba(160,80,255,.15);
+}
+.pm-card img{width:100%;height:100%;object-fit:cover}
+.pm-del{
+  position:absolute;top:6px;right:6px;
+  background:rgba(196,30,58,.85);color:#fff;
+  border:none;border-radius:6px;
+  padding:4px 9px;font-size:.72rem;font-weight:700;
+  cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;
+  opacity:0;transition:opacity .2s;
+}
+.pm-card:hover .pm-del{opacity:1}
+.pm-empty{
+  text-align:center;padding:40px 20px;
+  color:rgba(255,255,255,.35);font-size:.85rem;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -879,6 +980,7 @@ function initFirebase(){
   <a id="mob-private" onclick="showPage('private');closeMobMenu()">Private Rentals</a>
   <a id="mob-about" onclick="showPage('about');closeMobMenu()">About Us</a>
   <a id="mob-contact" onclick="showPage('contact');closeMobMenu()">Contact Us</a>
+  <a id="mob-faq" onclick="showPage('faq');closeMobMenu()">FAQs</a>
 </div>
 
 <!-- TOAST CONTAINER -->
@@ -1205,7 +1307,7 @@ function initFirebase(){
         <div class="gym-banner-content">
           <div class="gym-coming-pill">🚧 Coming Soon</div>
           <h2 class="gym-title">Boxing Gym &amp; <span class="gold-text">Fitness Centre</span></h2>
-          <p class="gym-sub">Brand new state-of-the-art boxing gym and gym facilities being built exclusively for our tenants at Forest Road House (Block 1 &amp; Block 2) and Candan House. Train harder. Live better.</p>
+          <p class="gym-sub">Brand new state-of-the-art Boxing Gym and Fitness Centre coming to Forest Road House (Block 1 &amp; Block 2) and Candan House. A fantastic new facility right on your doorstep.</p>
           <div class="gym-features">
             <div class="gym-feat"><span class="gym-feat-icon">🥊</span><span>Boxing Gym</span></div>
             <div class="gym-feat"><span class="gym-feat-icon">🏋️</span><span>Fitness Centre</span></div>
@@ -1704,7 +1806,7 @@ function initFirebase(){
       <div class="sec-hd">
         <h2 class="sec-title">Transparent <span class="gold-text">Pricing</span></h2>
         <p class="sec-sub">All prices include bills, contents insurance and maintenance. No deposit. No hidden fees.<br>
-          <span style="font-size:.82rem;color:rgba(255,255,255,.45)">Save 5% when paying annually &nbsp;·&nbsp; 1 month free on monthly or annual payments</span>
+          <span style="font-size:.82rem;color:rgba(255,255,255,.45)">Save 5% when paying annually &nbsp;·&nbsp; 1 month free when paying termly</span>
         </p>
       </div>
 
@@ -1764,7 +1866,7 @@ function initFirebase(){
       <div style="margin-top:20px;padding:14px 20px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:10px;font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.7">
         💡 All prices include gas, electric, water, 100Mbps WiFi, contents insurance and maintenance. No tenancy deposit required.
         A <strong style="color:var(--gold-400)">5% discount</strong> applies when paying annually.
-        <strong style="color:var(--gold-400)">1 month free</strong> when paying monthly or annually.
+        <strong style="color:var(--gold-400)">1 month free</strong> when paying termly.
       </div>
     </div>
   </section>
@@ -2251,47 +2353,105 @@ function initFirebase(){
   <!-- DASHBOARD -->
   <div class="admin-wrap hidden" id="adminDash">
     <div class="admin-in">
+
+      <!-- HEADER -->
       <div class="admin-hd">
         <div>
           <div style="font-size:.7rem;color:rgba(255,255,255,.35);margin-bottom:4px;letter-spacing:.08em;text-transform:uppercase">Millennium Investments 2000 Ltd</div>
           <h2 style="font-size:1.35rem;font-weight:800">Property Management Dashboard</h2>
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-gold btn-sm" onclick="openAddModal()">+ Add Property</button>
-          <button class="btn btn-ghost btn-sm" onclick="openTeamModal()">👥 Manage Team</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-ghost btn-sm" onclick="showPage('home')">← Back to Site</button>
           <button class="btn btn-sm" style="background:rgba(196,30,58,.18);color:#F07080;border:1px solid rgba(196,30,58,.3)" onclick="doLogout()">Sign Out</button>
         </div>
       </div>
-      <!-- Stats -->
-      <div class="astats" id="adminStats"><!-- JS --></div>
-      <!-- Table -->
-      <div class="table-wrap">
-        <div class="table-hd">
-          <div>
-            <div style="font-size:.97rem;font-weight:700">All Properties</div>
-            <div style="font-size:.75rem;color:rgba(255,255,255,.38);margin-top:2px">Manage, edit, and toggle availability</div>
-          </div>
-          <select class="f-sel" style="width:auto;font-size:.82rem" onchange="filterAdminTbl(this.value)">
+
+      <!-- STATS -->
+      <div class="astats" id="adminStats"></div>
+
+      <!-- ADMIN TABS -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchAdminTab('properties',this)">🏠 Properties</button>
+        <button class="admin-tab" onclick="switchAdminTab('photos',this)">📸 Photos</button>
+        <button class="admin-tab" onclick="switchAdminTab('team',this)">👥 Team</button>
+        <button class="admin-tab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
+      </div>
+
+      <!-- TAB: PROPERTIES -->
+      <div class="admin-tab-panel" id="atab-properties">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px">
+          <input type="text" class="form-input" id="adminSearch" placeholder="🔍  Search properties…" oninput="renderAdminProps()" style="max-width:260px;padding:9px 14px">
+          <select class="form-input form-select" id="adminTypeFilter" onchange="renderAdminProps()" style="width:auto">
             <option value="all">All Types</option>
             <option value="student">Student</option>
             <option value="private">Private</option>
           </select>
+          <select class="form-input form-select" id="adminStatusFilter" onchange="renderAdminProps()" style="width:auto">
+            <option value="all">All Status</option>
+            <option value="true">Available</option>
+            <option value="false">Let</option>
+          </select>
+          <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="viewCardBtn" class="btn btn-sm" onclick="setAdminView('card')" style="background:rgba(240,180,41,.15);border:1px solid rgba(240,180,41,.3);color:var(--gold-400)" title="Card view">⊞ Cards</button>
+            <button id="viewTableBtn" class="btn btn-sm" onclick="setAdminView('table')" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5)" title="Table view">☰ Table</button>
+            <button class="btn btn-gold btn-sm" onclick="openAddModal()">+ Add Property</button>
+          </div>
         </div>
-        <div style="overflow-x:auto">
+        <div id="adminCardView" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px"></div>
+        <div id="adminTableView" style="display:none;overflow-x:auto">
           <table class="atable">
-            <thead>
-              <tr>
-                <th>Property</th><th>Type</th><th>Location</th><th>Beds</th><th>Price</th><th>Status</th><th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="adminTbody"><!-- JS --></tbody>
+            <thead><tr><th>Property</th><th>Type</th><th>Location</th><th>Beds</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="adminTbody"></tbody>
           </table>
         </div>
       </div>
+
+      <!-- TAB: PHOTOS -->
+      <div class="admin-tab-panel hidden" id="atab-photos">
+        <p style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:16px">Select a property to view and manage its photos.</p>
+        <select class="form-input form-select" id="photoManagerProp" onchange="loadPhotoManager()" style="max-width:380px;margin-bottom:20px">
+          <option value="">Choose a property…</option>
+        </select>
+        <div id="photoManagerGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:18px"></div>
+        <div id="photoManagerAddUrl" style="display:none">
+          <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+            <div class="form-group" style="flex:1;min-width:220px">
+              <label class="form-label">Add Photo by URL</label>
+              <input type="text" class="form-input" id="newPhotoUrl" placeholder="https://example.com/photo.jpg">
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="addPhotoUrl()" style="margin-bottom:2px">+ Add Photo</button>
+          </div>
+          <p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-top:8px">💡 Upload to Google Drive → Share → Get link → paste URL here</p>
+        </div>
+      </div>
+
+      <!-- TAB: TEAM -->
+      <div class="admin-tab-panel hidden" id="atab-team">
+        <div id="teamContent" style="margin-bottom:16px"></div>
+        <button class="btn btn-gold btn-sm" onclick="openTeamModal()">+ Add Team Member</button>
+      </div>
+
+      <!-- TAB: SETTINGS -->
+      <div class="admin-tab-panel hidden" id="atab-settings">
+        <div style="display:grid;gap:16px;max-width:520px">
+          <div style="background:rgba(8,4,24,.55);border:1px solid rgba(160,80,255,.2);border-radius:14px;padding:22px">
+            <div style="font-weight:700;margin-bottom:12px">📣 Announcement Bar</div>
+            <div class="form-group" style="margin-bottom:10px">
+              <label class="form-label">Banner Text</label>
+              <input type="text" class="form-input" id="bannerTextInput" placeholder="e.g. Rates frozen for 2025/26!">
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="saveBannerText()">Save</button>
+          </div>
+          <div style="background:rgba(8,4,24,.55);border:1px solid rgba(160,80,255,.2);border-radius:14px;padding:22px">
+            <div style="font-weight:700;margin-bottom:12px">🗑️ Reset Data</div>
+            <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:12px">Reset all properties to default sample data.</p>
+            <button class="btn btn-sm" style="background:rgba(196,30,58,.18);color:#F07080;border:1px solid rgba(196,30,58,.3)" onclick="if(confirm('Reset all properties to defaults?')) resetToDefaults()">Reset to Defaults</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-
 </div><!-- end page-admin -->
 
 
@@ -2665,7 +2825,7 @@ const STUD_FEATURES = [
   {icon:'🛡️', title:'Free Contents Insurance',    desc:'Complimentary contents insurance via Gallagher — fully free. Click to sign up instantly.',link:'https://gallagherassist.ajg.com/forest-road-houses'},
   {icon:'📋', title:'No Agency Fees',             desc:'Zero admin or agency fees — what you see is what you pay.'},
   {icon:'📦', title:'4 Free Storage Boxes',       desc:'Four medium-size storage boxes provided free — perfect for keeping your room tidy or storing over summer.'},
-  {icon:'🎁', title:'1 Month Free',               desc:'Receive one month rent-free when paying monthly or annually. A great saving across your tenancy.'},
+  {icon:'🎁', title:'1 Month Free',               desc:'Receive one month rent-free when paying termly. A great saving across your tenancy.'},
   {icon:'💸', title:'5% Annual Discount',         desc:'Pay your rent annually and save 5% on your total rent — reducing your costs even further.'},
   {icon:'🔒', title:'Rates Frozen Since 2024',    desc:'Our rent rates have been frozen since 2024 — no unexpected increases, just consistent affordable pricing.'},
   {icon:'🔑', title:'First Refusal for Returners',desc:'Returning students get priority booking — no waiting lists, ever.'},
@@ -4490,6 +4650,188 @@ document.addEventListener('keydown', e=>{
   if(e.key==='Escape') closeApplyModal();
 });
 
+
+/* ============================================================
+   ENHANCED ADMIN PANEL FUNCTIONS
+============================================================ */
+let adminView = 'card';
+
+function switchAdminTab(id, btn){
+  document.querySelectorAll('.admin-tab-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
+  const panel = document.getElementById('atab-'+id);
+  if(panel) panel.classList.remove('hidden');
+  if(btn) btn.classList.add('active');
+  if(id==='photos') populatePhotoManagerSelect();
+  if(id==='team') renderTeamTab();
+}
+
+function setAdminView(v){
+  adminView = v;
+  const cardV = document.getElementById('adminCardView');
+  const tableV = document.getElementById('adminTableView');
+  const cardBtn = document.getElementById('viewCardBtn');
+  const tableBtn = document.getElementById('viewTableBtn');
+  if(v==='card'){
+    cardV.style.display='grid';
+    tableV.style.display='none';
+    if(cardBtn){cardBtn.style.background='rgba(240,180,41,.15)';cardBtn.style.color='var(--gold-400)';}
+    if(tableBtn){tableBtn.style.background='rgba(255,255,255,.06)';tableBtn.style.color='rgba(255,255,255,.5)';}
+  } else {
+    cardV.style.display='none';
+    tableV.style.display='block';
+    if(tableBtn){tableBtn.style.background='rgba(240,180,41,.15)';tableBtn.style.color='var(--gold-400)';}
+    if(cardBtn){cardBtn.style.background='rgba(255,255,255,.06)';cardBtn.style.color='rgba(255,255,255,.5)';}
+  }
+  renderAdminProps();
+}
+
+function getFilteredAdminProps(){
+  const search = (document.getElementById('adminSearch')?.value||'').toLowerCase();
+  const type   = document.getElementById('adminTypeFilter')?.value||'all';
+  const status = document.getElementById('adminStatusFilter')?.value||'all';
+  return properties.filter(p=>{
+    const matchSearch = !search || p.title.toLowerCase().includes(search) || (p.address||'').toLowerCase().includes(search);
+    const matchType   = type==='all' || p.type===type;
+    const matchStatus = status==='all' || String(p.available)===status;
+    return matchSearch && matchType && matchStatus;
+  });
+}
+
+function renderAdminProps(){
+  const list = getFilteredAdminProps();
+  if(adminView==='card') renderAdminCards(list);
+  else renderAdminTable(list);
+}
+
+function renderAdminCards(list){
+  const grid = document.getElementById('adminCardView');
+  if(!grid) return;
+  if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:rgba(255,255,255,.35)">No properties found</div>'; return; }
+  grid.innerHTML = list.map(p=>{
+    const img = (p.images&&p.images.length) ? `<img src="${p.images[0]}" alt="${p.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="admin-pcard-img-placeholder" style="display:none">🏠</div>` : `<div class="admin-pcard-img-placeholder">🏠</div>`;
+    const badge = p.type==='student'
+      ? '<span style="background:rgba(196,30,58,.2);color:#F07080;border:1px solid rgba(196,30,58,.3);padding:3px 10px;border-radius:100px;font-size:.68rem;font-weight:700">STUDENT</span>'
+      : '<span style="background:rgba(240,180,41,.15);color:var(--gold-400);border:1px solid rgba(240,180,41,.25);padding:3px 10px;border-radius:100px;font-size:.68rem;font-weight:700">PRIVATE</span>';
+    const avail = p.available
+      ? '<span style="color:#34d399;font-size:.75rem;font-weight:700">● Available</span>'
+      : '<span style="color:#F07080;font-size:.75rem;font-weight:700">● Let</span>';
+    return `<div class="admin-pcard">
+      <div class="admin-pcard-img">${img}</div>
+      <div class="admin-pcard-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+          ${badge} ${avail}
+        </div>
+        <div class="admin-pcard-title">${p.title}</div>
+        <div class="admin-pcard-meta">📍 ${p.address||p.location} &nbsp;·&nbsp; 🛏 ${p.beds} bed${p.beds>1?'s':''}</div>
+        <div class="admin-pcard-price">£${p.price}/${p.unit}</div>
+        <div class="admin-pcard-actions">
+          <button class="acard-edit" onclick="openEditModal(${p.id})">✏️ Edit</button>
+          <button class="acard-photos" onclick="openPhotoTab(${p.id})">📸 Photos</button>
+          <button class="acard-toggle ${p.available?'':'let'}" onclick="toggleAvailability(${p.id})">${p.available?'Mark Let':'Mark Available'}</button>
+          <button class="acard-del" onclick="deleteProperty(${p.id})">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPhotoTab(propId){
+  switchAdminTab('photos', document.querySelector('.admin-tab:nth-child(2)'));
+  setTimeout(()=>{
+    const sel = document.getElementById('photoManagerProp');
+    if(sel){ sel.value = propId; loadPhotoManager(); }
+  }, 100);
+}
+
+function populatePhotoManagerSelect(){
+  const sel = document.getElementById('photoManagerProp');
+  if(!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Choose a property…</option>' +
+    properties.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');
+  if(cur) sel.value = cur;
+}
+
+function loadPhotoManager(){
+  const sel = document.getElementById('photoManagerProp');
+  const grid = document.getElementById('photoManagerGrid');
+  const addDiv = document.getElementById('photoManagerAddUrl');
+  if(!sel||!grid) return;
+  const propId = sel.value;
+  if(!propId){ grid.innerHTML=''; if(addDiv) addDiv.style.display='none'; return; }
+  const p = properties.find(x=>x.id==propId);
+  if(!p){ grid.innerHTML=''; return; }
+  if(addDiv) addDiv.style.display='block';
+  const imgs = p.images||[];
+  if(!imgs.length){
+    grid.innerHTML='<div class="pm-empty">No photos yet. Add one using the URL field below.</div>';
+    return;
+  }
+  grid.innerHTML = imgs.map((url,i)=>`
+    <div class="pm-card">
+      <img src="${url}" alt="Photo ${i+1}" onerror="this.src='https://via.placeholder.com/300x225?text=Error'">
+      <button class="pm-del" onclick="removePhoto(${propId},${i})">✕ Remove</button>
+    </div>`).join('');
+}
+
+function removePhoto(propId, idx){
+  if(!confirm('Remove this photo?')) return;
+  const p = properties.find(x=>x.id==propId);
+  if(!p||!p.images) return;
+  p.images.splice(idx,1);
+  saveProps();
+  loadPhotoManager();
+  showToast('Photo removed','success');
+}
+
+function addPhotoUrl(){
+  const input = document.getElementById('newPhotoUrl');
+  const sel = document.getElementById('photoManagerProp');
+  if(!input||!sel||!sel.value){ showToast('Please select a property first','error'); return; }
+  const url = input.value.trim();
+  if(!url){ showToast('Please enter a photo URL','error'); return; }
+  const p = properties.find(x=>x.id==sel.value);
+  if(!p) return;
+  if(!p.images) p.images=[];
+  p.images.push(url);
+  saveProps();
+  input.value='';
+  loadPhotoManager();
+  showToast('Photo added!','success');
+}
+
+function renderTeamTab(){
+  const el = document.getElementById('teamContent');
+  if(!el) return;
+  const team = JSON.parse(localStorage.getItem('mi_team')||'[]');
+  if(!team.length){ el.innerHTML='<p style="color:rgba(255,255,255,.4);font-size:.85rem">No team members added yet.</p>'; return; }
+  el.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">' +
+    team.map((m,i)=>`<div style="background:rgba(8,4,24,.6);border:1px solid rgba(160,80,255,.18);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold-500),var(--crim-500));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;flex-shrink:0">${(m.name||'?')[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name}</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.45)">${m.role}</div>
+      </div>
+    </div>`).join('') + '</div>';
+}
+
+function filterAdminTbl(v){ renderAdminProps(); }
+
+function saveBannerText(){
+  const v = document.getElementById('bannerTextInput')?.value.trim();
+  if(!v){ showToast('Please enter banner text','error'); return; }
+  localStorage.setItem('mi_banner', v);
+  const banner = document.querySelector('.ticker-text');
+  if(banner) banner.textContent = v;
+  showToast('Banner updated!','success');
+}
+
+function changeAdminPwd(){
+  showToast('Password changes require updating in Firebase Authentication','error');
+}
+
 /* ============================================================
    BOOTSTRAP — runs after DOM is ready
 ============================================================ */
@@ -5117,7 +5459,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay for broadband or internet?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, this is fully included in the rent.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you tell me more about the rent-free 12th month offer?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The rent-free 12th month offer is available to all returning students who have chosen to stay with us for the following academic year. This offer only applies to termly paying students and to those that have paid the full 11 month rent in advance (in one payment). Please note, this offer is not available to students that have chosen to pay monthly.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you tell me more about the rent-free 12th month offer?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The rent-free 12th month offer is available to all returning students who have chosen to stay with us for the following academic year. This offer applies to termly paying students only. Please note, this offer is not available to students who have chosen to pay monthly or annually in advance.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When is the rent due?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>After the September rent has been paid, our rents are due termly as follows: Autumn term rent is due by 1st October; Spring term rent is due by 15th January; Summer rent is due by 23rd April.</p></div></div>
       </div>
