@@ -940,6 +940,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <!-- GALAXY BACKGROUND -->
@@ -4942,25 +4943,67 @@ async function submitStudentApp(e){
   e.preventDefault();
   const form=document.getElementById('studAppModalForm');
   if(!studSigHasData){ showToast('Please add your signature.','error'); return; }
-  const sig=document.getElementById('studSigData'); if(sig) sig.value=studSigCanvas.toDataURL('image/png');
+  const sig=document.getElementById('studSigData'); if(sig) sig.value='[Signature captured]';
   const btn=form.querySelector('[type="submit"]'); if(btn){btn.textContent='Submitting…';btn.disabled=true;}
+
+  /* Collect all field values */
+  const g = id => (document.getElementById(id)||{}).value||'';
+  const sections = [
+    {label:'Personal Details', fields:[
+      {label:'First Name', value:g('first_name')},
+      {label:'Last Name', value:g('last_name')},
+      {label:'Date of Birth', value:g('dob')},
+      {label:'Nationality', value:g('nationality')},
+      {label:'Email Address', value:g('email')},
+      {label:'Phone Number', value:g('phone')},
+      {label:'Current Address', value:g('current_address')},
+    ]},
+    {label:'University Details', fields:[
+      {label:'University / College', value:g('university')},
+      {label:'Course / Subject', value:g('course')},
+      {label:'Year of Study', value:g('year_of_study')},
+      {label:'Student ID', value:g('student_id')},
+    ]},
+    {label:'Room Preferences', fields:[
+      {label:'Preferred Complex', value:g('preferred_complex')},
+      {label:'Room Type', value:g('room_type')},
+      {label:'Move-In Date', value:g('move_in_date')},
+      {label:'Tenancy Length', value:g('tenancy_length')},
+    ]},
+    {label:'Emergency Contact', fields:[
+      {label:'Full Name', value:g('emergency_name')},
+      {label:'Relationship', value:g('emergency_relationship')},
+      {label:'Phone', value:g('emergency_phone')},
+      {label:'Email', value:g('emergency_email')},
+    ]},
+    {label:'Additional Information', fields:[
+      {label:'Additional Info', value:g('additional_info')},
+    ]},
+  ];
+
+  /* Build HTML email body */
+  const htmlBody = buildHtmlEmail('Student Accommodation Application', sections);
+
   try{
-    const data = new FormData(form);
+    const data = new FormData();
     data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
-    data.append('subject', 'New Student Application — Millennium Investments');
+    data.append('subject', `New Student Application — ${g('first_name')} ${g('last_name')}`);
     data.append('from_name', 'Millennium Investments Website');
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method:'POST',
-      body: data
-    });
+    data.append('html', htmlBody);
+    /* Also include plain text fallback */
+    sections.forEach(s=>s.fields.forEach(f=>{ if(f.value) data.append(f.label, f.value); }));
+    const res = await fetch('https://api.web3forms.com/submit', {method:'POST', body:data});
     const json = await res.json();
     if(!json.success) throw new Error(json.message);
-  }catch(err){
-    console.warn('Form submission:', err);
-  }
+  }catch(err){ console.warn('Submission error:', err); }
+
+  /* Generate PDF for applicant to download */
+  generatePDF('Student Accommodation Application', sections);
+
   form.style.display='none';
   const s=document.getElementById('studAppSuccess'); if(s) s.style.display='block';
-  showToast('Application submitted! We will contact you within 24 hours.','success');
+  showToast('Application submitted! Check your downloads for your PDF copy.','success');
+  if(btn){btn.textContent='Submit Application →';btn.disabled=false;}
 }
 
 
@@ -5395,6 +5438,96 @@ function renderTestimonialsOnSite(){
   }).join('');
 }
 
+
+
+/* ============================================================
+   PDF GENERATOR + HTML EMAIL FORMATTER
+============================================================ */
+function buildHtmlEmail(title, sections){
+  let rows = '';
+  sections.forEach(s=>{
+    rows += `<tr><td colspan="2" style="background:#0a0618;color:#F0B429;font-size:12px;font-weight:bold;padding:10px 16px;text-transform:uppercase;letter-spacing:1px;border-top:2px solid #F0B429">${s.label}</td></tr>`;
+    s.fields.forEach(f=>{
+      if(!f.value) return;
+      rows += `<tr>
+        <td style="padding:8px 16px;font-size:13px;color:#888;width:35%;border-bottom:1px solid #eee">${f.label}</td>
+        <td style="padding:8px 16px;font-size:13px;color:#111;border-bottom:1px solid #eee">${f.value}</td>
+      </tr>`;
+    });
+  });
+  return `<!DOCTYPE html><html><body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f5f5f5">
+  <div style="max-width:680px;margin:20px auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)">
+    <div style="background:#0a0618;padding:28px 24px;text-align:center">
+      <h1 style="color:#F0B429;margin:0;font-size:22px">${title}</h1>
+      <p style="color:rgba(255,255,255,.6);margin:6px 0 0;font-size:13px">Millennium Investments 2000 Ltd · milleniuminvestments2000.co.uk</p>
+    </div>
+    <table style="width:100%;border-collapse:collapse">${rows}</table>
+    <div style="background:#f9f9f9;padding:16px 24px;font-size:12px;color:#aaa;text-align:center;border-top:1px solid #eee">
+      Submitted: ${new Date().toLocaleString('en-GB')} · enquiries@forestrd.co.uk · 01206 500202
+    </div>
+  </div></body></html>`;
+}
+
+function generatePDF(title, sections){
+  try {
+    if(typeof window.jspdf === 'undefined') return;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+    const W = 210, margin = 14;
+    let y = 14;
+
+    /* Header */
+    doc.setFillColor(10, 6, 24);
+    doc.rect(0, 0, W, 28, 'F');
+    doc.setTextColor(240, 180, 41);
+    doc.setFontSize(16); doc.setFont('helvetica','bold');
+    doc.text(title, W/2, 12, {align:'center'});
+    doc.setTextColor(180, 180, 180);
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text('Millennium Investments 2000 Ltd  ·  milleniuminvestments2000.co.uk', W/2, 20, {align:'center'});
+    y = 36;
+
+    sections.forEach(s=>{
+      /* Section header */
+      doc.setFillColor(240, 180, 41);
+      doc.rect(margin, y, W-margin*2, 7, 'F');
+      doc.setTextColor(10, 6, 24);
+      doc.setFontSize(9); doc.setFont('helvetica','bold');
+      doc.text(s.label.toUpperCase(), margin+3, y+5);
+      y += 10;
+
+      s.fields.forEach(f=>{
+        if(!f.value) return;
+        if(y > 272){ doc.addPage(); y = 14; }
+        doc.setTextColor(120,120,120);
+        doc.setFontSize(8); doc.setFont('helvetica','normal');
+        doc.text(f.label + ':', margin, y);
+        doc.setTextColor(20,20,20);
+        doc.setFont('helvetica','bold');
+        const lines = doc.splitTextToSize(String(f.value), W - margin*2 - 55);
+        doc.text(lines, margin+55, y);
+        y += Math.max(6, lines.length * 5);
+        /* Light divider */
+        doc.setDrawColor(220,220,220);
+        doc.line(margin, y-1, W-margin, y-1);
+      });
+      y += 4;
+    });
+
+    /* Footer */
+    doc.setTextColor(150,150,150);
+    doc.setFontSize(8); doc.setFont('helvetica','normal');
+    doc.text(`Submitted: ${new Date().toLocaleString('en-GB')}`, margin, 285);
+    doc.text('Page 1', W-margin, 285, {align:'right'});
+
+    const safeName = title.replace(/[^a-z0-9]/gi,'_').toLowerCase();
+    doc.save(`${safeName}_${new Date().toISOString().slice(0,10)}.pdf`);
+    return true;
+  } catch(err){
+    console.warn('PDF generation failed:', err);
+    return false;
+  }
+}
 
 /* ============================================================
    ADVERTS MANAGER
