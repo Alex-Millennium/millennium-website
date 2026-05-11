@@ -892,6 +892,33 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   text-align:center;padding:40px 20px;
   color:rgba(255,255,255,.35);font-size:.85rem;
 }
+
+/* ── REVIEWS MANAGER (ADMIN) ─────────────────────────────── */
+.rev-card{
+  background:rgba(8,4,24,.7);
+  border:1px solid rgba(160,80,255,.18);
+  border-radius:12px;padding:16px;
+  position:relative;
+  transition:var(--trans);
+}
+.rev-card:hover{border-color:rgba(240,180,41,.25)}
+.rev-stars-input{display:flex;gap:4px;margin-bottom:10px}
+.rev-star{
+  font-size:1.4rem;cursor:pointer;
+  color:rgba(255,255,255,.2);
+  transition:color .15s;
+  background:none;border:none;padding:0;
+  line-height:1;
+}
+.rev-star.active,.rev-star:hover{color:var(--gold-400)}
+.rev-source-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:.7rem;font-weight:700;padding:3px 10px;
+  border-radius:100px;letter-spacing:.06em;
+}
+.rev-source-google{background:rgba(66,133,244,.15);color:#7baaf7;border:1px solid rgba(66,133,244,.3)}
+.rev-source-manual{background:rgba(240,180,41,.12);color:var(--gold-400);border:1px solid rgba(240,180,41,.25)}
+.rev-hidden-badge{background:rgba(196,30,58,.12);color:#F07080;border:1px solid rgba(196,30,58,.25);font-size:.68rem;padding:2px 8px;border-radius:100px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -1818,10 +1845,10 @@ function initFirebase(){
       </div>
 
       <!-- Forest Road House -->
-      <div class="ptab-panel" id="ptab-frh">
+      <div class="ptab-panel" id="ptab-frh" style="background:rgba(3,1,14,0.98);border-radius:12px;padding:18px;border:1px solid rgba(160,80,255,0.2)">
         <p style="font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:16px">Forest Road, Colchester, CO4 3XA &nbsp;·&nbsp; 2025/26 academic year</p>
         <div style="overflow-x:auto">
-          <table class="price-tbl">
+          <table class="price-tbl" style="background:#0a0618">
             <thead><tr><th>Room Type</th><th>Per Week</th><th>Monthly</th><th>1st Term</th><th>2nd Term</th><th>3rd Term</th><th>Total (11 mo)</th><th></th></tr></thead>
             <tbody>
               <tr><td class="room-name">Single Room</td><td class="price-pw">£96.92</td><td>£420</td><td>£1,450</td><td>£1,450</td><td>£1,300</td><td class="price-total">£4,620</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Forest Road House — Single Room')">Enquire</button></td></tr>
@@ -1834,10 +1861,10 @@ function initFirebase(){
       </div>
 
       <!-- Candan House -->
-      <div class="ptab-panel hidden" id="ptab-can">
+      <div class="ptab-panel hidden" id="ptab-can" style="background:rgba(3,1,14,0.98);border-radius:12px;padding:18px;border:1px solid rgba(160,80,255,0.2)">
         <p style="font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:16px">Forest Road, Colchester, CO4 3XA &nbsp;·&nbsp; 2025/26 academic year</p>
         <div style="overflow-x:auto">
-          <table class="price-tbl">
+          <table class="price-tbl" style="background:#0a0618">
             <thead><tr><th>Room Type</th><th>Per Week</th><th>Monthly</th><th>1st Term</th><th>2nd Term</th><th>3rd Term</th><th>Total (11 mo)</th><th></th></tr></thead>
             <tbody>
               <tr><td class="room-name">Single Room</td><td class="price-pw">£101.54</td><td>£440</td><td>£1,550</td><td>£1,550</td><td>£1,300</td><td class="price-total">£4,840</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Candan House — Single Room')">Enquire</button></td></tr>
@@ -1848,10 +1875,10 @@ function initFirebase(){
       </div>
 
       <!-- Greenstead House -->
-      <div class="ptab-panel hidden" id="ptab-grn">
+      <div class="ptab-panel hidden" id="ptab-grn" style="background:rgba(3,1,14,0.98);border-radius:12px;padding:18px;border:1px solid rgba(160,80,255,0.2)">
         <p style="font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:16px">Greenstead Road, Colchester, CO4 &nbsp;·&nbsp; 2025/26 academic year</p>
         <div style="overflow-x:auto">
-          <table class="price-tbl">
+          <table class="price-tbl" style="background:#0a0618">
             <thead><tr><th>Room Type</th><th>Per Week</th><th>Monthly</th><th>1st Term</th><th>2nd Term</th><th>3rd Term</th><th>Total (11 mo)</th><th></th></tr></thead>
             <tbody>
               <tr><td class="room-name">Single Room</td><td class="price-pw">£106.15</td><td>£460</td><td>£1,650</td><td>£1,650</td><td>£1,300</td><td class="price-total">£5,060</td><td><button class="btn btn-sm btn-gold" onclick="enquireAbout('Greenstead House — Single Room')">Enquire</button></td></tr>
@@ -2374,6 +2401,7 @@ function initFirebase(){
         <button class="admin-tab active" onclick="switchAdminTab('properties',this)">🏠 Properties</button>
         <button class="admin-tab" onclick="switchAdminTab('photos',this)">📸 Photos</button>
         <button class="admin-tab" onclick="switchAdminTab('team',this)">👥 Team</button>
+        <button class="admin-tab" onclick="switchAdminTab('reviews',this)">⭐ Reviews</button>
         <button class="admin-tab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
       </div>
 
@@ -2423,6 +2451,73 @@ function initFirebase(){
           </div>
           <p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-top:8px">💡 Upload to Google Drive → Share → Get link → paste URL here</p>
         </div>
+      </div>
+
+
+      <!-- TAB: REVIEWS -->
+      <div class="admin-tab-panel hidden" id="atab-reviews">
+
+        <!-- Add/Edit Review Form -->
+        <div style="background:rgba(8,4,24,.6);border:1px solid rgba(160,80,255,.2);border-radius:14px;padding:22px;margin-bottom:24px">
+          <div style="font-weight:700;margin-bottom:16px;font-size:.95rem" id="revFormTitle">➕ Add New Review</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Reviewer Name *</label>
+              <input type="text" class="form-input" id="revName" placeholder="e.g. James Mitchell">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Role / Detail *</label>
+              <input type="text" class="form-input" id="revRole" placeholder="e.g. University of Essex, 3rd Year">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Review Text *</label>
+            <textarea class="form-input form-textarea" id="revText" placeholder="Enter the review text…" style="min-height:90px"></textarea>
+          </div>
+
+          <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px">
+            <div>
+              <label class="form-label" style="margin-bottom:8px;display:block">Star Rating *</label>
+              <div class="rev-stars-input" id="revStarsInput">
+                <button type="button" class="rev-star" onclick="setRevStar(1)">★</button>
+                <button type="button" class="rev-star" onclick="setRevStar(2)">★</button>
+                <button type="button" class="rev-star" onclick="setRevStar(3)">★</button>
+                <button type="button" class="rev-star" onclick="setRevStar(4)">★</button>
+                <button type="button" class="rev-star active" onclick="setRevStar(5)">★</button>
+              </div>
+            </div>
+            <div>
+              <label class="form-label" style="margin-bottom:8px;display:block">Source</label>
+              <select class="form-input form-select" id="revSource" style="width:auto">
+                <option value="manual">✍️ Manual Entry</option>
+                <option value="google">🟢 Google Review</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="margin-bottom:8px;display:block">Visibility</label>
+              <select class="form-input form-select" id="revVisible" style="width:auto">
+                <option value="true">👁️ Visible on site</option>
+                <option value="false">🙈 Hidden</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-gold btn-sm" onclick="saveReview()">Save Review</button>
+            <button class="btn btn-ghost btn-sm" onclick="cancelRevEdit()" id="revCancelBtn" style="display:none">Cancel</button>
+          </div>
+
+          <!-- Google copy helper -->
+          <div style="margin-top:16px;padding:12px 16px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:10px;font-size:.78rem;color:rgba(255,255,255,.55);line-height:1.7">
+            💡 <strong style="color:#7baaf7">To add a Google Review:</strong> Go to your Google Business Profile → Reviews → copy the reviewer's name, their text, and star rating → paste above → set Source to "Google Review" → Save.
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div style="font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:12px" id="revCount">Loading reviews…</div>
+        <div style="display:grid;gap:12px" id="revListGrid"></div>
       </div>
 
       <!-- TAB: TEAM -->
@@ -3641,6 +3736,17 @@ function resetAdminLogin(){
   const dash  = document.getElementById('adminDash');
   if(login) login.classList.remove('hidden');
   if(dash)  dash.classList.add('hidden');
+  /* Restore site navigation */
+  const nav = document.getElementById('mainNav');
+  const footer = document.getElementById('mainFooter');
+  const fab = document.getElementById('applyFab');
+  const fabGroup = document.querySelector('.contact-fab-group');
+  const annBar = document.querySelector('.ann-bar');
+  if(nav) nav.style.cssText = '';
+  if(footer) footer.style.cssText = '';
+  if(fab) fab.style.cssText = '';
+  if(fabGroup) fabGroup.style.cssText = '';
+  if(annBar) annBar.style.cssText = '';
   ['adminEmail','adminPwd'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
@@ -3701,6 +3807,11 @@ function doLogout(){
   if(typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length){
     firebase.auth().signOut();
   }
+  /* Restore nav before navigating home */
+  const nav = document.getElementById('mainNav');
+  const annBar = document.querySelector('.ann-bar');
+  if(nav) nav.style.cssText = '';
+  if(annBar) annBar.style.cssText = '';
   resetAdminLogin();
   showPage('home');
 }
@@ -3708,8 +3819,21 @@ function doLogout(){
 function showAdminDash(){
   document.getElementById('adminLogin').classList.add('hidden');
   document.getElementById('adminDash').classList.remove('hidden');
+  /* Hide site navigation so it doesn't cover admin buttons */
+  const nav = document.getElementById('mainNav');
+  const footer = document.getElementById('mainFooter');
+  const fab = document.getElementById('applyFab');
+  const fabGroup = document.querySelector('.contact-fab-group');
+  const annBar = document.querySelector('.ann-bar');
+  if(nav) nav.style.cssText = 'display:none!important';
+  if(footer) footer.style.cssText = 'display:none!important';
+  if(fab) fab.style.cssText = 'display:none!important';
+  if(fabGroup) fabGroup.style.cssText = 'display:none!important';
+  if(annBar) annBar.style.cssText = 'display:none!important';
   renderAdminStats();
-  renderAdminTable(properties);
+  renderAdminProps();
+  loadReviews();
+  renderTestimonialsOnSite();
 }
 
 function renderAdminStats(){
@@ -4658,6 +4782,162 @@ document.addEventListener('keydown', e=>{
 });
 
 
+
+/* ============================================================
+   REVIEWS MANAGER
+============================================================ */
+let reviews = [];
+let editingRevId = null;
+let currentRevStars = 5;
+
+const DEFAULT_REVIEWS = [
+  {id:1, name:'James Mitchell', role:'University of Essex, 3rd Year', text:'Moving to Forest Road House was one of the best decisions I made at university. Bills-inclusive, no deposit, and the management team were incredibly responsive whenever we needed anything.', stars:5, source:'manual', visible:true},
+  {id:2, name:'Sarah & Tom Peters', role:'Private Tenant, Ipswich', text:'As a family, finding a private rental that felt like a real home was difficult — until we found Millennium Investments. The Ipswich property was immaculate, and the team professional throughout.', stars:5, source:'manual', visible:true},
+  {id:3, name:'Aisha Okafor', role:'Candan House, Colchester', text:'No deposit, no agency fees, free insurance — I couldn\'t believe how straightforward everything was. The on-site support is genuinely 24/7. I\'ve recommended Millennium to all my friends.', stars:5, source:'manual', visible:true},
+];
+
+function loadReviews(){
+  const saved = localStorage.getItem('mi_reviews');
+  reviews = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_REVIEWS));
+}
+
+function saveReviews(){
+  localStorage.setItem('mi_reviews', JSON.stringify(reviews));
+  renderTestimonialsOnSite();
+}
+
+function setRevStar(n){
+  currentRevStars = n;
+  document.querySelectorAll('#revStarsInput .rev-star').forEach((s,i)=>{
+    s.classList.toggle('active', i < n);
+  });
+}
+
+function saveReview(){
+  const name = document.getElementById('revName').value.trim();
+  const role = document.getElementById('revRole').value.trim();
+  const text = document.getElementById('revText').value.trim();
+  const source = document.getElementById('revSource').value;
+  const visible = document.getElementById('revVisible').value === 'true';
+  if(!name||!role||!text){ showToast('Please fill in name, role and review text','error'); return; }
+  if(editingRevId !== null){
+    const r = reviews.find(x=>x.id===editingRevId);
+    if(r){ r.name=name; r.role=role; r.text=text; r.stars=currentRevStars; r.source=source; r.visible=visible; }
+    editingRevId = null;
+  } else {
+    const newId = reviews.length ? Math.max(...reviews.map(r=>r.id))+1 : 1;
+    reviews.push({id:newId, name, role, text, stars:currentRevStars, source, visible});
+  }
+  saveReviews();
+  clearRevForm();
+  renderRevList();
+  showToast('Review saved!','success');
+}
+
+function clearRevForm(){
+  ['revName','revRole','revText'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('revSource').value='manual';
+  document.getElementById('revVisible').value='true';
+  document.getElementById('revFormTitle').textContent='➕ Add New Review';
+  document.getElementById('revCancelBtn').style.display='none';
+  setRevStar(5);
+  editingRevId=null;
+}
+
+function cancelRevEdit(){ clearRevForm(); renderRevList(); }
+
+function editReview(id){
+  const r = reviews.find(x=>x.id===id);
+  if(!r) return;
+  editingRevId = id;
+  document.getElementById('revName').value = r.name;
+  document.getElementById('revRole').value = r.role;
+  document.getElementById('revText').value = r.text;
+  document.getElementById('revSource').value = r.source||'manual';
+  document.getElementById('revVisible').value = String(r.visible);
+  document.getElementById('revFormTitle').textContent = '✏️ Edit Review';
+  document.getElementById('revCancelBtn').style.display = 'inline-flex';
+  setRevStar(r.stars||5);
+  document.getElementById('revFormTitle').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function deleteReview(id){
+  if(!confirm('Delete this review?')) return;
+  reviews = reviews.filter(r=>r.id!==id);
+  saveReviews();
+  renderRevList();
+  showToast('Review deleted','success');
+}
+
+function toggleRevVisibility(id){
+  const r = reviews.find(x=>x.id===id);
+  if(!r) return;
+  r.visible = !r.visible;
+  saveReviews();
+  renderRevList();
+  showToast(r.visible ? 'Review shown on site' : 'Review hidden from site','success');
+}
+
+function renderRevList(){
+  const grid = document.getElementById('revListGrid');
+  const count = document.getElementById('revCount');
+  if(!grid) return;
+  loadReviews();
+  if(count) count.textContent = `${reviews.length} review${reviews.length!==1?'s':''} total · ${reviews.filter(r=>r.visible).length} visible on site`;
+  if(!reviews.length){ grid.innerHTML='<p style="color:rgba(255,255,255,.35);font-size:.85rem">No reviews yet. Add your first one above.</p>'; return; }
+  grid.innerHTML = reviews.map(r=>{
+    const stars = '★'.repeat(r.stars||5) + '☆'.repeat(5-(r.stars||5));
+    const srcBadge = r.source==='google'
+      ? '<span class="rev-source-badge rev-source-google">🟢 Google</span>'
+      : '<span class="rev-source-badge rev-source-manual">✍️ Manual</span>';
+    const visBadge = r.visible ? '' : ' <span class="rev-hidden-badge">Hidden</span>';
+    const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="rev-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-500),var(--crim-500));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0">${initials}</div>
+          <div>
+            <div style="font-weight:700;font-size:.88rem">${r.name}</div>
+            <div style="font-size:.75rem;color:rgba(255,255,255,.45)">${r.role}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex-shrink:0">
+          ${srcBadge}${visBadge}
+        </div>
+      </div>
+      <div style="color:var(--gold-400);font-size:1rem;margin-bottom:8px;letter-spacing:2px">${stars}</div>
+      <p style="font-size:.83rem;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:12px font-style:italic">"${r.text}"</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" style="background:rgba(240,180,41,.12);color:var(--gold-400);border:1px solid rgba(240,180,41,.25);font-size:.75rem;padding:6px 12px" onclick="editReview(${r.id})">✏️ Edit</button>
+        <button class="btn btn-sm" style="background:rgba(99,102,241,.1);color:#a5b4fc;border:1px solid rgba(99,102,241,.25);font-size:.75rem;padding:6px 12px" onclick="toggleRevVisibility(${r.id})">${r.visible?'🙈 Hide':'👁️ Show'}</button>
+        <button class="btn btn-sm" style="background:rgba(196,30,58,.12);color:#F07080;border:1px solid rgba(196,30,58,.25);font-size:.75rem;padding:6px 12px" onclick="deleteReview(${r.id})">🗑️ Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTestimonialsOnSite(){
+  const grid = document.querySelector('.test-grid');
+  if(!grid) return;
+  const visible = reviews.filter(r=>r.visible);
+  if(!visible.length) return;
+  grid.innerHTML = visible.map((r,i)=>{
+    const stars = '★'.repeat(r.stars||5);
+    const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const googleBadge = r.source==='google'
+      ? '<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span style="font-size:.7rem;color:#7baaf7;font-weight:700">🟢 Google Review</span></div>' : '';
+    return `<div class="tcard fade-in stagger-${i%4}">
+      ${googleBadge}
+      <div class="stars">${stars}</div>
+      <p class="ttext">"${r.text}"</p>
+      <div class="tauthor">
+        <div class="tavatar">${initials}</div>
+        <div><div class="taname">${r.name}</div><div class="tadet">${r.role}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 /* ============================================================
    ENHANCED ADMIN PANEL FUNCTIONS
 ============================================================ */
@@ -4671,6 +4951,7 @@ function switchAdminTab(id, btn){
   if(btn) btn.classList.add('active');
   if(id==='photos') populatePhotoManagerSelect();
   if(id==='team') renderTeamTab();
+  if(id==='reviews'){ loadReviews(); renderRevList(); }
 }
 
 function setAdminView(v){
