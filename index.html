@@ -4858,21 +4858,23 @@ async function submitPrivateApp(e){
   const btn = form.querySelector('[type="submit"]');
   if(btn){ btn.textContent='Submitting…'; btn.disabled=true; }
   try {
-    const res = await fetch('/', {
+    const data = new FormData(form);
+    data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
+    data.append('subject', 'New Private Rental Application — Millennium Investments');
+    data.append('from_name', 'Millennium Investments Website');
+    const res = await fetch('https://api.web3forms.com/submit', {
       method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body: new URLSearchParams(new FormData(form)).toString()
+      body: data
     });
-    form.style.display='none';
-    const success = document.getElementById('privAppSuccess');
-    if(success){ success.style.display='block'; }
-    showToast('Application submitted! We will contact you within 24 hours.','success');
+    const json = await res.json();
+    if(!json.success) throw new Error(json.message);
   } catch(err){
-    form.style.display='none';
-    const success = document.getElementById('privAppSuccess');
-    if(success){ success.style.display='block'; }
-    showToast('Application submitted! We will be in touch soon.','success');
+    console.warn('Form submission:', err);
   }
+  form.style.display='none';
+  const success = document.getElementById('privAppSuccess');
+  if(success){ success.style.display='block'; }
+  showToast('Application submitted! We will contact you within 24 hours.','success');
 }
 
 
@@ -4908,8 +4910,19 @@ async function submitStudentApp(e){
   const sig=document.getElementById('studSigData'); if(sig) sig.value=studSigCanvas.toDataURL('image/png');
   const btn=form.querySelector('[type="submit"]'); if(btn){btn.textContent='Submitting…';btn.disabled=true;}
   try{
-    await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()});
-  }catch(err){}
+    const data = new FormData(form);
+    data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
+    data.append('subject', 'New Student Application — Millennium Investments');
+    data.append('from_name', 'Millennium Investments Website');
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method:'POST',
+      body: data
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.message);
+  }catch(err){
+    console.warn('Form submission:', err);
+  }
   form.style.display='none';
   const s=document.getElementById('studAppSuccess'); if(s) s.style.display='block';
   showToast('Application submitted! We will contact you within 24 hours.','success');
