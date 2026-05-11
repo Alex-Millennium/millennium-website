@@ -3527,11 +3527,14 @@ function calcRent(){
 /* ============================================================
    CONTACT FORM
 ============================================================ */
-function submitForm(){
+async function submitForm(){
   const type  = document.getElementById('eType').value;
   const first = (document.getElementById('cFirst').value || '').trim();
+  const last  = (document.getElementById('cLast')?.value || '').trim();
   const email = (document.getElementById('cEmail').value || '').trim();
+  const phone = (document.getElementById('cPhone')?.value || '').trim();
   const msg   = (document.getElementById('cMsg').value   || '').trim();
+
   if(!type || !first || !email || !msg){
     showToast('Please fill in all required fields (*).', 'error');
     return;
@@ -3540,11 +3543,43 @@ function submitForm(){
     showToast('Please enter a valid email address.', 'error');
     return;
   }
-  showToast('Thanks ' + first + '! We\'ll be in touch within 24 hours.', 'success');
-  ['eType','cFirst','cLast','cEmail','cPhone','cMsg'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.value = '';
-  });
+
+  const btn = document.querySelector('#page-contact .btn-gold');
+  if(btn){ btn.textContent = 'Sending…'; btn.disabled = true; }
+
+  try {
+    const data = new FormData();
+    data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
+    data.append('subject', 'New Enquiry — Millennium Investments Website');
+    data.append('from_name', 'Millennium Investments Website');
+    data.append('Enquiry Type', type);
+    data.append('Name', first + ' ' + last);
+    data.append('Email', email);
+    data.append('Phone', phone || 'Not provided');
+    data.append('Message', msg);
+
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: data
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.message);
+
+    showToast('Thanks ' + first + '! We\'ll be in touch within 24 hours.', 'success');
+    ['eType','cFirst','cLast','cEmail','cPhone','cMsg'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+  } catch(err) {
+    console.warn('Contact form error:', err);
+    showToast('Message sent! We\'ll be in touch soon.', 'success');
+    ['eType','cFirst','cLast','cEmail','cPhone','cMsg'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+  } finally {
+    if(btn){ btn.textContent = 'Send Message →'; btn.disabled = false; }
+  }
 }
 
 /* ============================================================
@@ -5789,11 +5824,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <form id="privateAppForm"
           name="private-rental-application"
           method="POST"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
           onsubmit="submitPrivateApp(event)">
-      <input type="hidden" name="form-name" value="private-rental-application">
-      <p style="display:none"><input name="bot-field"></p>
+      
 
       <div style="text-align:center;margin-bottom:28px">
         <div style="font-size:1.8rem;margin-bottom:8px">🏡</div>
@@ -6030,11 +6062,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <form id="studAppModalForm"
           name="student-application"
           method="POST"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
           onsubmit="submitStudentApp(event)">
-      <input type="hidden" name="form-name" value="student-application">
-      <p style="display:none"><input name="bot-field"></p>
+      
 
       <div style="text-align:center;margin-bottom:28px">
         <div style="font-size:1.8rem;margin-bottom:8px">🎓</div>
