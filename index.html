@@ -617,18 +617,18 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   border-color:var(--gold-500);
   color:var(--navy-800);
 }
-.ptab-panel{animation:fadeIn .3s ease;background:rgba(4,2,20,0.7);border-radius:14px;padding:20px;}
+.ptab-panel{animation:fadeIn .3s ease;background:rgba(4,2,16,0.95);border-radius:14px;padding:20px;border:1px solid rgba(160,80,255,0.15);}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .price-tbl{
   width:100%;border-collapse:collapse;font-size:.875rem;
   min-width:640px;
-  background:rgba(4,2,20,0.82);
+  background:rgba(4,2,16,0.98);
   border-radius:12px;
   overflow:hidden;
 }
 .price-tbl thead tr{
-  background:rgba(240,180,41,0.1);
-  border-bottom:2px solid rgba(240,180,41,0.3);
+  background:rgba(240,180,41,0.18);
+  border-bottom:2px solid rgba(240,180,41,0.4);
 }
 .price-tbl th{
   padding:12px 16px;text-align:left;
@@ -638,13 +638,13 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 .price-tbl td{
   padding:13px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  color:rgba(255,255,255,.9);
-  background:rgba(4,2,20,0.6);
+  border-bottom:1px solid rgba(255,255,255,.1);
+  color:#ffffff;
+  background:rgba(6,3,22,0.97);
   vertical-align:middle;
 }
 .price-tbl tr:last-child td{border-bottom:none}
-.price-tbl tr:hover td{background:rgba(240,180,41,.04)}
+.price-tbl tr:hover td{background:rgba(240,180,41,.08)}
 .room-name{font-weight:600;color:#fff}
 .price-pw{font-weight:800;color:var(--gold-400);font-size:1rem}
 .price-total{font-weight:700;color:#34d399}
@@ -2940,9 +2940,16 @@ function showPage(id){
   if(dn) dn.classList.add('active');
   if(mn) mn.classList.add('active');
 
-  // Hide footer on admin page
+  // Hide nav + footer on admin page
   const footer = document.getElementById('mainFooter');
-  if(footer) footer.style.display = (id === 'admin') ? 'none' : '';
+  const nav = document.getElementById('mainNav');
+  const fab = document.getElementById('applyFab');
+  const fabGroup = document.querySelector('.contact-fab-group');
+  const isAdmin = (id === 'admin');
+  if(footer) footer.style.display = isAdmin ? 'none' : '';
+  if(nav) nav.style.display = isAdmin ? 'none' : '';
+  if(fab) fab.style.display = isAdmin ? 'none' : '';
+  if(fabGroup) fabGroup.style.display = isAdmin ? 'none' : '';
 
   // Page-specific init
   if(id === 'home')    { renderHome('all'); renderFeats('homeFeatGrid', FEATURES); initCounters(); }
