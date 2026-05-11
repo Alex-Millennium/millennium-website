@@ -58,6 +58,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .gold-text{background:linear-gradient(135deg,#F0B429,#F7D060);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .page{display:none;position:relative;z-index:2}
 .page.active{display:block;position:relative;z-index:2}
+#page-admin.active{position:fixed;top:0;left:0;right:0;bottom:0;z-index:900;overflow-y:auto;background:#0a0618}
 
 /* ============================================================
    BUTTONS
@@ -893,6 +894,20 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   color:rgba(255,255,255,.35);font-size:.85rem;
 }
 
+
+/* ── ADMIN SETTINGS CARDS ────────────────────────────────── */
+.admin-settings-card{
+  background:rgba(8,4,24,.55);
+  border:1px solid rgba(160,80,255,.2);
+  border-radius:14px;padding:22px;
+}
+.admin-settings-title{
+  font-weight:700;font-size:.95rem;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
 /* ── REVIEWS MANAGER (ADMIN) ─────────────────────────────── */
 .rev-card{
   background:rgba(8,4,24,.7);
@@ -1380,6 +1395,12 @@ function initFirebase(){
         <p class="sec-sub">Everything covered in your weekly rent — no hidden costs, no nasty surprises.</p>
       </div>
       <div class="feat-grid" id="homeStudFeatGrid"><!-- JS rendered --></div>
+      <div style="text-align:center;margin-top:28px">
+        <button class="btn btn-gold" onclick="showPage('student')">
+          See Everything That's Included &nbsp;→
+        </button>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:10px">14 inclusions — bills, WiFi, CCTV, insurance, storage &amp; more</p>
+      </div>
     </div>
   </section>
 
@@ -2526,22 +2547,114 @@ function initFirebase(){
         <button class="btn btn-gold btn-sm" onclick="openTeamModal()">+ Add Team Member</button>
       </div>
 
-      <!-- TAB: SETTINGS -->
+      <!-- TAB: SETTINGS / CONTENT MANAGER -->
       <div class="admin-tab-panel hidden" id="atab-settings">
-        <div style="display:grid;gap:16px;max-width:520px">
-          <div style="background:rgba(8,4,24,.55);border:1px solid rgba(160,80,255,.2);border-radius:14px;padding:22px">
-            <div style="font-weight:700;margin-bottom:12px">📣 Announcement Bar</div>
+        <div style="display:grid;gap:18px">
+
+          <!-- Announcement Bar -->
+          <div class="admin-settings-card">
+            <div class="admin-settings-title">📣 Announcement Bar</div>
             <div class="form-group" style="margin-bottom:10px">
               <label class="form-label">Banner Text</label>
               <input type="text" class="form-input" id="bannerTextInput" placeholder="e.g. Rates frozen for 2025/26!">
             </div>
-            <button class="btn btn-gold btn-sm" onclick="saveBannerText()">Save</button>
+            <button class="btn btn-gold btn-sm" onclick="saveBannerText()">Save Banner</button>
           </div>
-          <div style="background:rgba(8,4,24,.55);border:1px solid rgba(160,80,255,.2);border-radius:14px;padding:22px">
-            <div style="font-weight:700;margin-bottom:12px">🗑️ Reset Data</div>
-            <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:12px">Reset all properties to default sample data.</p>
+
+          <!-- Hero Section -->
+          <div class="admin-settings-card">
+            <div class="admin-settings-title">🏠 Hero Section</div>
+            <div class="form-group" style="margin-bottom:10px">
+              <label class="form-label">Hero Subtitle</label>
+              <textarea class="form-input form-textarea" id="heroSubInput" style="min-height:70px" placeholder="Budget friendly student accommodation…"></textarea>
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="saveHeroContent()">Save Hero</button>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="admin-settings-card">
+            <div class="admin-settings-title">📞 Contact Information</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div class="form-group">
+                <label class="form-label">Main Phone</label>
+                <input type="text" class="form-input" id="ctPhone1" placeholder="01206 500202">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mobile / WhatsApp</label>
+                <input type="text" class="form-input" id="ctPhone2" placeholder="07872 428232">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="text" class="form-input" id="ctEmail" placeholder="enquiries@forestrd.co.uk">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Office Hours</label>
+                <input type="text" class="form-input" id="ctHours" placeholder="Mon–Fri 9am–6pm">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:10px">
+              <label class="form-label">Office Address</label>
+              <input type="text" class="form-input" id="ctAddress" placeholder="Forest Road House, Forest Road, Colchester, Essex, CO4 3XA">
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="saveContactInfo()">Save Contact Info</button>
+          </div>
+
+          <!-- Key Stats -->
+          <div class="admin-settings-card">
+            <div class="admin-settings-title">📊 Key Stats (Hero Section)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div class="form-group">
+                <label class="form-label">Properties Managed</label>
+                <input type="text" class="form-input" id="stat1" placeholder="200+">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Happy Tenants</label>
+                <input type="text" class="form-input" id="stat2" placeholder="1,000+">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Years of Excellence</label>
+                <input type="text" class="form-input" id="stat3" placeholder="25+">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Locations</label>
+                <input type="text" class="form-input" id="stat4" placeholder="2">
+              </div>
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="saveStats()">Save Stats</button>
+          </div>
+
+          <!-- FAQ Manager -->
+          <div class="admin-settings-card">
+            <div class="admin-settings-title">❓ FAQ Manager</div>
+            <div id="faqManagerList" style="max-height:300px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:8px"></div>
+            <div style="background:rgba(4,2,14,.5);border:1px solid rgba(160,80,255,.15);border-radius:10px;padding:14px;margin-bottom:10px">
+              <div style="font-size:.78rem;font-weight:700;color:var(--gold-400);margin-bottom:8px">Add New FAQ</div>
+              <div class="form-group" style="margin-bottom:8px">
+                <input type="text" class="form-input" id="newFaqQ" placeholder="Question…" style="font-size:.82rem">
+              </div>
+              <div class="form-group" style="margin-bottom:8px">
+                <textarea class="form-input form-textarea" id="newFaqA" placeholder="Answer…" style="min-height:70px;font-size:.82rem"></textarea>
+              </div>
+              <div class="form-group" style="margin-bottom:8px">
+                <select class="form-input form-select" id="newFaqCat" style="font-size:.82rem">
+                  <option value="applying">🎓 Applying</option>
+                  <option value="payments">💷 Payments & Charges</option>
+                  <option value="accommodation">🏠 My Accommodation</option>
+                  <option value="moving">🔑 Moving In / Moving Out</option>
+                </select>
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="addFaqItem()">+ Add FAQ</button>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="loadFaqManager()">↻ Refresh List</button>
+          </div>
+
+          <!-- Reset Data -->
+          <div class="admin-settings-card" style="border-color:rgba(196,30,58,.25)">
+            <div class="admin-settings-title" style="color:#F07080">🗑️ Reset Data</div>
+            <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:12px">Reset all properties to default sample data. This cannot be undone.</p>
             <button class="btn btn-sm" style="background:rgba(196,30,58,.18);color:#F07080;border:1px solid rgba(196,30,58,.3)" onclick="if(confirm('Reset all properties to defaults?')) resetToDefaults()">Reset to Defaults</button>
           </div>
+
         </div>
       </div>
 
@@ -2900,14 +3013,14 @@ const FEATURES = [
 
 
 const PRIVATE_FEATURES = [
-  {icon:'🏡', title:'Quality Homes',         desc:'All our private properties are well-maintained, inspected regularly and presented to a high standard.'},
-  {icon:'🔧', title:'Fast Maintenance',       desc:'Our responsive maintenance team resolves issues quickly — we know your home is important.'},
-  {icon:'📋', title:'No Hidden Fees',         desc:'Transparent pricing from day one — no surprise admin or agency fees added on top.'},
-  {icon:'📞', title:'Dedicated Support',      desc:'A real person to call — our team is available Monday to Friday and responsive to all enquiries.'},
-  {icon:'📍', title:'Prime Locations',        desc:'Properties in sought-after areas of Colchester and Ipswich with great transport links.'},
-  {icon:'🤝', title:'Flexible Terms',         desc:'We work with you to find the right arrangement — families, couples and professionals all welcome.'},
-  {icon:'🔒', title:'Safe & Secure',          desc:'All properties meet current safety standards with working smoke alarms, gas certificates and more.'},
-  {icon:'⭐', title:'25 Years Experience',    desc:'Over two decades of property management means you are in safe, experienced hands.'},
+  {icon:'🏦', title:'No Deposit Required',    desc:'Move in without a large upfront deposit — saving you money from day one.'},
+  {icon:'📋', title:'No Hidden Fees',         desc:'Transparent pricing from the start — no admin fees, no agency charges, no surprises.'},
+  {icon:'🔧', title:'Fast Maintenance',       desc:'Issues reported and resolved quickly — a real team you can actually get hold of.'},
+  {icon:'📞', title:'Dedicated Support',      desc:'Speak to a real person — our team is available Monday to Friday and always responsive.'},
+  {icon:'🐾', title:'Pets Considered',        desc:'We consider pets on a case-by-case basis — just let us know when you enquire.'},
+  {icon:'🤝', title:'Flexible Arrangements',  desc:'Families, couples, professionals and single occupants all welcome — we work with you.'},
+  {icon:'📍', title:'Great Locations',        desc:'Properties in sought-after areas of Colchester and Ipswich with excellent transport links.'},
+  {icon:'⭐', title:'Trusted Since 2000',     desc:'Over 25 years of property management across Essex and Suffolk — you are in safe hands.'},
 ];
 
 const STUD_FEATURES = [
@@ -3025,6 +3138,26 @@ function showPage(id){
   const pg = document.getElementById('page-' + id);
   if(pg) pg.classList.add('active');
 
+  // If admin is logged in and navigating away from admin, show mode bar
+  if(adminLoggedIn && id !== 'admin'){
+    const bar = document.getElementById('adminModeBar');
+    if(bar) bar.style.display = 'flex';
+    /* Restore nav for site browsing */
+    const navEl = document.getElementById('mainNav');
+    const notifBarEl = document.querySelector('.notif-bar');
+    const footerEl = document.getElementById('mainFooter');
+    const fabEl = document.getElementById('applyFab');
+    const fabGrpEl = document.querySelector('.contact-fab-group');
+    if(navEl) navEl.style.cssText = '';
+    if(notifBarEl) notifBarEl.style.cssText = '';
+    if(footerEl) footerEl.style.cssText = '';
+    if(fabEl) fabEl.style.cssText = '';
+    if(fabGrpEl) fabGrpEl.style.cssText = '';
+  } else if(id === 'admin'){
+    const bar = document.getElementById('adminModeBar');
+    if(bar) bar.style.display = 'none';
+  }
+
   // Scroll to top
   window.scrollTo({top:0, behavior:'smooth'});
 
@@ -3041,10 +3174,12 @@ function showPage(id){
   const fab = document.getElementById('applyFab');
   const fabGroup = document.querySelector('.contact-fab-group');
   const isAdmin = (id === 'admin');
+  const notifBarSP = document.querySelector('.notif-bar');
   if(footer) footer.style.display = isAdmin ? 'none' : '';
   if(nav) nav.style.display = isAdmin ? 'none' : '';
   if(fab) fab.style.display = isAdmin ? 'none' : '';
   if(fabGroup) fabGroup.style.display = isAdmin ? 'none' : '';
+  if(notifBarSP) notifBarSP.style.display = isAdmin ? 'none' : '';
 
   // Page-specific init
   if(id === 'home')    { renderHome('all'); renderFeats('homeFeatGrid', FEATURES); initCounters(); }
@@ -3732,6 +3867,9 @@ function initGalaxy(){
    ADMIN PANEL
 ============================================================ */
 function resetAdminLogin(){
+  adminLoggedIn = false;
+  const bar = document.getElementById('adminModeBar');
+  if(bar) bar.style.display='none';
   const login = document.getElementById('adminLogin');
   const dash  = document.getElementById('adminDash');
   if(login) login.classList.remove('hidden');
@@ -3741,12 +3879,12 @@ function resetAdminLogin(){
   const footer = document.getElementById('mainFooter');
   const fab = document.getElementById('applyFab');
   const fabGroup = document.querySelector('.contact-fab-group');
-  const annBar = document.querySelector('.ann-bar');
+  const notifBar = document.querySelector('.notif-bar');
   if(nav) nav.style.cssText = '';
   if(footer) footer.style.cssText = '';
   if(fab) fab.style.cssText = '';
   if(fabGroup) fabGroup.style.cssText = '';
-  if(annBar) annBar.style.cssText = '';
+  if(notifBar) notifBar.style.cssText = '';
   ['adminEmail','adminPwd'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
@@ -3809,14 +3947,15 @@ function doLogout(){
   }
   /* Restore nav before navigating home */
   const nav = document.getElementById('mainNav');
-  const annBar = document.querySelector('.ann-bar');
+  const notifBar = document.querySelector('.notif-bar');
   if(nav) nav.style.cssText = '';
-  if(annBar) annBar.style.cssText = '';
+  if(notifBar) notifBar.style.cssText = '';
   resetAdminLogin();
   showPage('home');
 }
 
 function showAdminDash(){
+  adminLoggedIn = true;
   document.getElementById('adminLogin').classList.add('hidden');
   document.getElementById('adminDash').classList.remove('hidden');
   /* Hide site navigation so it doesn't cover admin buttons */
@@ -3824,12 +3963,12 @@ function showAdminDash(){
   const footer = document.getElementById('mainFooter');
   const fab = document.getElementById('applyFab');
   const fabGroup = document.querySelector('.contact-fab-group');
-  const annBar = document.querySelector('.ann-bar');
+  const notifBar = document.querySelector('.notif-bar');
   if(nav) nav.style.cssText = 'display:none!important';
   if(footer) footer.style.cssText = 'display:none!important';
   if(fab) fab.style.cssText = 'display:none!important';
   if(fabGroup) fabGroup.style.cssText = 'display:none!important';
-  if(annBar) annBar.style.cssText = 'display:none!important';
+  if(notifBar) notifBar.style.cssText = 'display:none!important';
   renderAdminStats();
   renderAdminProps();
   loadReviews();
@@ -4783,6 +4922,185 @@ document.addEventListener('keydown', e=>{
 
 
 
+
+/* ── ADMIN PERSISTENT STATE ──────────────────────────────── */
+let adminLoggedIn = false;
+
+function returnToAdmin(){
+  document.getElementById('adminModeBar').style.display = 'none';
+  showPage('admin');
+  /* Re-show the admin dash (already logged in) */
+  const login = document.getElementById('adminLogin');
+  const dash = document.getElementById('adminDash');
+  if(login) login.style.display = 'none';
+  if(dash) dash.classList.remove('hidden');
+  /* Hide nav again */
+  const nav = document.getElementById('mainNav');
+  const notifBar = document.querySelector('.notif-bar');
+  const footer = document.getElementById('mainFooter');
+  const fab = document.getElementById('applyFab');
+  const fabGroup = document.querySelector('.contact-fab-group');
+  if(nav) nav.style.cssText = 'display:none!important';
+  if(notifBar) notifBar.style.cssText = 'display:none!important';
+  if(footer) footer.style.cssText = 'display:none!important';
+  if(fab) fab.style.cssText = 'display:none!important';
+  if(fabGroup) fabGroup.style.cssText = 'display:none!important';
+}
+
+function exitAdminMode(){
+  adminLoggedIn = false;
+  document.getElementById('adminModeBar').style.display = 'none';
+  if(typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length){
+    firebase.auth().signOut();
+  }
+  resetAdminLogin();
+  showPage('home');
+}
+
+
+/* ============================================================
+   CONTENT MANAGEMENT
+============================================================ */
+
+/* ── HERO ──────────────────────────────────────────────────── */
+function saveHeroContent(){
+  const sub = document.getElementById('heroSubInput')?.value.trim();
+  if(!sub){ showToast('Please enter hero subtitle','error'); return; }
+  localStorage.setItem('mi_hero_sub', sub);
+  /* Apply to page */
+  const heroP = document.querySelector('.hero-sub, .hero p, #page-home .hero p');
+  if(heroP) heroP.textContent = sub;
+  showToast('Hero updated!','success');
+}
+
+/* ── CONTACT INFO ─────────────────────────────────────────── */
+function saveContactInfo(){
+  const data = {
+    phone1: document.getElementById('ctPhone1')?.value.trim(),
+    phone2: document.getElementById('ctPhone2')?.value.trim(),
+    email:  document.getElementById('ctEmail')?.value.trim(),
+    hours:  document.getElementById('ctHours')?.value.trim(),
+    address:document.getElementById('ctAddress')?.value.trim(),
+  };
+  localStorage.setItem('mi_contact', JSON.stringify(data));
+  applyContactInfo(data);
+  showToast('Contact info saved!','success');
+}
+
+function applyContactInfo(data){
+  if(!data) return;
+  /* Update all phone number references */
+  document.querySelectorAll('a[href^="tel:01206"]').forEach(a=>{ if(data.phone1){ a.href='tel:'+data.phone1.replace(/\s/g,''); a.textContent=data.phone1; }});
+  document.querySelectorAll('a[href^="tel:078"]').forEach(a=>{ if(data.phone2){ a.href='tel:'+data.phone2.replace(/\s/g,''); a.textContent=data.phone2; }});
+  document.querySelectorAll('a[href^="mailto:"]').forEach(a=>{ if(data.email){ a.href='mailto:'+data.email; a.textContent=data.email; }});
+}
+
+function loadContactSettings(){
+  const saved = JSON.parse(localStorage.getItem('mi_contact')||'{}');
+  if(document.getElementById('ctPhone1')) document.getElementById('ctPhone1').value = saved.phone1||'01206 500202';
+  if(document.getElementById('ctPhone2')) document.getElementById('ctPhone2').value = saved.phone2||'07872 428232';
+  if(document.getElementById('ctEmail'))  document.getElementById('ctEmail').value  = saved.email||'enquiries@forestrd.co.uk';
+  if(document.getElementById('ctHours'))  document.getElementById('ctHours').value  = saved.hours||'Mon–Fri 9am–6pm';
+  if(document.getElementById('ctAddress'))document.getElementById('ctAddress').value= saved.address||'Forest Road House, Forest Road, Colchester, Essex, CO4 3XA';
+}
+
+/* ── STATS ────────────────────────────────────────────────── */
+function saveStats(){
+  const data = {
+    s1: document.getElementById('stat1')?.value.trim()||'200+',
+    s2: document.getElementById('stat2')?.value.trim()||'1,000+',
+    s3: document.getElementById('stat3')?.value.trim()||'25+',
+    s4: document.getElementById('stat4')?.value.trim()||'2',
+  };
+  localStorage.setItem('mi_stats', JSON.stringify(data));
+  showToast('Stats saved! Refresh page to see changes.','success');
+}
+
+function loadStatsSettings(){
+  const saved = JSON.parse(localStorage.getItem('mi_stats')||'{}');
+  if(document.getElementById('stat1')) document.getElementById('stat1').value = saved.s1||'200+';
+  if(document.getElementById('stat2')) document.getElementById('stat2').value = saved.s2||'1,000+';
+  if(document.getElementById('stat3')) document.getElementById('stat3').value = saved.s3||'25+';
+  if(document.getElementById('stat4')) document.getElementById('stat4').value = saved.s4||'2';
+}
+
+/* ── FAQ MANAGER ──────────────────────────────────────────── */
+let customFaqs = [];
+
+function loadFaqManager(){
+  const saved = localStorage.getItem('mi_custom_faqs');
+  customFaqs = saved ? JSON.parse(saved) : [];
+  const list = document.getElementById('faqManagerList');
+  if(!list) return;
+  if(!customFaqs.length){
+    list.innerHTML='<p style="font-size:.78rem;color:rgba(255,255,255,.35)">No custom FAQs added yet. Use the form below to add new questions.</p>';
+    return;
+  }
+  const cats = {'applying':'🎓 Applying','payments':'💷 Payments','accommodation':'🏠 Accommodation','moving':'🔑 Moving'};
+  list.innerHTML = customFaqs.map((f,i)=>`
+    <div style="background:rgba(4,2,14,.5);border:1px solid rgba(160,80,255,.12);border-radius:8px;padding:12px;display:flex;gap:10px;align-items:flex-start">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.78rem;color:var(--gold-400);margin-bottom:3px">${cats[f.cat]||f.cat}</div>
+        <div style="font-size:.83rem;font-weight:600;margin-bottom:3px">${f.q}</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.45)">${f.a.slice(0,80)}${f.a.length>80?'…':''}</div>
+      </div>
+      <button onclick="deleteFaqItem(${i})" style="background:rgba(196,30,58,.15);color:#F07080;border:1px solid rgba(196,30,58,.25);border-radius:6px;padding:4px 10px;font-size:.72rem;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0">✕</button>
+    </div>`).join('');
+}
+
+function addFaqItem(){
+  const q = document.getElementById('newFaqQ')?.value.trim();
+  const a = document.getElementById('newFaqA')?.value.trim();
+  const cat = document.getElementById('newFaqCat')?.value||'applying';
+  if(!q||!a){ showToast('Please enter both question and answer','error'); return; }
+  customFaqs.push({q,a,cat});
+  localStorage.setItem('mi_custom_faqs', JSON.stringify(customFaqs));
+  document.getElementById('newFaqQ').value='';
+  document.getElementById('newFaqA').value='';
+  loadFaqManager();
+  renderCustomFaqsOnSite();
+  showToast('FAQ added!','success');
+}
+
+function deleteFaqItem(idx){
+  if(!confirm('Delete this FAQ?')) return;
+  customFaqs.splice(idx,1);
+  localStorage.setItem('mi_custom_faqs', JSON.stringify(customFaqs));
+  loadFaqManager();
+  showToast('FAQ deleted','success');
+}
+
+function renderCustomFaqsOnSite(){
+  /* Append custom FAQs to each category on the FAQ page */
+  const cats = {'applying':'🎓 Applying','payments':'💷 Payments & Charges','accommodation':'🏠 My Accommodation','moving':'🔑 Moving In / Moving Out'};
+  customFaqs.forEach(f=>{
+    /* Find matching category in the FAQ page */
+    const allCatTitles = document.querySelectorAll('.faq-cat-title');
+    allCatTitles.forEach(title=>{
+      const catKey = Object.keys(cats).find(k=>title.textContent.includes(cats[k].split(' ').slice(1).join(' ')));
+      if(catKey && catKey===f.cat){
+        const category = title.closest('.faq-category');
+        if(category && !category.querySelector(`[data-faq="${f.q}"]`)){
+          const div = document.createElement('div');
+          div.className='faq-item';
+          div.dataset.faq=f.q;
+          div.innerHTML=`<button class="faq-q" onclick="toggleFaq(this)"><span>${f.q}</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>${f.a}</p></div>`;
+          category.appendChild(div);
+        }
+      }
+    });
+  });
+}
+
+/* Load all content settings when settings tab opens */
+function loadAllSettings(){
+  loadContactSettings();
+  loadStatsSettings();
+  loadFaqManager();
+  const banner = localStorage.getItem('mi_banner');
+  if(banner && document.getElementById('bannerTextInput')) document.getElementById('bannerTextInput').value = banner;
+}
+
 /* ============================================================
    REVIEWS MANAGER
 ============================================================ */
@@ -4952,6 +5270,7 @@ function switchAdminTab(id, btn){
   if(id==='photos') populatePhotoManagerSelect();
   if(id==='team') renderTeamTab();
   if(id==='reviews'){ loadReviews(); renderRevList(); }
+  if(id==='settings'){ loadAllSettings(); }
 }
 
 function setAdminView(v){
@@ -5126,6 +5445,13 @@ function changeAdminPwd(){
 document.addEventListener('DOMContentLoaded', () => {
   loadProps();
   showPage('home');
+  /* Ensure home features render even if showPage fires before arrays ready */
+  setTimeout(()=>{
+    if(typeof renderFeats==='function' && typeof STUD_FEATURES!=='undefined'){
+      renderFeats('homeStudFeatGrid', STUD_FEATURES.slice(0,8));
+      renderFeats('homePrivFeatGrid', PRIVATE_FEATURES);
+    }
+  }, 300);
   /* setupAuthObserver called by initFirebase */
   /* Show setup guide banner if Firebase not configured */
   if(!FB_CONFIGURED){
@@ -5815,6 +6141,22 @@ document.addEventListener('DOMContentLoaded', () => {
   </section>
 
 </div><!-- end page-faq -->
+
+
+<!-- ADMIN MODE BAR — shown when browsing site while logged in -->
+<div id="adminModeBar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  background:linear-gradient(135deg,rgba(196,30,58,0.95),rgba(100,20,40,0.95));
+  backdrop-filter:blur(12px);padding:10px 20px;
+  display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  border-top:1px solid rgba(196,30,58,0.5);">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-size:.8rem;font-weight:700;color:#fff;letter-spacing:.05em">🔐 ADMIN MODE — You are logged in as admin</span>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="returnToAdmin()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:6px 16px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">← Back to Admin Panel</button>
+    <button onclick="exitAdminMode()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,.7);padding:6px 12px;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Sign Out</button>
+  </div>
+</div>
 
 </body>
 </html>
