@@ -4962,69 +4962,131 @@ async function submitStudentApp(e){
   const btn = form.querySelector('[type="submit"]');
   if(btn){ btn.textContent='Submitting…'; btn.disabled=true; }
 
-  /* Collect field values */
   const gF = name => { const el=form.querySelector(`[name="${name}"]`); return el?el.value.trim():''; };
-  const sections = [
-    {label:'PERSONAL DETAILS', fields:[
-      {label:'First Name', value:gF('first_name')},
-      {label:'Last Name', value:gF('last_name')},
-      {label:'Date of Birth', value:gF('dob')},
-      {label:'Nationality', value:gF('nationality')},
-      {label:'Email', value:gF('email')},
-      {label:'Phone', value:gF('phone')},
-      {label:'Current Address', value:gF('current_address')},
-    ]},
-    {label:'UNIVERSITY DETAILS', fields:[
-      {label:'University', value:gF('university')},
-      {label:'Course', value:gF('course')},
-      {label:'Year of Study', value:gF('year_of_study')},
-      {label:'Student ID', value:gF('student_id')},
-    ]},
-    {label:'ROOM PREFERENCES', fields:[
-      {label:'Preferred Complex', value:gF('preferred_complex')},
-      {label:'Room Type', value:gF('room_type')},
-      {label:'Move-In Date', value:gF('move_in_date')},
-      {label:'Tenancy Length', value:gF('tenancy_length')},
-    ]},
-    {label:'EMERGENCY CONTACT', fields:[
-      {label:'Name', value:gF('emergency_name')},
-      {label:'Relationship', value:gF('emergency_relationship')},
-      {label:'Phone', value:gF('emergency_phone')},
-      {label:'Email', value:gF('emergency_email')},
-    ]},
-    {label:'ADDITIONAL INFORMATION', fields:[
-      {label:'Additional Info', value:gF('additional_info')},
-      {label:'Declaration', value:'Signed & Agreed'},
-      {label:'Signature', value:'Digital signature captured on application form'},
-    ]},
+
+  /* Collect all fields */
+  const fields = [
+    {label:'First Name',           value:gF('first_name')},
+    {label:'Last Name',            value:gF('last_name')},
+    {label:'Date of Birth',        value:gF('dob')},
+    {label:'Nationality',          value:gF('nationality')},
+    {label:'Email',                value:gF('email')},
+    {label:'Phone',                value:gF('phone')},
+    {label:'Current Address',      value:gF('current_address')},
+    {label:'University',           value:gF('university')},
+    {label:'Course',               value:gF('course')},
+    {label:'Year of Study',        value:gF('year_of_study')},
+    {label:'Student ID',           value:gF('student_id')},
+    {label:'Preferred Complex',    value:gF('preferred_complex')},
+    {label:'Room Type',            value:gF('room_type')},
+    {label:'Move-In Date',         value:gF('move_in_date')},
+    {label:'Tenancy Length',       value:gF('tenancy_length')},
+    {label:'Emergency Name',       value:gF('emergency_name')},
+    {label:'Emergency Relation',   value:gF('emergency_relationship')},
+    {label:'Emergency Phone',      value:gF('emergency_phone')},
+    {label:'Emergency Email',      value:gF('emergency_email')},
+    {label:'Additional Info',      value:gF('additional_info')},
+    {label:'Declaration',          value:'Signed & Agreed'},
   ];
 
-  /* Build plain text email body */
-  let emailBody = `STUDENT ACCOMMODATION APPLICATION\nMillennium Investments 2000 Ltd\nSubmitted: ${new Date().toLocaleString('en-GB')}\n\n`;
-  sections.forEach(s=>{
-    emailBody += `\n=== ${s.label} ===\n`;
-    s.fields.forEach(f=>{ if(f.value) emailBody += `${f.label}: ${f.value}\n`; });
-  });
+  const applicantName = gF('first_name')+' '+gF('last_name');
 
-  /* Generate PDF first */
-  const sigDataUrl = studSigCanvas ? studSigCanvas.toDataURL('image/png') : null;
-  const pdfBlob = generateStudentPDF(sections, sigDataUrl, gF('first_name')+' '+gF('last_name'));
-
-  /* Send via Web3Forms (backup plain text) */
+  /* Generate PDF — no download */
+  let pdfBase64 = '';
   try {
-    const data = new FormData();
-    data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
-    data.append('subject', `Student Application: ${gF('first_name')} ${gF('last_name')} — ${gF('preferred_complex')||'Millennium Investments'}`);
-    data.append('from_name', 'Millennium Investments Website');
-    data.append('message', emailBody);
-    sections.forEach(s=>s.fields.forEach(f=>{ if(f.value && f.label!=='Signature') data.append(f.label, f.value); }));
-    await fetch('https://api.web3forms.com/submit', {method:'POST', body:data});
-  } catch(err){ console.warn('Submission error:', err); }
+    if(typeof window.jspdf !== 'undefined'){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+      const W=210, M=14; let y=14;
+      const sections = [
+        {title:'PERSONAL DETAILS',     fields:fields.slice(0,7)},
+        {title:'UNIVERSITY DETAILS',   fields:fields.slice(7,11)},
+        {title:'ROOM PREFERENCES',     fields:fields.slice(11,15)},
+        {title:'EMERGENCY CONTACT',    fields:fields.slice(15,19)},
+        {title:'ADDITIONAL',           fields:fields.slice(19)},
+      ];
 
+      /* Header */
+      doc.setFillColor(10,6,24); doc.rect(0,0,W,32,'F');
+      doc.setTextColor(240,180,41); doc.setFontSize(16); doc.setFont('helvetica','bold');
+      doc.text('Student Accommodation Application', W/2, 13, {align:'center'});
+      doc.setTextColor(180,180,180); doc.setFontSize(9); doc.setFont('helvetica','normal');
+      doc.text('Millennium Investments 2000 Ltd', W/2, 21, {align:'center'});
+      doc.text('Submitted: '+new Date().toLocaleString('en-GB'), W/2, 27, {align:'center'});
+      y = 40;
+
+      sections.forEach(s=>{
+        if(y>265){doc.addPage();y=14;}
+        doc.setFillColor(240,180,41); doc.rect(M,y,W-M*2,7,'F');
+        doc.setTextColor(10,6,24); doc.setFontSize(8); doc.setFont('helvetica','bold');
+        doc.text(s.title, M+3, y+5); y+=10;
+        s.fields.forEach(f=>{
+          if(!f.value)return;
+          if(y>272){doc.addPage();y=14;}
+          doc.setTextColor(100,100,100); doc.setFontSize(8); doc.setFont('helvetica','normal');
+          doc.text(f.label+':', M, y);
+          doc.setTextColor(20,20,20); doc.setFont('helvetica','bold');
+          const lines=doc.splitTextToSize(String(f.value),W-M*2-60);
+          doc.text(lines, M+60, y);
+          y+=Math.max(6,lines.length*5);
+          doc.setDrawColor(230,230,230); doc.line(M,y-1,W-M,y-1);
+        });
+        y+=4;
+      });
+
+      /* Signature */
+      if(studSigCanvas && studSigHasData){
+        if(y>220){doc.addPage();y=14;}
+        doc.setFillColor(240,180,41); doc.rect(M,y,W-M*2,7,'F');
+        doc.setTextColor(10,6,24); doc.setFontSize(8); doc.setFont('helvetica','bold');
+        doc.text('SIGNATURE', M+3, y+5); y+=12;
+        doc.setDrawColor(200,200,200); doc.setFillColor(252,252,252);
+        doc.roundedRect(M,y,W-M*2,38,3,3,'FD');
+        try{ doc.addImage(studSigCanvas.toDataURL('image/png'),'PNG',M+5,y+4,W-M*2-10,30); }catch(e){}
+        doc.setTextColor(120,120,120); doc.setFontSize(8); doc.setFont('helvetica','normal');
+        doc.text(applicantName, M+3, y+42); y+=48;
+      }
+
+      /* Footer */
+      const pages=doc.internal.getNumberOfPages();
+      for(let i=1;i<=pages;i++){
+        doc.setPage(i);
+        doc.setFillColor(10,6,24); doc.rect(0,287,W,10,'F');
+        doc.setTextColor(150,150,150); doc.setFontSize(7);
+        doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202',M,293);
+        doc.text(`Page ${i}/${pages}`,W-M,293,{align:'right'});
+      }
+
+      /* Get base64 WITHOUT downloading */
+      pdfBase64 = doc.output('datauristring').split(',')[1];
+    }
+  } catch(pdfErr){ console.warn('PDF build error:', pdfErr); }
+
+  /* Send to PHP endpoint */
+  try {
+    const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('
+');
+    const res = await fetch('https://www.forestrd.co.uk/send-application.php', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        app_type: 'Student Accommodation Application',
+        applicant_name: applicantName,
+        applicant_email: gF('email'),
+        summary: summary,
+        pdf_base64: pdfBase64
+      })
+    });
+    const json = await res.json();
+    console.log('PHP result:', json);
+  } catch(err){ console.warn('Send error:', err); }
+
+  /* Show success — no PDF download */
   form.style.display='none';
   const success = document.getElementById('studAppSuccess');
   if(success) success.style.display='block';
   if(btn){ btn.textContent='Submit Application →'; btn.disabled=false; }
+  showToast('Application submitted! We will contact you within 24 hours.','success');
 }
 
 
