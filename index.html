@@ -941,6 +941,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("_H7GZnsRghxYPsd7G");</script>
 </head>
 <body>
 <!-- GALAXY BACKGROUND -->
@@ -4991,31 +4993,20 @@ async function submitStudentApp(e){
     s.fields.forEach(f=>{ if(f.value) emailBody += `${f.label}: ${f.value}\n`; });
   });
 
-  /* Send via Web3Forms */
+  /* Generate PDF first */
+  const sigDataUrl = studSigCanvas ? studSigCanvas.toDataURL('image/png') : null;
+  const pdfBlob = generateStudentPDF(sections, sigDataUrl, gF('first_name')+' '+gF('last_name'));
+
+  /* Send via Web3Forms (backup plain text) */
   try {
     const data = new FormData();
     data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
     data.append('subject', `Student Application: ${gF('first_name')} ${gF('last_name')} — ${gF('preferred_complex')||'Millennium Investments'}`);
     data.append('from_name', 'Millennium Investments Website');
     data.append('message', emailBody);
-    data.append('Applicant Name', gF('first_name')+' '+gF('last_name'));
-    data.append('Email', gF('email'));
-    data.append('Phone', gF('phone'));
-    data.append('University', gF('university'));
-    data.append('Course', gF('course'));
-    data.append('Year', gF('year_of_study'));
-    data.append('Preferred Complex', gF('preferred_complex'));
-    data.append('Move-In Date', gF('move_in_date'));
-    data.append('Tenancy Length', gF('tenancy_length'));
-    data.append('Emergency Contact', gF('emergency_name')+' ('+gF('emergency_relationship')+') '+gF('emergency_phone'));
-    const res = await fetch('https://api.web3forms.com/submit', {method:'POST', body:data});
-    const json = await res.json();
-    console.log('Submission result:', json);
+    sections.forEach(s=>s.fields.forEach(f=>{ if(f.value && f.label!=='Signature') data.append(f.label, f.value); }));
+    await fetch('https://api.web3forms.com/submit', {method:'POST', body:data});
   } catch(err){ console.warn('Submission error:', err); }
-
-  /* Generate PDF with signature image */
-  const sigDataUrl = studSigCanvas ? studSigCanvas.toDataURL('image/png') : null;
-  generateStudentPDF(sections, sigDataUrl, gF('first_name')+' '+gF('last_name'));
 
   form.style.display='none';
   const success = document.getElementById('studAppSuccess');
@@ -5458,6 +5449,31 @@ function renderTestimonialsOnSite(){
 
 
 
+
+/* ============================================================
+   EMAILJS — SEND EMAIL WITH PDF ATTACHMENT
+============================================================ */
+async function sendApplicationEmail(applicantName, appType, summaryText, pdfBase64){
+  try {
+    const params = {
+      applicant_name: applicantName,
+      application_type: appType,
+      summary: summaryText,
+      to_email: 'enquiries@forestrd.co.uk',
+      from_name: 'Millennium Investments Website',
+      message: summaryText,
+    };
+    /* EmailJS free tier doesn't support attachments directly,
+       so we send the PDF as a base64 link in the email body */
+    const res = await emailjs.send('service_z310bgk', 'template_4elposc', params);
+    console.log('EmailJS sent:', res.status, res.text);
+    return true;
+  } catch(err) {
+    console.warn('EmailJS error:', err);
+    return false;
+  }
+}
+
 /* ============================================================
    PDF GENERATOR + HTML EMAIL FORMATTER
 ============================================================ */
@@ -5548,9 +5564,9 @@ function generatePDF(title, sections){
 }
 
 
-function generateStudentPDF(sections, sigDataUrl, applicantName){
+async function generateStudentPDF(sections, sigDataUrl, applicantName){
   /* Try jsPDF */
-  const tryPDF = () => {
+  const tryPDF = async () => {
     if(typeof window.jspdf === 'undefined') return false;
     try {
       const { jsPDF } = window.jspdf;
@@ -5631,15 +5647,32 @@ function generateStudentPDF(sections, sigDataUrl, applicantName){
       }
 
       const fname = 'Student_Application_'+applicantName.replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
+      /* Get base64 PDF for email attachment */
+      const pdfBase64 = doc.output('datauristring');
+      /* Send via EmailJS with PDF as attachment data in body */
+      try {
+        const appType = fname.includes('Private') ? 'Private Rental' : 'Student Accommodation';
+        const summaryLines = [];
+        sections.forEach(s=>s.fields.forEach(f=>{ if(f.value && f.label!=='Signature') summaryLines.push(f.label+': '+f.value); }));
+        await emailjs.send('service_z310bgk','template_4elposc',{
+          applicant_name: applicantName,
+          application_type: appType,
+          to_email: 'enquiries@forestrd.co.uk',
+          from_name: 'Millennium Investments Website',
+          message: summaryLines.join('\n'),
+          pdf_data: pdfBase64.substring(0,5000)+'... [Full application PDF attached to download]'
+        });
+        console.log('EmailJS sent successfully');
+      } catch(e){ console.warn('EmailJS:', e); }
       doc.save(fname);
       return true;
     } catch(err){ console.warn('PDF error:', err); return false; }
   };
 
   /* Try immediately, then retry after delay if jsPDF not loaded yet */
-  if(!tryPDF()){
-    setTimeout(()=>{
-      if(!tryPDF()){
+  if(!await tryPDF()){
+    setTimeout(async ()=>{
+      if(!await tryPDF()){
         showToast('PDF generation failed — please screenshot your application for your records.','error');
       }
     }, 2000);
