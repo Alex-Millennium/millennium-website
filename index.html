@@ -4939,7 +4939,20 @@ function initStudSigPad(){
 }
 function clearStudSig(){ if(!studSigCtx)return; studSigCtx.clearRect(0,0,studSigCanvas.width,studSigCanvas.height); studSigHasData=false; updateStudSigStatus(); }
 function updateStudSigStatus(){ const s=document.getElementById('studSigStatus'); if(!s)return; s.textContent=studSigHasData?'✓ Signature captured':'Draw your signature above'; s.style.color=studSigHasData?'#34d399':'rgba(255,255,255,.35)'; }
-function openStudentAppModal(){ document.getElementById('studentAppModal').classList.add('open'); document.body.style.overflow='hidden'; setTimeout(initStudSigPad,300); }
+function openStudentAppModal(){
+  /* Reset form state each time modal opens */
+  const form = document.getElementById('studAppModalForm');
+  const success = document.getElementById('studAppSuccess');
+  if(form){ form.style.display=''; form.reset(); }
+  if(success){ success.style.display='none'; }
+  /* Reset signature */
+  studSigHasData=false;
+  if(studSigCtx && studSigCanvas) studSigCtx.clearRect(0,0,studSigCanvas.width,studSigCanvas.height);
+  updateStudSigStatus();
+  document.getElementById('studentAppModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(initStudSigPad,300);
+}
 function closeStudentAppModal(){ document.getElementById('studentAppModal').classList.remove('open'); document.body.style.overflow=''; }
 async function submitStudentApp(e){
   e.preventDefault();
