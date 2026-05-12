@@ -5025,7 +5025,6 @@ async function submitStudentApp(e){
   const success = document.getElementById('studAppSuccess');
   if(success) success.style.display='block';
   if(btn){ btn.textContent='Submit Application →'; btn.disabled=false; }
-  showToast('Application submitted! Your PDF copy is downloading.','success');
 }
 
 
@@ -5662,22 +5661,29 @@ async function generateStudentPDF(sections, sigDataUrl, applicantName){
       const fname = 'Student_Application_'+applicantName.replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
       /* Get base64 PDF for email attachment */
       const pdfBase64 = doc.output('datauristring');
-      /* Send via EmailJS with PDF as attachment data in body */
+      /* Send PDF via PHP endpoint on forestrd.co.uk */
       try {
         const appType = fname.includes('Private') ? 'Private Rental' : 'Student Accommodation';
         const summaryLines = [];
         sections.forEach(s=>s.fields.forEach(f=>{ if(f.value && f.label!=='Signature') summaryLines.push(f.label+': '+f.value); }));
-        await emailjs.send('service_z310bgk','template_4elposc',{
-          applicant_name: applicantName,
-          application_type: appType,
-          to_email: 'enquiries@forestrd.co.uk',
-          from_name: 'Millennium Investments Website',
-          message: summaryLines.join('\n'),
-          pdf_data: pdfBase64.substring(0,5000)+'... [Full application PDF attached to download]'
+        const emailRes = await fetch('https://www.forestrd.co.uk/send-application.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            app_type: appType,
+            applicant_name: applicantName,
+            applicant_email: sections.flatMap(s=>s.fields).find(f=>f.label==='Email'||f.label==='Email Address')?.value||'',
+            summary: summaryLines.join('\n'),
+            pdf_base64: doc.output('datauristring').split(',')[1]
+          })
         });
-        console.log('EmailJS sent successfully');
-      } catch(e){ console.warn('EmailJS:', e); }
-      doc.save(fname);
+        const emailJson = await emailRes.json();
+        console.log('PHP mailer result:', emailJson);
+        if(emailJson.success){
+          showToast('Application submitted — PDF sent to our team!','success');
+        }
+      } catch(e){ console.warn('PHP mailer error:', e); }
+      /* Do NOT auto-download — email is sent to the company instead */
       return true;
     } catch(err){ console.warn('PDF error:', err); return false; }
   };
