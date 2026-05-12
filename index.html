@@ -5064,8 +5064,7 @@ async function submitStudentApp(e){
 
   /* Send to PHP endpoint */
   try {
-    const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('
-');
+    const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
     const res = await fetch('https://www.forestrd.co.uk/send-application.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
