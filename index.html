@@ -1383,8 +1383,9 @@ function initFirebase(){
         <p class="sec-sub" style="text-align:left;margin:0">Purpose-built HMO rooms in Colchester — minutes from the University of Essex. All bills included.</p>
       </div>
       <div class="prop-grid" id="homeStudGrid"><!-- JS rendered --></div>
-      <div style="text-align:center;margin-top:32px">
+      <div style="text-align:center;margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <button class="btn btn-gold" onclick="showPage('student')">View All Student Rooms &nbsp;→</button>
+        <button class="btn btn-ghost" onclick="showPageAndScroll('student','studentPricing')">💷 See Prices</button>
       </div>
     </div>
   </section>
@@ -1606,6 +1607,9 @@ function initFirebase(){
         <span class="badge-pill red">💡 All Bills Included</span>
         <button class="btn-apply-inline" onclick="applyForType('student')" style="margin-left:8px">
           ✍️ Apply Now
+        </button>
+        <button class="btn-apply-inline" onclick="scrollToPricing()" style="margin-left:8px;background:transparent;color:#F5C518;border:1.5px solid rgba(245,197,24,.55)">
+          💷 See Prices
         </button>
       </div>
     </div>
@@ -1852,7 +1856,7 @@ function initFirebase(){
   </section>
 
 <!-- PRICING TABLE — TABBED -->
-  <section class="section bg-dark">
+  <section class="section bg-dark" id="studentPricing">
     <div class="sec-in">
       <div class="sec-hd">
         <h2 class="sec-title">Transparent <span class="gold-text">Pricing</span></h2>
@@ -2187,6 +2191,48 @@ function initFirebase(){
 @media(max-width:480px){
   .astats{grid-template-columns:1fr 1fr}
 }
+
+/* ── FAQ Tabs ───────────────────────────────────────────── */
+.faqtab-row{
+  display:flex;gap:6px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:6px;
+  margin:0 auto 36px;max-width:620px;
+}
+.faqtab{
+  flex:1;padding:14px 16px;border:none;background:transparent;
+  color:rgba(255,255,255,.55);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.9rem;font-weight:600;cursor:pointer;
+  border-radius:9px;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.faqtab:hover{color:rgba(255,255,255,.92);background:rgba(255,255,255,.04)}
+.faqtab.active{
+  background:linear-gradient(135deg,var(--gold-500),var(--gold-dark));
+  color:var(--navy-800);
+  box-shadow:0 4px 16px rgba(240,180,41,.22);
+}
+.faq-panel.hidden{display:none}
+.faq-panel-intro{
+  text-align:center;font-size:.84rem;color:rgba(255,255,255,.5);
+  margin:-18px auto 28px;max-width:580px;line-height:1.6;
+}
+@media (max-width:560px){
+  .faqtab{font-size:.82rem;padding:12px 10px}
+  .faqtab span.faqtab-emoji{font-size:1rem}
+}
+
+
+/* ── T&Cs Tabs ──────────────────────────────────────────── */
+.tctab-row{display:flex;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:5px;margin-bottom:22px}
+.tctab{flex:1;padding:11px 14px;border:none;background:transparent;color:rgba(255,255,255,.55);font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;border-radius:8px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px}
+.tctab:hover{color:rgba(255,255,255,.9);background:rgba(255,255,255,.04)}
+.tctab.active{background:linear-gradient(135deg,var(--gold-500),var(--gold-dark));color:var(--navy-800);box-shadow:0 4px 14px rgba(240,180,41,.22)}
+.tc-panel{display:flex;flex-direction:column;gap:22px}
+.tc-panel.hidden{display:none}
+@media (max-width:560px){.tctab{font-size:.78rem;padding:10px 8px}}
 </style>
 
 <!-- ============================================================
@@ -3121,7 +3167,7 @@ const STUD_FEATURES = [
   {icon:'🏦', title:'No Tenancy Deposit',        desc:'Save hundreds — we do not require a deposit when you move in.'},
   {icon:'⚡', title:'All Bills Included',         desc:'Gas, electric, water, internet — all covered. No utility bond required.'},
   {icon:'📡', title:'100 Mbps Free WiFi',         desc:'Fast 100 Mbps broadband throughout every room and communal area — included in your rent.'},
-  {icon:'📹', title:'4K Ultra HD 4K CCTV',           desc:'State-of-the-art 4K CCTV cameras across all properties for your safety and peace of mind.'},
+  {icon:'📹', title:'4K Ultra HD CCTV',           desc:'State-of-the-art 4K CCTV cameras across all properties for your safety and peace of mind.'},
   {icon:'👥', title:'24/7 On-Site Support',       desc:'Our team is present on-site 24 hours a day, every day of the year.'},
   {icon:'🚗', title:'Free On-Site Parking',       desc:'Free parking available plus a secure bike shed for cyclists.'},
   {icon:'🛡️', title:'Free Contents Insurance',    desc:'Complimentary contents insurance via Gallagher — fully free. Click to sign up instantly.',link:'https://gallagherassist.ajg.com/forest-road-houses'},
@@ -3284,6 +3330,21 @@ function showPage(id){
 
   // Trigger scroll animations
   setTimeout(triggerFadeIns, 120);
+}
+
+/* Navigate to a page and then scroll to a specific element on it (See Prices buttons) */
+function showPageAndScroll(pageId, targetId){
+  showPage(pageId);
+  setTimeout(function(){
+    const el = document.getElementById(targetId);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 180);
+}
+
+/* Quick scroll-to-pricing helper (used by hero See Prices button on student page) */
+function scrollToPricing(){
+  const el = document.getElementById('studentPricing');
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 /* ============================================================
@@ -5236,6 +5297,22 @@ function toggleFaq(btn){
   if(!isOpen) item.classList.add('open');
 }
 
+/* Switch between Student / Private FAQ panels */
+function switchFaqTab(which){
+  /* Show the chosen panel, hide the other */
+  document.querySelectorAll('.faq-panel').forEach(p => p.classList.add('hidden'));
+  const target = document.getElementById('faq-'+which);
+  if(target) target.classList.remove('hidden');
+
+  /* Update tab button active state */
+  document.querySelectorAll('.faqtab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector('.faqtab[data-tab="'+which+'"]');
+  if(tab) tab.classList.add('active');
+
+  /* Collapse any open Q&A so the user starts fresh on the new tab */
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+}
+
 /* ── PRIVACY POLICY MODAL ───────────────────────────────── */
 function openPrivacy(){
   document.getElementById('privacyModal').classList.add('open');
@@ -5247,7 +5324,17 @@ function closePrivacy(){
 }
 
 /* ── TERMS & CONDITIONS MODAL ───────────────────────────── */
-function openTerms(){
+function switchTcTab(which){
+  document.querySelectorAll('.tc-panel').forEach(function(p){ p.classList.add('hidden'); });
+  var target = document.getElementById('tc-'+which);
+  if(target) target.classList.remove('hidden');
+  document.querySelectorAll('.tctab').forEach(function(t){ t.classList.remove('active'); });
+  var tab = document.querySelector('.tctab[data-tctab="'+which+'"]');
+  if(tab) tab.classList.add('active');
+}
+
+function openTerms(tab){
+  if(tab) switchTcTab(tab); else switchTcTab('student');
   document.getElementById('termsModal').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -6411,6 +6498,11 @@ document.addEventListener('DOMContentLoaded', () => {
         </label>
       </div>
 
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:14px 16px">
+        <input type="checkbox" name="terms_agree" id="privTermsCheck" style="margin-top:3px;accent-color:var(--gold-500);width:16px;height:16px;flex-shrink:0" required>
+        <label for="privTermsCheck" style="font-size:.85rem;color:rgba(255,255,255,.8);cursor:pointer;line-height:1.55">I have read and agree to the <a onclick="event.preventDefault();openTerms('private')" style="color:var(--gold-400);font-weight:700;text-decoration:underline;cursor:pointer">Terms and Conditions</a> of Millennium Investments 2000 Ltd applicable to private rentals. *</label>
+      </div>
+
       <!-- SIGNATURE -->
       <div class="form-section-title">✍️ Signature</div>
       <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:12px">Sign below using your mouse or finger:</p>
@@ -6546,6 +6638,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <label for="studDeclarationCheck" style="font-size:.85rem;color:rgba(255,255,255,.75);cursor:pointer">I confirm that I have read and agree to all four points of the above declaration *</label>
       </div>
 
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:14px 16px">
+        <input type="checkbox" name="terms_agree" id="studTermsCheck" style="margin-top:3px;accent-color:var(--gold-500);width:16px;height:16px;flex-shrink:0" required>
+        <label for="studTermsCheck" style="font-size:.85rem;color:rgba(255,255,255,.8);cursor:pointer;line-height:1.55">I have read and agree to the <a onclick="event.preventDefault();openTerms('student')" style="color:var(--gold-400);font-weight:700;text-decoration:underline;cursor:pointer">Terms and Conditions</a> of Millennium Investments 2000 Ltd applicable to student accommodation. *</label>
+      </div>
+
       <div class="form-section-title">✍️ Signature</div>
       <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:12px">Sign below using your mouse or finger:</p>
       <div class="sig-box"><canvas id="studSigCanvas" style="width:100%;height:160px;display:block"></canvas></div>
@@ -6601,7 +6698,27 @@ document.addEventListener('DOMContentLoaded', () => {
       <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:4px">Millennium Investments 2000 Ltd</p>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:22px;font-size:.875rem;color:rgba(255,255,255,.72);line-height:1.85">
+    <div style="background:linear-gradient(135deg,rgba(240,180,41,0.13),rgba(245,197,24,0.08));border:1px solid rgba(240,180,41,0.32);border-radius:12px;padding:14px 16px;margin-bottom:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="font-size:1.4rem;flex-shrink:0">📜</div>
+      <div style="flex:1;min-width:200px">
+        <p style="margin:0;font-size:.84rem;font-weight:700;color:var(--gold-400)">Government Information Sheet — Renters' Rights Act 2025</p>
+        <p style="margin:3px 0 0;font-size:.74rem;color:rgba(255,255,255,.6);line-height:1.5">By law, all tenants in the private rented sector must receive this sheet by 28 May 2026.</p>
+      </div>
+      <a href="https://assets.publishing.service.gov.uk/media/69bc04b8f7b1c24d8e23ce60/The_Renters__Rights_Act_Information_Sheet_2026.pdf" target="_blank" rel="noopener" style="background:var(--gold-500);color:var(--navy-800);text-decoration:none;font-weight:700;font-size:.78rem;padding:9px 14px;border-radius:7px;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:6px">
+        ↓ View PDF
+      </a>
+    </div>
+
+    <div class="tctab-row" role="tablist">
+      <button class="tctab active" data-tctab="student" role="tab" onclick="switchTcTab('student')">🎓 Student Accommodation</button>
+      <button class="tctab" data-tctab="private" role="tab" onclick="switchTcTab('private')">🏠 Private Rentals</button>
+    </div>
+
+    <div class="tc-panel" id="tc-student" role="tabpanel" style="font-size:.875rem;color:rgba(255,255,255,.72);line-height:1.85">
+
+      <div style="background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.25);border-radius:10px;padding:12px 14px;margin-bottom:6px;font-size:.82rem;color:rgba(255,255,255,.85);line-height:1.6">
+        <strong style="color:var(--gold-400)">Important — Renters' Rights Act 2025 status.</strong> Millennium Investments 2000 Ltd has applied for membership of a Government-approved code of practice for student accommodation providers. Pending approval of this membership, certain provisions of the Renters' Rights Act 2025 — which came into force on 1 May 2026 — may apply to your tenancy alongside these terms. Once our code membership is confirmed, the full student-let exemption will apply and we will update these terms accordingly. The Government Information Sheet linked above sets out your rights in full.
+      </div>
 
       <div>
         <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Occupants</h3>
@@ -6616,6 +6733,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div>
         <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Additional Charges</h3>
         <p>In the event that rent remains unpaid for a period of more than 14 days from the date on which the same is due, a fee will be charged which is equal to 3% above the Bank of England's base rate of the rental amount that is overdue. This fee will continue to accrue until the date on which payment is made.</p>
+        <p style="margin-top:10px;font-size:.82rem;color:rgba(255,255,255,.58);font-style:italic">All charges set out below comply with Schedule 1 of the Tenant Fees Act 2019 and represent reasonable costs incurred by the landlord.</p>
         <div style="margin-top:14px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:10px;overflow:hidden">
           <table style="width:100%;border-collapse:collapse;font-size:.85rem">
             <thead>
@@ -6651,6 +6769,16 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
 
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Council Tax</h3>
+        <p>Full-time students are exempt from paying council tax under the Local Government Finance Act 1992. To maintain this exemption, you must provide a valid Student Certificate issued by your university, which we will share with the local council where required. If at any time you cease to be a full-time student during your tenancy, you must notify us immediately, as the council tax liability will transfer to you.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Right to Rent</h3>
+        <p>In accordance with the Immigration Act 2014, we are required by law to verify that all occupants have the right to live in the UK before the tenancy commences. You will be asked to provide original identification documents (e.g. passport, BRP or other approved ID) so we can complete this check in person. Copies of these documents are retained for the duration of your tenancy in compliance with Home Office requirements.</p>
+      </div>
+
       <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:18px">
         <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Disclaimer</h3>
         <div style="display:flex;flex-direction:column;gap:12px">
@@ -6661,7 +6789,141 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
 
-    </div>
+    </div><!-- /#tc-student -->
+
+    <div class="tc-panel hidden" id="tc-private" role="tabpanel" style="font-size:.875rem;color:rgba(255,255,255,.72);line-height:1.85">
+
+      <div style="background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.25);border-radius:10px;padding:12px 14px;margin-bottom:6px;font-size:.82rem;color:rgba(255,255,255,.85);line-height:1.6">
+        <strong style="color:var(--gold-400)">Updated for the Renters' Rights Act 2025.</strong> These terms reflect the new private rented sector regime that came into force on 1 May 2026, including the abolition of Assured Shorthold Tenancies and the move to Assured Periodic Tenancies.
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Tenancy Type</h3>
+        <p>The tenancy granted is an <strong>Assured Periodic Tenancy</strong> under the Housing Act 1988, as amended by the Renters' Rights Act 2025. The tenancy runs on a rolling monthly basis with no fixed end date. Existing Assured Shorthold Tenancies granted before 1 May 2026 were automatically converted to Assured Periodic Tenancies on that date.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Occupancy &amp; Subletting</h3>
+        <p>Only persons named on the tenancy agreement may occupy the property as their primary residence. Any change in occupancy must be agreed by the landlord in writing in advance. Subletting and lodging are not permitted under any circumstances.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Holding Deposit &amp; Reservation</h3>
+        <p>A holding deposit, capped at one week's rent in accordance with the Tenant Fees Act 2019, may be required to reserve the property pending referencing and contract preparation. The holding deposit is offset against the first month's rent on commencement of the tenancy. Where, through no fault of ours, the tenancy does not proceed within 15 days of the holding deposit being paid, the deposit may only be retained where: (a) you provide false or misleading information; (b) you fail the Right to Rent check; (c) you fail referencing through your own conduct; or (d) you withdraw from the application.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Tenancy Deposit</h3>
+        <p>A tenancy deposit, capped at 5 weeks' rent (where annual rent is less than £50,000) per the Tenant Fees Act 2019, is required at the commencement of the tenancy. The deposit will be protected in a Government-approved Tenancy Deposit Scheme within 30 days of receipt, and you will be issued with the Prescribed Information confirming the protection. The deposit will be returned at the end of the tenancy, less any agreed deductions for damages beyond fair wear and tear, unpaid rent or breach of the tenancy agreement.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Rent &amp; Advance Payments</h3>
+        <p>Rent is payable monthly in advance by standing order to the landlord's nominated account. In compliance with the Renters' Rights Act 2025, no rent may be demanded or accepted before the tenancy agreement is signed, and the maximum amount payable in advance during the tenancy is one month's rent (or 28 days' rent where the rental period is shorter).</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Rent Increases</h3>
+        <p>Rent may only be increased once in any 12-month period. The landlord must serve a Section 13 notice in the prescribed form, giving at least 2 months' notice of the proposed increase. The new rent must reflect market rent. The tenant has the right to challenge the increase by applying to the First-tier Tribunal (Property Chamber) before the date the increase is due to take effect.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Late Payment Charge</h3>
+        <p>In the event that rent remains unpaid for a period of more than 14 days from the date on which the same is due, interest will be charged at a rate equal to 3% above the Bank of England's base rate, calculated daily on the overdue amount until payment is received in full. This complies with Schedule 1, Section 4 of the Tenant Fees Act 2019.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Permitted Charges</h3>
+        <p style="font-size:.82rem;color:rgba(255,255,255,.58);font-style:italic;margin-bottom:10px">All charges set out below comply with Schedule 1 of the Tenant Fees Act 2019.</p>
+        <div style="background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:10px;overflow:hidden">
+          <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+            <thead>
+              <tr style="background:rgba(240,180,41,0.12);border-bottom:1px solid rgba(240,180,41,0.2)">
+                <th style="padding:10px 16px;text-align:left;color:var(--gold-400);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase">Charge</th>
+                <th style="padding:10px 16px;text-align:right;color:var(--gold-400);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase">Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+                <td style="padding:10px 16px;color:rgba(255,255,255,.75)">Lost / Replacement Key</td>
+                <td style="padding:10px 16px;text-align:right;font-weight:700;color:#fff">Reasonable cost</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+                <td style="padding:10px 16px;color:rgba(255,255,255,.75)">Change of Sharer (tenant request)</td>
+                <td style="padding:10px 16px;text-align:right;font-weight:700;color:#fff">£50 + VAT</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;color:rgba(255,255,255,.75)">Early Surrender (tenant request)</td>
+                <td style="padding:10px 16px;text-align:right;font-weight:700;color:#fff">At landlord discretion</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:12px;font-size:.82rem;color:rgba(255,255,255,.55)">We do not charge any administration, referencing, renewal, check-in, check-out, inventory or other fees prohibited under the Tenant Fees Act 2019.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Tenant Notice to End Tenancy</h3>
+        <p>The tenant may end the tenancy at any time by giving the landlord at least <strong>2 months' written notice</strong>, in accordance with section 8(1) of the Renters' Rights Act 2025. The notice must be in writing and must expire at the end of a rental period.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Landlord Possession</h3>
+        <p>The landlord may only seek possession of the property by serving a notice under Section 8 of the Housing Act 1988 (as amended), relying on one or more of the statutory grounds set out in Schedule 2. Notice periods vary by ground (typically 4 months for mandatory grounds such as Ground 1A — landlord selling the property — which cannot be used in the first 12 months of a tenancy). Section 21 "no-fault" evictions were abolished by the Renters' Rights Act 2025 on 1 May 2026.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Pet Requests</h3>
+        <p>Under the Renters' Rights Act 2025, you have the right to request to keep a pet at the property. We will consider any pet request reasonably and respond in writing within a reasonable period. Consent may be made conditional (for example, on you taking out pet insurance or paying a reasonable additional security deposit where permitted by law). Consent must not be unreasonably refused.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Anti-Discrimination</h3>
+        <p>In accordance with the Renters' Rights Act 2025, we do not discriminate against prospective or existing tenants on the basis of receipt of housing benefit or other welfare benefits, having children in the household, or other protected characteristics under the Equality Act 2010.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Repairs, Maintenance &amp; Inspections</h3>
+        <p>In accordance with Section 11 of the Landlord and Tenant Act 1985, the landlord is responsible for keeping in repair: (a) the structure and exterior of the property; (b) installations for the supply of water, gas and electricity, and for sanitation; (c) installations for space heating and water heating.</p>
+        <p style="margin-top:10px">The tenant is responsible for: keeping the property in a clean and tenantable condition; reporting issues promptly; replacing items such as light bulbs and fuses; and preventing damage by negligence, misuse or wilful act.</p>
+        <p style="margin-top:10px">Periodic property inspections may be carried out at intervals of typically 3 to 6 months, with no less than 24 hours' written notice as required by law.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Insurance</h3>
+        <p>Buildings insurance is maintained by the landlord. Tenants are strongly advised to take out tenants' contents insurance to protect their personal belongings, as these are not covered by the landlord's policy.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Smoking &amp; Alterations</h3>
+        <p>Smoking is strictly not permitted inside the property. Painting, wallpapering or other decorative alterations require the landlord's written permission in advance — pictures may be hung using suitable picture hooks.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Utilities &amp; Council Tax</h3>
+        <p>Unless specifically stated as included in the tenancy agreement, the tenant is responsible for setting up and paying all utilities (gas, electricity, water, broadband), council tax and TV licence for the duration of the tenancy.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">End of Tenancy</h3>
+        <p>At the end of the tenancy, the property must be returned in the same condition as recorded on the check-in inventory, allowing for fair wear and tear. This includes a thorough clean, removal of all personal belongings, and final meter readings on the move-out date.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">PRS Database &amp; Landlord Ombudsman</h3>
+        <p>Millennium Investments 2000 Ltd will register with the Private Rented Sector Database and the PRS Landlord Ombudsman in accordance with the Renters' Rights Act 2025, on the dates these schemes become operational.</p>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:18px">
+        <h3 style="font-size:.82rem;font-weight:800;color:var(--gold-400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Disclaimer</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <p>Millennium Investments 2000 Ltd makes all reasonable efforts to ensure that the contents of its website are accurate and up-to-date, but can accept no responsibility for omissions, errors or subsequent changes. Information on the website regarding the property or booking is provided for information and guidance purposes only and is not intended to form part of the contract between you and the company.</p>
+          <p>It is the responsibility of the user to check the accuracy of relevant information before entering into any commitment, and Millennium Investments 2000 Ltd accepts no liability for any loss or damage resulting directly or indirectly from inaccuracies in the information held on its website.</p>
+          <p>Unless expressly stated to the contrary, all text, images, design and other content is copyright &copy; Millennium Investments 2000 Ltd and all rights are reserved.</p>
+        </div>
+      </div>
+
+    </div><!-- /#tc-private -->
 
     <div style="text-align:center;margin-top:28px">
       <button class="btn btn-gold" onclick="closeTerms()">Close</button>
@@ -6777,6 +7039,22 @@ document.addEventListener('DOMContentLoaded', () => {
   <section class="section bg-dark">
     <div class="sec-in" style="max-width:820px;margin:0 auto">
 
+      <!-- TAB SWITCHER -->
+      <div class="faqtab-row" role="tablist">
+        <button class="faqtab active" data-tab="student" role="tab" onclick="switchFaqTab('student')">
+          <span class="faqtab-emoji">🎓</span> Student Accommodation
+        </button>
+        <button class="faqtab" data-tab="private" role="tab" onclick="switchFaqTab('private')">
+          <span class="faqtab-emoji">🏠</span> Private Rentals
+        </button>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════
+           STUDENT ACCOMMODATION FAQ PANEL
+           ═══════════════════════════════════════════════════════ -->
+      <div class="faq-panel" id="faq-student" role="tabpanel">
+        <p class="faq-panel-intro">Questions about life at Forest Road House, Candan House and Greenstead House — bills, applications, and everything in between. <a onclick="switchFaqTab('private')" style="color:var(--gold-400);cursor:pointer">Looking for private rental info? →</a></p>
+
       <!-- APPLYING -->
       <div class="faq-category">
         <div class="faq-cat-title">🎓 Applying</div>
@@ -6866,6 +7144,110 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When can I move out?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You may move out at any point, but please note that the rent will continue to become due for the entire term of the tenancy, irrespective of when you decide to move out. Your liability to pay the rent will also continue until the expiry of the term.</p></div></div>
       </div>
+
+      </div><!-- /#faq-student -->
+
+      <!-- ═══════════════════════════════════════════════════════
+           PRIVATE RENTAL FAQ PANEL
+           ═══════════════════════════════════════════════════════ -->
+      <div class="faq-panel hidden" id="faq-private" role="tabpanel">
+        <p class="faq-panel-intro">Questions about renting one of our private homes in Colchester or Ipswich — tenancy agreements, deposits, repairs, and everything in between. <a onclick="switchFaqTab('student')" style="color:var(--gold-400);cursor:pointer">Looking for student accommodation info? →</a></p>
+
+<!-- PRIVATE RENTAL FAQ — 5 categories, 28 questions -->
+<!-- APPLYING & VIEWING -->
+      <div class="faq-category">
+        <div class="faq-cat-title">🏠 Applying &amp; Viewing</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How do I apply for a private rental?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You can apply by completing the online application form on our Private Rentals page, or by contacting us on 01206 500202 or <a href="mailto:enquiries@forestrd.co.uk">enquiries@forestrd.co.uk</a>. We will then arrange a viewing and walk you through the next steps.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I view the property before signing?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes — we strongly encourage viewings. We can arrange in-person viewings at a time that suits you, including evenings and weekends where possible.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need a UK-based guarantor?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>In most cases, yes — particularly if you are a first-time renter or your income does not meet our affordability checks. We will let you know during the application process whether a guarantor is required.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you carry out referencing and credit checks?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes. We work with reputable referencing partners to verify identity, address history, employment / income and credit. References from previous landlords are also requested where applicable.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Are there any agency, admin or referencing fees?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No. Under the Tenant Fees Act 2019, we cannot charge any application, admin, referencing or renewal fees. The only payments you will be asked for are rent and a refundable tenancy deposit (capped by law).</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How long does the application process take?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Typically 3–7 working days once we have received all required documents and references. We'll keep you updated at every stage.</p></div></div>
+      </div>
+
+      <!-- TENANCY & DEPOSITS -->
+      <div class="faq-category">
+        <div class="faq-cat-title">📋 Tenancy &amp; Deposits</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What type of tenancy agreement do you use?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>From 1 May 2026, following the Renters' Rights Act 2025, we issue <strong>Assured Periodic Tenancies (APTs)</strong> under the Housing Act 1988 (as amended). Assured Shorthold Tenancies (ASTs) and fixed-term tenancies have been abolished for both new and existing tenancies. Your tenancy will run on a rolling monthly basis with no fixed end date.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How long is the typical tenancy?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Under the Renters' Rights Act 2025, all tenancies are now <strong>periodic (rolling)</strong> by law — there is no fixed term. The tenancy continues indefinitely until either party validly ends it: you can give two months' written notice at any time, and the landlord can only seek possession on prescribed statutory grounds. This gives tenants much more security and flexibility than under the old AST system.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you take a deposit?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes. The deposit is capped at 5 weeks' rent (where the annual rent is under £50,000), in accordance with the Tenant Fees Act 2019.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Where is my deposit protected?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>All deposits are protected in a Government-approved Tenancy Deposit Scheme within 30 days of receipt, as required by law. You will receive the prescribed information confirming protection.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When will I get my deposit back?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>After check-out, we inspect the property and propose any deductions (e.g. damage beyond fair wear and tear). If you agree, the deposit is returned within 10 working days. Any dispute can be referred to the scheme's free independent adjudication service.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I have a break clause?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Break clauses are no longer relevant under the Renters' Rights Act 2025. Because all tenancies are now periodic (rolling), you can give two months' written notice to end the tenancy at any time — there is no fixed term to "break out of". This gives you greater flexibility than the previous fixed-term AST model.</p></div></div>
+      </div>
+
+      <!-- RENT, BILLS & COUNCIL TAX -->
+      <div class="faq-category">
+        <div class="faq-cat-title">💷 Rent, Bills &amp; Council Tax</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Are bills included in private rentals?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>In most of our private rentals, bills are not included unless specifically stated. You'll be responsible for setting up and paying for gas, electricity, water, broadband, council tax and TV licence. We'll confirm which (if any) bills are included before you sign.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How do I pay my rent?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Rent is paid monthly in advance by standing order to our nominated account. Bank details are provided in your tenancy agreement.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When is my rent due?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Rent is due on the same date each month, as set out in your tenancy agreement — usually the date the tenancy began.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How often can the rent be increased?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Under the Renters' Rights Act 2025, rent can be increased <strong>no more than once per year</strong>, and only by serving a <strong>Section 13 notice</strong>. You will be given at least <strong>two months' written notice</strong> of any proposed increase. Pre-existing rent review clauses in your contract are overridden by statute and have no effect. You have the right to challenge any proposed increase at the First-tier Tribunal if you believe it exceeds market rent.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay council tax?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes. Council tax is the tenant's responsibility unless all occupants qualify for an exemption (e.g. full-time students). You will need to register with the local council when you move in.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need a TV licence?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, if you watch or record live TV, or use BBC iPlayer. See <a href="https://www.tvlicensing.co.uk" target="_blank" rel="noopener">www.tvlicensing.co.uk</a> for further details.</p></div></div>
+      </div>
+
+      <!-- THE PROPERTY & REPAIRS -->
+      <div class="faq-category">
+        <div class="faq-cat-title">🛠️ The Property &amp; Repairs</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Are pets allowed?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes — under the Renters' Rights Act 2025, requests to keep a pet at the property are considered on their merits and <strong>cannot be unreasonably refused</strong>. The landlord may require you to maintain pet damage insurance, or pay a reasonable contribution towards such cover. Please let us know in writing as part of your application.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I smoke in the property?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, smoking is not permitted inside any of our properties. You are welcome to smoke outside, away from doors and windows.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can my partner, family or guests stay?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, occasional overnight guests are absolutely fine. However, only those named on the tenancy agreement may live at the property permanently. If your circumstances change, please contact us so we can update the agreement.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is there parking?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>This depends on the property. Some have allocated off-street parking, some have permit street parking, and others have a driveway. We confirm exact parking arrangements for each property at the viewing.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Who is responsible for repairs?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Under Section 11 of the Landlord and Tenant Act 1985, we (the landlord) are responsible for maintaining the structure, exterior, heating, water, gas and electrical installations. Tenants are responsible for taking reasonable care of the property and reporting issues promptly.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How do I report a maintenance issue?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You can report issues by emailing <a href="mailto:enquiries@forestrd.co.uk">enquiries@forestrd.co.uk</a>, calling 01206 500202, or using the contact form on this website. Emergencies (major water leak, no heating in winter, no power, security risk) should always be reported by phone.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How quickly are repairs completed?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Emergencies (loss of heating, water, power or security risk) are attended to within 24 hours. Urgent repairs typically within 3–5 working days. Routine repairs are scheduled within 14–28 days. We will always keep you informed of timescales.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need contents insurance?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Our buildings insurance covers the property itself, but not your personal belongings. We strongly recommend taking out tenants' contents insurance to protect your possessions.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Who looks after the garden?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Where the property has a private garden, day-to-day garden maintenance (mowing, weeding, keeping it tidy) is the tenant's responsibility. Structural matters such as fence repairs and major tree work are dealt with by us.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I decorate or put pictures up?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You may hang pictures using suitable picture hooks. Painting, wallpapering or any other decorative changes require our written permission in advance.</p></div></div>
+      </div>
+
+      <!-- MOVING IN & MOVING OUT -->
+      <div class="faq-category">
+        <div class="faq-cat-title">🔑 Moving In &amp; Moving Out</div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When can I move in?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Move-in dates are agreed when you sign the tenancy agreement and pay the first month's rent and deposit. We aim to make every property "move-in ready" — cleaned, with all appliances and utilities working.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What happens at check-in?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We carry out a detailed inventory and schedule of condition at the start of the tenancy, including photos. You'll have 7 days to review the document and add any comments before it is finalised — this protects both parties at the end of the tenancy.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you carry out property inspections?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes. We may carry out periodic inspections (typically every 3–6 months) with at least 24 hours' written notice, as required by law. The purpose is to check for any issues that need attention before they become serious.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What notice do I need to give to leave?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Under the Renters' Rights Act 2025, you can end the tenancy at any time by giving at least <strong>two months' written notice</strong> to the landlord. The notice must be in writing and must expire at the end of a rental period. There is no longer a "fixed term" to commit to — you have flexibility from day one.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What's expected at check-out?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The property should be returned in the same condition as recorded on the check-in inventory, allowing for fair wear and tear. That includes a thorough clean, removal of all your belongings, and taking final meter readings on move-out day.</p></div></div>
+
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I sublet the property?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, subletting is not permitted. Only those named on the tenancy agreement may live at the property.</p></div></div>
+      </div>
+
+      </div><!-- /#faq-private -->
 
       <!-- CTA -->
       <div style="text-align:center;margin-top:16px;padding:28px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:14px">
