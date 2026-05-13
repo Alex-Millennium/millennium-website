@@ -4943,7 +4943,12 @@ function openStudentAppModal(){
   /* Reset form state each time modal opens */
   const form = document.getElementById('studAppModalForm');
   const success = document.getElementById('studAppSuccess');
-  if(form){ form.style.display=''; form.reset(); }
+  if(form){
+    form.style.display='';
+    form.reset();
+    /* Explicitly reset all selects to prevent browser autofill */
+    form.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  }
   if(success){ success.style.display='none'; }
   /* Reset signature */
   studSigHasData=false;
@@ -6449,7 +6454,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <button class="btn btn-gold" style="margin-top:20px" onclick="closeStudentAppModal()">Close</button>
     </div>
 
-    <form id="studAppModalForm"
+    <form id="studAppModalForm" autocomplete="off"
           name="student-application"
           method="POST"
           onsubmit="submitStudentApp(event)">
