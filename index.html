@@ -5011,64 +5011,81 @@ async function submitStudentApp(e){
         {title:'ADDITIONAL',           fields:fields.slice(19)},
       ];
 
-      /* Header */
-      doc.setFillColor(10,6,24); doc.rect(0,0,W,38,'F');
-      /* Add logo from nav */
+      /* ── COMPACT SINGLE-PAGE PDF LAYOUT ─────────────────── */
+      /* Header — slim */
+      doc.setFillColor(10,6,24); doc.rect(0,0,W,30,'F');
       try {
         const logoEl = document.querySelector('.nav-logo img');
         if(logoEl && logoEl.src && logoEl.src.startsWith('data:')){
-          doc.addImage(logoEl.src,'PNG',M,4,28,14);
+          doc.addImage(logoEl.src,'PNG',M,3,22,12);
         }
-      } catch(le){ console.warn('Logo error:',le); }
-      doc.setTextColor(240,180,41); doc.setFontSize(15); doc.setFont('helvetica','bold');
-      doc.text('Student Accommodation Application', W/2, 15, {align:'center'});
-      doc.setTextColor(200,200,200); doc.setFontSize(9); doc.setFont('helvetica','normal');
-      doc.text('Millennium Investments 2000 Ltd  ·  Est. 1998', W/2, 23, {align:'center'});
-      doc.text('milleniuminvestments2000.co.uk  ·  enquiries@forestrd.co.uk', W/2, 29, {align:'center'});
-      doc.text('Submitted: '+new Date().toLocaleString('en-GB'), W/2, 35, {align:'center'});
-      y = 46;
+      } catch(le){}
+      doc.setTextColor(240,180,41); doc.setFontSize(13); doc.setFont('helvetica','bold');
+      doc.text('Student Accommodation Application', W/2, 12, {align:'center'});
+      doc.setTextColor(190,190,190); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+      doc.text('Millennium Investments 2000 Ltd  ·  Est. 1998  ·  milleniuminvestments2000.co.uk', W/2, 19, {align:'center'});
+      doc.text('Submitted: '+new Date().toLocaleString('en-GB'), W/2, 25, {align:'center'});
+      y = 33;
 
-      sections.forEach(s=>{
-        if(y>265){doc.addPage();y=14;}
-        doc.setFillColor(240,180,41); doc.rect(M,y,W-M*2,7,'F');
-        doc.setTextColor(10,6,24); doc.setFontSize(8); doc.setFont('helvetica','bold');
-        doc.text(s.title, M+3, y+5); y+=10;
+      /* Two-column layout: left col = sections 0-2, right col = sections 3-4 */
+      const colW = (W - M*2 - 6) / 2;
+      const col2X = M + colW + 6;
+
+      function drawSection(s, startX, startY, maxW){
+        let ly = startY;
+        doc.setFillColor(240,180,41); doc.rect(startX, ly, maxW, 5.5,'F');
+        doc.setTextColor(10,6,24); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
+        doc.text(s.title, startX+2, ly+4); ly+=7;
         s.fields.forEach(f=>{
-          if(!f.value)return;
-          if(y>272){doc.addPage();y=14;}
-          doc.setTextColor(100,100,100); doc.setFontSize(8); doc.setFont('helvetica','normal');
-          doc.text(f.label+':', M, y);
-          doc.setTextColor(20,20,20); doc.setFont('helvetica','bold');
-          const lines=doc.splitTextToSize(String(f.value),W-M*2-60);
-          doc.text(lines, M+60, y);
-          y+=Math.max(6,lines.length*5);
-          doc.setDrawColor(230,230,230); doc.line(M,y-1,W-M,y-1);
+          if(!f.value) return;
+          doc.setTextColor(110,110,110); doc.setFontSize(6.5); doc.setFont('helvetica','normal');
+          doc.text(f.label+':', startX, ly);
+          doc.setTextColor(15,15,15); doc.setFont('helvetica','bold');
+          const lines=doc.splitTextToSize(String(f.value), maxW-32);
+          doc.text(lines, startX+32, ly);
+          ly+=Math.max(5, lines.length*4.5);
+          doc.setDrawColor(220,220,220);
+          doc.line(startX, ly-0.5, startX+maxW, ly-0.5);
         });
-        y+=4;
-      });
+        return ly+2;
+      }
 
-      /* Signature */
-      if(studSigCanvas && studSigHasData){
-        if(y>220){doc.addPage();y=14;}
-        doc.setFillColor(240,180,41); doc.rect(M,y,W-M*2,7,'F');
-        doc.setTextColor(10,6,24); doc.setFontSize(8); doc.setFont('helvetica','bold');
-        doc.text('SIGNATURE', M+3, y+5); y+=12;
+      /* Left column — Personal, University, Room Preferences */
+      let leftY = y;
+      leftY = drawSection(sections[0], M, leftY, colW);
+      leftY += 2;
+      leftY = drawSection(sections[1], M, leftY, colW);
+      leftY += 2;
+      leftY = drawSection(sections[2], M, leftY, colW);
+
+      /* Right column — Emergency, Additional */
+      let rightY = y;
+      rightY = drawSection(sections[3], col2X, rightY, colW);
+      rightY += 2;
+      rightY = drawSection(sections[4], col2X, rightY, colW);
+
+      /* Signature — below both columns, full width */
+      y = Math.max(leftY, rightY) + 4;
+
+      /* Check if signature fits — if not, reduce sig box height */
+      const sigBoxH = Math.min(28, 278 - y - 16);
+      if(sigBoxH > 10 && studSigCanvas && studSigHasData){
+        doc.setFillColor(240,180,41); doc.rect(M,y,W-M*2,5.5,'F');
+        doc.setTextColor(10,6,24); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
+        doc.text('APPLICANT SIGNATURE', M+2, y+4); y+=7;
         doc.setDrawColor(200,200,200); doc.setFillColor(252,252,252);
-        doc.roundedRect(M,y,W-M*2,38,3,3,'FD');
-        try{ doc.addImage(studSigCanvas.toDataURL('image/png'),'PNG',M+5,y+4,W-M*2-10,30); }catch(e){}
-        doc.setTextColor(120,120,120); doc.setFontSize(8); doc.setFont('helvetica','normal');
-        doc.text(applicantName, M+3, y+42); y+=48;
+        doc.roundedRect(M,y,W-M*2,sigBoxH,2,2,'FD');
+        try{ doc.addImage(studSigCanvas.toDataURL('image/png'),'PNG',M+3,y+2,W-M*2-6,sigBoxH-4); }catch(e){}
+        doc.setTextColor(120,120,120); doc.setFontSize(7); doc.setFont('helvetica','normal');
+        doc.text(applicantName+'  —  '+new Date().toLocaleDateString('en-GB'), M+2, y+sigBoxH+4);
+        y+=sigBoxH+8;
       }
 
-      /* Footer */
-      const pages=doc.internal.getNumberOfPages();
-      for(let i=1;i<=pages;i++){
-        doc.setPage(i);
-        doc.setFillColor(10,6,24); doc.rect(0,287,W,10,'F');
-        doc.setTextColor(150,150,150); doc.setFontSize(7);
-        doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202',M,293);
-        doc.text(`Page ${i}/${pages}`,W-M,293,{align:'right'});
-      }
+      /* Footer — single page */
+      doc.setFillColor(10,6,24); doc.rect(0,287,W,10,'F');
+      doc.setTextColor(150,150,150); doc.setFontSize(6.5);
+      doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202 · milleniuminvestments2000.co.uk', M, 293);
+      doc.text('Page 1 of 1', W-M, 293, {align:'right'});
 
       /* Get base64 WITHOUT downloading */
       pdfBase64 = doc.output('datauristring').split(',')[1];
