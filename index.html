@@ -5076,7 +5076,7 @@ async function submitStudentApp(e){
   } catch(pdfErr){ console.warn('PDF build error:', pdfErr); }
 
   /* Read uploaded documents */
-  const [idDoc, casDoc] = await Promise.all([readUploadedFile('idDocument'), readUploadedFile('casDocument')]);
+  const [idDoc, casDoc] = await Promise.all([readUploadedFile('studIdDocument'), readUploadedFile('studCasDocument')]);
   console.log('ID doc:', idDoc ? idDoc.name+' ('+idDoc.data.length+' chars)' : 'none');
   console.log('CAS doc:', casDoc ? casDoc.name+' ('+casDoc.data.length+' chars)' : 'none');
 
@@ -5102,8 +5102,8 @@ async function submitStudentApp(e){
     }catch(pdfErr){ console.warn('PDF attach error:', pdfErr); }
 
     /* Attach documents — get fresh references */
-    const idEl  = document.getElementById('idDocument');
-    const casEl = document.getElementById('casDocument');
+    const idEl  = document.getElementById('studIdDocument');
+    const casEl = document.getElementById('studCasDocument');
     console.log('ID input:', idEl, 'files:', idEl && idEl.files ? idEl.files.length : 'none');
     console.log('CAS input:', casEl, 'files:', casEl && casEl.files ? casEl.files.length : 'none');
 
@@ -5184,12 +5184,15 @@ async function readUploadedFile(inputId){
 
 /* ── FILE UPLOAD PREVIEW ─────────────────────────────── */
 document.addEventListener('change', function(e){
-  if(e.target.id === 'idDocument'){
-    const preview = document.getElementById('idDocPreview');
+  /* Student form (renamed to studIdDocument / studCasDocument to avoid duplicate-ID clash with private form) */
+  if(e.target.id === 'studIdDocument' || e.target.id === 'idDocument'){
+    const previewId = e.target.id === 'studIdDocument' ? 'studIdDocPreview' : 'idDocPreview';
+    const preview = document.getElementById(previewId);
     if(preview) preview.style.display = e.target.files[0] ? 'block' : 'none';
   }
-  if(e.target.id === 'casDocument'){
-    const preview = document.getElementById('casDocPreview');
+  if(e.target.id === 'studCasDocument' || e.target.id === 'casDocument'){
+    const previewId = e.target.id === 'studCasDocument' ? 'studCasDocPreview' : 'casDocPreview';
+    const preview = document.getElementById(previewId);
     if(preview) preview.style.display = e.target.files[0] ? 'block' : 'none';
   }
 });
@@ -6488,13 +6491,13 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Photo ID * <span style="font-size:.72rem;color:rgba(255,255,255,.4)">(Passport, BRP or driving licence)</span></label>
-            <input type="file" name="id_document" id="idDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
-            <div id="idDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+            <input type="file" name="id_document" id="studIdDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
+            <div id="studIdDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
           </div>
           <div class="form-group">
             <label class="form-label">CAS Letter or Student Certificate *</label>
-            <input type="file" name="cas_document" id="casDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
-            <div id="casDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+            <input type="file" name="cas_document" id="studCasDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
+            <div id="studCasDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
           </div>
         </div>
       </div>
