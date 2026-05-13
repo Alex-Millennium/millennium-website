@@ -5091,23 +5091,43 @@ async function submitStudentApp(e){
     fd.append('applicant_email', gF('email'));
     fd.append('summary',         summary);
 
-    /* Attach PDF as a blob */
-    if(pdfBase64){
-      const pdfBytes = Uint8Array.from(atob(pdfBase64), c=>c.charCodeAt(0));
-      fd.append('pdf_file', new Blob([pdfBytes],{type:'application/pdf'}), applicantName.replace(/ /g,'_')+'_Application.pdf');
-    }
+    /* Attach PDF */
+    try{
+      if(pdfBase64){
+        const bytes = Uint8Array.from(atob(pdfBase64), c=>c.charCodeAt(0));
+        fd.append('pdf_file', new Blob([bytes],{type:'application/pdf'}),
+          applicantName.replace(/\s+/g,'_')+'_Application.pdf');
+        console.log('PDF added to FormData, size:', bytes.length);
+      }
+    }catch(pdfErr){ console.warn('PDF attach error:', pdfErr); }
 
-    /* Attach ID document directly from file input */
-    const idInput  = document.getElementById('idDocument');
-    const casInput = document.getElementById('casDocument');
-    if(idInput  && idInput.files[0])  fd.append('id_file',  idInput.files[0],  idInput.files[0].name);
-    if(casInput && casInput.files[0]) fd.append('cas_file', casInput.files[0], casInput.files[0].name);
+    /* Attach documents — get fresh references */
+    const idEl  = document.getElementById('idDocument');
+    const casEl = document.getElementById('casDocument');
+    console.log('ID input:', idEl, 'files:', idEl && idEl.files ? idEl.files.length : 'none');
+    console.log('CAS input:', casEl, 'files:', casEl && casEl.files ? casEl.files.length : 'none');
 
-    console.log('Sending to PHP via FormData...');
+    if(idEl && idEl.files && idEl.files.length > 0){
+      fd.append('id_file', idEl.files[0], idEl.files[0].name);
+      console.log('ID file added:', idEl.files[0].name, idEl.files[0].size, 'bytes');
+    } else { console.warn('No ID file found'); }
+
+    if(casEl && casEl.files && casEl.files.length > 0){
+      fd.append('cas_file', casEl.files[0], casEl.files[0].name);
+      console.log('CAS file added:', casEl.files[0].name, casEl.files[0].size, 'bytes');
+    } else { console.warn('No CAS file found'); }
+
+    /* Log all FormData entries */
+    for(let pair of fd.entries()){ console.log('FormData:', pair[0], typeof pair[1] === 'object' ? pair[1].name||pair[1].size : pair[1]); }
+
     const res  = await fetch('https://www.forestrd.co.uk/send-application.php', {method:'POST', body:fd});
-    const json = await res.json();
-    console.log('PHP result:', json);
-    if(json.success) emailSent = true;
+    const text = await res.text();
+    console.log('PHP raw response:', text);
+    try{
+      const json = JSON.parse(text);
+      console.log('PHP result:', json);
+      if(json.success) emailSent = true;
+    }catch(e){ console.warn('PHP response parse error:', e, text); }
   } catch(err){ console.warn('PHP send error:', err); }
 
   /* Always send Web3Forms backup (plain text, guaranteed delivery) */
