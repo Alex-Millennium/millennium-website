@@ -5022,61 +5022,73 @@ async function submitStudentApp(e){
       doc.setTextColor(190,190,190);doc.setFontSize(7);doc.setFont('helvetica','normal');
       doc.text('Millennium Investments 2000 Ltd · Est.1998 · milleniuminvestments2000.co.uk',W/2,18,{align:'center'});
       doc.text('Submitted: '+new Date().toLocaleString('en-GB'),W/2,24,{align:'center'});
-      y=31;
+      y=31; const LM=10; /* smaller margin = more space */
 
-      /* Draw all fields in two columns */
-      const colW=(W-M*2-5)/2, col2X=M+colW+5;
-      const leftSections=[sections[0],sections[1],sections[2]];
-      const rightSections=[sections[3],sections[4]];
-
-      function renderSections(secList,startX,startY,mW){
-        let ly=startY;
-        secList.forEach(s=>{
-          doc.setFillColor(240,180,41);doc.rect(startX,ly,mW,6.5,'F');
-          doc.setTextColor(10,6,24);doc.setFontSize(8);doc.setFont('helvetica','bold');
-          doc.text(s.title,startX+2,ly+5);ly+=8.5;
-          s.fields.forEach(f=>{
-            if(!f.value)return;
-            doc.setTextColor(100,100,100);doc.setFontSize(7.5);doc.setFont('helvetica','normal');
-            doc.text(f.label+':',startX,ly);
-            doc.setTextColor(10,10,10);doc.setFont('helvetica','bold');
-            const lines=doc.splitTextToSize(String(f.value),mW-33);
-            doc.text(lines,startX+33,ly);
-            ly+=Math.max(6,lines.length*5.5);
-            doc.setDrawColor(225,225,225);doc.line(startX,ly-0.5,startX+mW,ly-0.5);
-          });
-          ly+=3;
+      /* Full-width single column sections */
+      function renderSec(s,sy){
+        doc.setFillColor(240,180,41);doc.rect(LM,sy,W-LM*2,8,'F');
+        doc.setTextColor(10,6,24);doc.setFontSize(9.5);doc.setFont('helvetica','bold');
+        doc.text(s.title,LM+3,sy+6);sy+=10;
+        const colLabel=70, colVal=W-LM*2-colLabel;
+        s.fields.forEach(f=>{
+          if(!f.value)return;
+          /* Label */
+          doc.setFillColor(248,248,248);doc.rect(LM,sy-1,colLabel,8,'F');
+          doc.setTextColor(90,90,90);doc.setFontSize(8.5);doc.setFont('helvetica','normal');
+          doc.text(f.label,LM+2,sy+5);
+          /* Value */
+          doc.setFillColor(255,255,255);doc.rect(LM+colLabel,sy-1,colVal,8,'F');
+          doc.setTextColor(15,15,15);doc.setFont('helvetica','bold');
+          const lines=doc.splitTextToSize(String(f.value),colVal-4);
+          doc.text(lines,LM+colLabel+2,sy+5);
+          const rowH=Math.max(8,lines.length*6);
+          sy+=rowH;
+          doc.setDrawColor(220,220,220);
+          doc.line(LM,sy-1,W-LM,sy-1);
         });
-        return ly;
+        return sy+3;
       }
 
-      const leftEnd=renderSections(leftSections,M,y,colW);
-      const rightEnd=renderSections(rightSections,col2X,y,colW);
-      y=Math.max(leftEnd,rightEnd)+3;
+      sections.forEach(s=>{ y=renderSec(s,y); });
 
-      /* Signature — full width, fits remaining space */
-      const remainH=280-y-18;
-      const sigH=Math.max(12,Math.min(30,remainH));
-      doc.setFillColor(240,180,41);doc.rect(M,y,W-M*2,6.5,'F');
-      doc.setTextColor(10,6,24);doc.setFontSize(8);doc.setFont('helvetica','bold');
-      doc.text('APPLICANT SIGNATURE',M+2,y+5);y+=8;
-      doc.setDrawColor(200,200,200);doc.setFillColor(250,250,250);
-      doc.roundedRect(M,y,W-M*2,sigH,2,2,'FD');
+      /* Signature */
+      const remH=Math.max(25,278-y-12);
+      const sigH=Math.min(40,remH);
+      doc.setFillColor(240,180,41);doc.rect(LM,y,W-LM*2,8,'F');
+      doc.setTextColor(10,6,24);doc.setFontSize(9.5);doc.setFont('helvetica','bold');
+      doc.text('APPLICANT SIGNATURE',LM+3,y+6);y+=10;
+      doc.setDrawColor(200,200,200);doc.setFillColor(252,252,252);
+      doc.roundedRect(LM,y,W-LM*2,sigH,2,2,'FD');
       if(studSigCanvas&&studSigHasData){
-        try{doc.addImage(studSigCanvas.toDataURL('image/png'),'PNG',M+2,y+1,W-M*2-4,sigH-2);}catch(e){}
+        try{doc.addImage(studSigCanvas.toDataURL('image/png'),'PNG',LM+4,y+2,W-LM*2-8,sigH-4);}catch(e){}
       }
-      doc.setTextColor(100,100,100);doc.setFontSize(8);doc.setFont('helvetica','normal');
-      doc.text(applicantName+' — '+new Date().toLocaleDateString('en-GB'),M+2,y+sigH+4.5);
+      doc.setTextColor(90,90,90);doc.setFontSize(8.5);doc.setFont('helvetica','normal');
+      doc.text(applicantName+' — '+new Date().toLocaleDateString('en-GB'),LM+2,y+sigH+5);
 
       /* Footer */
       doc.setFillColor(10,6,24);doc.rect(0,287,W,10,'F');
-      doc.setTextColor(160,160,160);doc.setFontSize(7.5);
-      doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202',M,293);
-      doc.text('Page 1 of 1',W-M,293,{align:'right'});
+      doc.setTextColor(160,160,160);doc.setFontSize(8);
+      doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202',LM,293);
+      doc.text('Page 1 of 1',W-LM,293,{align:'right'});
             /* Get base64 WITHOUT downloading */
       pdfBase64 = doc.output('datauristring').split(',')[1];
     }
   } catch(pdfErr){ console.warn('PDF build error:', pdfErr); }
+
+  /* Read uploaded documents */
+  async function fileToBase64(inputId){
+    const input = document.getElementById(inputId);
+    if(!input || !input.files || !input.files[0]) return null;
+    const file = input.files[0];
+    if(file.size > 4*1024*1024){ showToast(file.name+' is too large (max 4MB)','error'); return null; }
+    return new Promise(res=>{
+      const r=new FileReader();
+      r.onload=e=>res({name:file.name,type:file.type,data:e.target.result.split(',')[1]});
+      r.onerror=()=>res(null);
+      r.readAsDataURL(file);
+    });
+  }
+  const [idDoc, casDoc] = await Promise.all([fileToBase64('idDocument'), fileToBase64('casDocument')]);
 
   /* Send to PHP endpoint with Web3Forms fallback */
   const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
@@ -5093,7 +5105,9 @@ async function submitStudentApp(e){
         applicant_name: applicantName,
         applicant_email: gF('email'),
         summary: summary,
-        pdf_base64: pdfBase64
+        pdf_base64: pdfBase64,
+        id_doc: idDoc,
+        cas_doc: casDoc
       })
     });
     const json = await res.json();
@@ -5129,6 +5143,19 @@ async function submitStudentApp(e){
 
 
 
+
+
+/* ── FILE UPLOAD PREVIEW ─────────────────────────────── */
+document.addEventListener('change', function(e){
+  if(e.target.id === 'idDocument'){
+    const preview = document.getElementById('idDocPreview');
+    if(preview) preview.style.display = e.target.files[0] ? 'block' : 'none';
+  }
+  if(e.target.id === 'casDocument'){
+    const preview = document.getElementById('casDocPreview');
+    if(preview) preview.style.display = e.target.files[0] ? 'block' : 'none';
+  }
+});
 
 /* ── FAQ ACCORDION ───────────────────────────────────────── */
 function toggleFaq(btn){
@@ -6287,6 +6314,23 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
 
       <!-- DECLARATION -->
+      <div class="form-section-title">📎 Required Documents</div>
+      <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:16px;margin-bottom:14px">
+        <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:12px;line-height:1.6">Please upload your ID document and either your CAS letter or Student Certificate. Accepted formats: JPG, PNG, PDF. Max 4MB per file.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Photo ID * <span style="font-size:.72rem;color:rgba(255,255,255,.4)">(Passport, BRP or driving licence)</span></label>
+            <input type="file" name="id_document" id="idDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
+            <div id="idDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CAS Letter or Student Certificate *</label>
+            <input type="file" name="cas_document" id="casDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
+            <div id="casDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+          </div>
+        </div>
+      </div>
+
       <div class="form-section-title">📋 Declaration</div>
       <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.15);border-radius:10px;padding:16px;margin-bottom:16px;font-size:.82rem;color:rgba(255,255,255,.65);line-height:1.75">
         By signing and submitting this application I confirm all information is accurate and complete. I understand this is an application only and does not guarantee a tenancy. I consent to Millennium Investments 2000 Ltd contacting me regarding this application.
@@ -6399,6 +6443,23 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="form-section-title">📝 Additional Information</div>
       <div class="form-row full">
         <div class="form-group"><label class="form-label">Any requirements or questions?</label><textarea name="additional_info" class="form-input form-textarea" placeholder="e.g. accessibility needs, parking, questions…" style="min-height:80px"></textarea></div>
+      </div>
+
+      <div class="form-section-title">📎 Required Documents</div>
+      <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:16px;margin-bottom:14px">
+        <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:12px;line-height:1.6">Please upload your ID document and either your CAS letter or Student Certificate. Accepted formats: JPG, PNG, PDF. Max 4MB per file.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Photo ID * <span style="font-size:.72rem;color:rgba(255,255,255,.4)">(Passport, BRP or driving licence)</span></label>
+            <input type="file" name="id_document" id="idDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
+            <div id="idDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CAS Letter or Student Certificate *</label>
+            <input type="file" name="cas_document" id="casDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
+            <div id="casDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+          </div>
+        </div>
       </div>
 
       <div class="form-section-title">📋 Declaration</div>
