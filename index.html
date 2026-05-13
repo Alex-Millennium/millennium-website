@@ -5008,19 +5008,13 @@ async function submitStudentApp(e){
 
       /* Header */
       doc.setFillColor(10,6,24); doc.rect(0,0,W,38,'F');
-      /* Try to add logo */
+      /* Add logo from nav */
       try {
-        const logoEl = document.querySelector('.nav-logo img, header img, .logo img');
-        if(logoEl && logoEl.src){
-          const logoCanvas = document.createElement('canvas');
-          logoCanvas.width=120; logoCanvas.height=60;
-          const lCtx = logoCanvas.getContext('2d');
-          const lImg = new Image(); lImg.crossOrigin='anonymous';
-          await new Promise(res=>{ lImg.onload=res; lImg.onerror=res; lImg.src=logoEl.src; });
-          lCtx.drawImage(lImg,0,0,120,60);
-          doc.addImage(logoCanvas.toDataURL(),'PNG',M,4,30,15);
+        const logoEl = document.querySelector('.nav-logo img');
+        if(logoEl && logoEl.src && logoEl.src.startsWith('data:')){
+          doc.addImage(logoEl.src,'PNG',M,4,28,14);
         }
-      } catch(le){}
+      } catch(le){ console.warn('Logo error:',le); }
       doc.setTextColor(240,180,41); doc.setFontSize(15); doc.setFont('helvetica','bold');
       doc.text('Student Accommodation Application', W/2, 15, {align:'center'});
       doc.setTextColor(200,200,200); doc.setFontSize(9); doc.setFont('helvetica','normal');
