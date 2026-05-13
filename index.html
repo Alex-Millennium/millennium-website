@@ -1857,7 +1857,7 @@ function initFirebase(){
       <div class="sec-hd">
         <h2 class="sec-title">Transparent <span class="gold-text">Pricing</span></h2>
         <p class="sec-sub">All prices include bills, contents insurance and maintenance. No deposit. No hidden fees.<br>
-          <span style="font-size:.82rem;color:rgba(255,255,255,.45)">Save 5% when paying annually &nbsp;·&nbsp; 1 month free when paying termly</span>
+          <span style="font-size:.82rem;color:rgba(255,255,255,.45)">Save 5% when paying annually &nbsp;·&nbsp; Loyalty bonus: 12th month free for returning termly payers</span>
         </p>
       </div>
 
@@ -1917,7 +1917,7 @@ function initFirebase(){
       <div style="margin-top:20px;padding:14px 20px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:10px;font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.7">
         💡 All prices include gas, electric, water, 100Mbps WiFi, contents insurance and maintenance. No tenancy deposit required.
         A <strong style="color:var(--gold-400)">5% discount</strong> applies when paying annually.
-        <strong style="color:var(--gold-400)">1 month free</strong> when paying termly.
+        <strong style="color:var(--gold-400)">Loyalty bonus</strong> — 12th month free when returning for next academic year (termly payers).
       </div>
     </div>
   </section>
@@ -3121,13 +3121,13 @@ const STUD_FEATURES = [
   {icon:'🏦', title:'No Tenancy Deposit',        desc:'Save hundreds — we do not require a deposit when you move in.'},
   {icon:'⚡', title:'All Bills Included',         desc:'Gas, electric, water, internet — all covered. No utility bond required.'},
   {icon:'📡', title:'100 Mbps Free WiFi',         desc:'Fast 100 Mbps broadband throughout every room and communal area — included in your rent.'},
-  {icon:'📹', title:'4K CCTV Security',           desc:'State-of-the-art 4K CCTV cameras across all properties for your safety and peace of mind.'},
+  {icon:'📹', title:'4K Ultra HD 4K CCTV',           desc:'State-of-the-art 4K CCTV cameras across all properties for your safety and peace of mind.'},
   {icon:'👥', title:'24/7 On-Site Support',       desc:'Our team is present on-site 24 hours a day, every day of the year.'},
   {icon:'🚗', title:'Free On-Site Parking',       desc:'Free parking available plus a secure bike shed for cyclists.'},
   {icon:'🛡️', title:'Free Contents Insurance',    desc:'Complimentary contents insurance via Gallagher — fully free. Click to sign up instantly.',link:'https://gallagherassist.ajg.com/forest-road-houses'},
   {icon:'📋', title:'No Agency Fees',             desc:'Zero admin or agency fees — what you see is what you pay.'},
   {icon:'📦', title:'4 Free Storage Boxes',       desc:'Four medium-size storage boxes provided free — perfect for keeping your room tidy or storing over summer.'},
-  {icon:'🎁', title:'1 Month Free',               desc:'Receive one month rent-free when paying termly. A great saving across your tenancy.'},
+  {icon:'🎁', title:'1 Month Free',               desc:'Loyalty bonus — sign for the next academic year paying termly and receive your 12th month rent-free.'},
   {icon:'💸', title:'5% Annual Discount',         desc:'Pay your rent annually and save 5% on your total rent — reducing your costs even further.'},
   {icon:'🔒', title:'Rates Frozen Since 2024',    desc:'Our rent rates have been frozen since 2024 — no unexpected increases, just consistent affordable pricing.'},
   {icon:'🔑', title:'First Refusal for Returners',desc:'Returning students get priority booking — no waiting lists, ever.'},
@@ -5007,13 +5007,27 @@ async function submitStudentApp(e){
       ];
 
       /* Header */
-      doc.setFillColor(10,6,24); doc.rect(0,0,W,32,'F');
-      doc.setTextColor(240,180,41); doc.setFontSize(16); doc.setFont('helvetica','bold');
-      doc.text('Student Accommodation Application', W/2, 13, {align:'center'});
-      doc.setTextColor(180,180,180); doc.setFontSize(9); doc.setFont('helvetica','normal');
-      doc.text('Millennium Investments 2000 Ltd', W/2, 21, {align:'center'});
-      doc.text('Submitted: '+new Date().toLocaleString('en-GB'), W/2, 27, {align:'center'});
-      y = 40;
+      doc.setFillColor(10,6,24); doc.rect(0,0,W,38,'F');
+      /* Try to add logo */
+      try {
+        const logoEl = document.querySelector('.nav-logo img, header img, .logo img');
+        if(logoEl && logoEl.src){
+          const logoCanvas = document.createElement('canvas');
+          logoCanvas.width=120; logoCanvas.height=60;
+          const lCtx = logoCanvas.getContext('2d');
+          const lImg = new Image(); lImg.crossOrigin='anonymous';
+          await new Promise(res=>{ lImg.onload=res; lImg.onerror=res; lImg.src=logoEl.src; });
+          lCtx.drawImage(lImg,0,0,120,60);
+          doc.addImage(logoCanvas.toDataURL(),'PNG',M,4,30,15);
+        }
+      } catch(le){}
+      doc.setTextColor(240,180,41); doc.setFontSize(15); doc.setFont('helvetica','bold');
+      doc.text('Student Accommodation Application', W/2, 15, {align:'center'});
+      doc.setTextColor(200,200,200); doc.setFontSize(9); doc.setFont('helvetica','normal');
+      doc.text('Millennium Investments 2000 Ltd  ·  Est. 1998', W/2, 23, {align:'center'});
+      doc.text('milleniuminvestments2000.co.uk  ·  enquiries@forestrd.co.uk', W/2, 29, {align:'center'});
+      doc.text('Submitted: '+new Date().toLocaleString('en-GB'), W/2, 35, {align:'center'});
+      y = 46;
 
       sections.forEach(s=>{
         if(y>265){doc.addPage();y=14;}
@@ -5062,9 +5076,13 @@ async function submitStudentApp(e){
     }
   } catch(pdfErr){ console.warn('PDF build error:', pdfErr); }
 
-  /* Send to PHP endpoint */
+  /* Send to PHP endpoint with Web3Forms fallback */
+  const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
+  let emailSent = false;
+
+  /* Try PHP first (sends PDF attachment) */
   try {
-    const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
+    console.log('Sending to PHP... PDF size:', pdfBase64.length, 'bytes');
     const res = await fetch('https://www.forestrd.co.uk/send-application.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -5078,7 +5096,24 @@ async function submitStudentApp(e){
     });
     const json = await res.json();
     console.log('PHP result:', json);
-  } catch(err){ console.warn('Send error:', err); }
+    if(json.success) emailSent = true;
+  } catch(err){ console.warn('PHP send error:', err); }
+
+  /* Always send Web3Forms backup (plain text, guaranteed delivery) */
+  try {
+    const w3data = new FormData();
+    w3data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
+    w3data.append('subject', 'Student Application: '+applicantName);
+    w3data.append('from_name', 'Millennium Investments Website');
+    w3data.append('message', summary);
+    fields.filter(f=>f.value).forEach(f=>w3data.append(f.label, f.value));
+    const w3res = await fetch('https://api.web3forms.com/submit', {method:'POST', body:w3data});
+    const w3json = await w3res.json();
+    console.log('Web3Forms result:', w3json);
+    if(w3json.success) emailSent = true;
+  } catch(err){ console.warn('Web3Forms error:', err); }
+
+  console.log('Email sent:', emailSent);
 
   /* Show success — no PDF download */
   form.style.display='none';
@@ -6305,11 +6340,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="form-group">
           <label class="form-label">Tenancy Length *</label>
           <select name="tenancy_length" class="form-input form-select" required>
-            <option value="">Select…</option>
-            <option>6 Months</option>
+            <option value="">Select tenancy length…</option>
+            <option>11 Months</option>
             <option>12 Months</option>
-            <option>18 Months</option>
-            <option>24 Months</option>
             <option>Flexible</option>
           </select>
         </div>
@@ -6762,7 +6795,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay for broadband or internet?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, this is fully included in the rent.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you tell me more about the rent-free 12th month offer?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The rent-free 12th month offer is available to all returning students who have chosen to stay with us for the following academic year. This offer applies to termly paying students only. Please note, this offer is not available to students who have chosen to pay monthly or annually in advance.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you tell me more about the rent-free 12th month offer?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The rent-free 12th month is a loyalty bonus available to returning students who sign for the next academic year. It applies to termly paying students only — if you stay with us and renew your tenancy for the following academic year, your 12th month is rent-free. This offer is not available to students paying monthly or annually in advance.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When is the rent due?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>After the September rent has been paid, our rents are due termly as follows: Autumn term rent is due by 1st October; Spring term rent is due by 15th January; Summer rent is due by 23rd April.</p></div></div>
       </div>
@@ -6847,5 +6880,141 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
+</body>
+</html<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+
+  <div class="page-hero">
+    <div class="ph-inner">
+      <div class="breadcrumb">
+        <a onclick="showPage('home')">Home</a>
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="cur">About Us</span>
+      </div>
+      <h1 class="ph-title">About <span class="gold-text">Millennium Investments</span></h1>
+      <p class="ph-sub">A family-run property company with over 27 years of experience — built on trust, transparency and genuine care for our tenants.</p>
+    </div>
+  </div>
+
+  <!-- OUR STORY -->
+  <section class="section bg-dark">
+    <div class="sec-in">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+        <div>
+          <div class="sec-tag">Our Story</div>
+          <h2 class="sec-title" style="font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:20px">Building Homes &amp; <span class="gold-text">Communities Since 1998</span></h2>
+          <p style="font-size:.95rem;color:rgba(255,255,255,.65);line-height:1.85;margin-bottom:16px">Millennium Investments 2000 Ltd was founded in 1998 in Colchester, Essex, with a simple but powerful vision: to provide high-quality, affordable accommodation that students and families could genuinely call home.</p>
+          <p style="font-size:.95rem;color:rgba(255,255,255,.65);line-height:1.85;margin-bottom:16px">What began as a small portfolio of properties has grown into a well-established property management company operating across Colchester and Ipswich — serving hundreds of students and private tenants every year.</p>
+          <p style="font-size:.95rem;color:rgba(255,255,255,.65);line-height:1.85">Over the years, we have built a reputation not just for the quality of our properties, but for how we treat the people who live in them. We believe that a well-managed home makes a real difference to our tenants' wellbeing, studies, and daily lives.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:rgba(240,180,41,0.08);border:1px solid rgba(240,180,41,0.2);border-radius:16px;padding:28px 20px;text-align:center">
+            <div style="font-size:2.2rem;font-weight:900;color:var(--gold-400);line-height:1">1998</div>
+            <div style="font-size:.8rem;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Year Founded</div>
+          </div>
+          <div style="background:rgba(240,180,41,0.08);border:1px solid rgba(240,180,41,0.2);border-radius:16px;padding:28px 20px;text-align:center">
+            <div style="font-size:2.2rem;font-weight:900;color:var(--gold-400);line-height:1">200+</div>
+            <div style="font-size:.8rem;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Properties Managed</div>
+          </div>
+          <div style="background:rgba(240,180,41,0.08);border:1px solid rgba(240,180,41,0.2);border-radius:16px;padding:28px 20px;text-align:center">
+            <div style="font-size:2.2rem;font-weight:900;color:var(--gold-400);line-height:1">1,000+</div>
+            <div style="font-size:.8rem;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Happy Tenants</div>
+          </div>
+          <div style="background:rgba(196,30,58,0.12);border:1px solid rgba(196,30,58,0.25);border-radius:16px;padding:28px 20px;text-align:center">
+            <div style="font-size:2.2rem;font-weight:900;color:#F07080;line-height:1">27+</div>
+            <div style="font-size:.8rem;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Years Experience</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT DRIVES US -->
+  <section class="section bg-base">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Our Values</div>
+        <h2 class="sec-title">What <span class="gold-text">Drives Us</span></h2>
+        <p class="sec-sub">Everything we do is guided by three core principles.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">
+        <div style="background:rgba(8,4,24,.6);border:1px solid rgba(240,180,41,.15);border-radius:16px;padding:28px;text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:14px">🤝</div>
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:10px">Trust &amp; Transparency</h3>
+          <p style="font-size:.875rem;color:rgba(255,255,255,.55);line-height:1.75">We believe in honest, upfront communication. No hidden fees, no surprises — just clear information from the moment you enquire to the day you move out.</p>
+        </div>
+        <div style="background:rgba(8,4,24,.6);border:1px solid rgba(240,180,41,.15);border-radius:16px;padding:28px;text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:14px">💷</div>
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:10px">Genuine Affordability</h3>
+          <p style="font-size:.875rem;color:rgba(255,255,255,.55);line-height:1.75">We've always believed that quality accommodation shouldn't come at an unreasonable price. Our pricing is competitive, fair and includes everything — bills, WiFi, insurance and more.</p>
+        </div>
+        <div style="background:rgba(8,4,24,.6);border:1px solid rgba(240,180,41,.15);border-radius:16px;padding:28px;text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:14px">🏠</div>
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:10px">Homes, Not Just Properties</h3>
+          <p style="font-size:.875rem;color:rgba(255,255,255,.55);line-height:1.75">We manage every property as if it were our own. Regular maintenance, prompt repairs and 24/7 on-site support mean our tenants always have someone to turn to.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR LOCATIONS -->
+  <section class="section bg-dark">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Where We Operate</div>
+        <h2 class="sec-title">Colchester <span class="gold-text">&amp; Ipswich</span></h2>
+        <p class="sec-sub">Our properties are located in two of Essex and Suffolk's most vibrant university and commuter towns.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div style="background:rgba(8,4,24,.6);border:1px solid rgba(160,80,255,.18);border-radius:16px;padding:28px">
+          <div style="font-size:1.5rem;margin-bottom:10px">📍</div>
+          <h3 style="font-size:1.05rem;font-weight:800;color:var(--gold-400);margin-bottom:10px">Colchester, Essex</h3>
+          <p style="font-size:.875rem;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:14px">Our main base of operations. We manage student accommodation across three complexes — Forest Road House, Candan House and Greenstead House — all within easy reach of the University of Essex and Colchester town centre.</p>
+          <div style="font-size:.8rem;color:rgba(255,255,255,.4)">🎓 University of Essex &nbsp;·&nbsp; 🏙️ Colchester City Centre &nbsp;·&nbsp; 🚆 Colchester Rail Station</div>
+        </div>
+        <div style="background:rgba(8,4,24,.6);border:1px solid rgba(160,80,255,.18);border-radius:16px;padding:28px">
+          <div style="font-size:1.5rem;margin-bottom:10px">📍</div>
+          <h3 style="font-size:1.05rem;font-weight:800;color:var(--gold-400);margin-bottom:10px">Ipswich, Suffolk</h3>
+          <p style="font-size:.875rem;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:14px">We also manage a portfolio of private rental properties across Ipswich — ideal for families, couples and professionals looking for well-maintained homes in a great location.</p>
+          <div style="font-size:.8rem;color:rgba(255,255,255,.4)">🏡 Family Homes &nbsp;·&nbsp; 🚆 Ipswich Rail Station &nbsp;·&nbsp; 🛒 Town Centre Amenities</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMING SOON -->
+  <section class="section bg-base">
+    <div class="sec-in">
+      <div class="gym-banner fade-in">
+        <div class="gym-banner-glow"></div>
+        <div class="gym-banner-content">
+          <div class="gym-coming-pill">🚧 Coming Soon</div>
+          <h2 class="gym-title">What's <span class="gold-text">Next For Us</span></h2>
+          <p class="gym-sub">We're constantly investing in our properties and services. Our latest project — a brand new Boxing Gym and Fitness Centre at Forest Road House and Candan House — is currently in development, bringing even more value to our student tenants.</p>
+          <div class="gym-features">
+            <div class="gym-feat"><span class="gym-feat-icon">🥊</span><span>Boxing Gym</span></div>
+            <div class="gym-feat"><span class="gym-feat-icon">🏋️</span><span>Fitness Centre</span></div>
+            <div class="gym-feat"><span class="gym-feat-icon">📈</span><span>Expanding Portfolio</span></div>
+          </div>
+        </div>
+        <div class="gym-icons"><div class="gym-icon-big">🏗️</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section bg-dark">
+    <div class="sec-in" style="text-align:center;max-width:600px;margin:0 auto">
+      <div class="sec-tag">Get In Touch</div>
+      <h2 class="sec-title">Ready to <span class="gold-text">Find Your Home?</span></h2>
+      <p class="sec-sub" style="margin-bottom:28px">Whether you're a student looking for your next room or a family searching for a private rental, we'd love to hear from you.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="showPage('student')">Student Accommodation →</button>
+        <button class="btn btn-ghost" onclick="showPage('contact')">Contact Us</button>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page-about -->
 </body>
 </html>
