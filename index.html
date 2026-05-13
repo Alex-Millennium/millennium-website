@@ -5076,19 +5076,9 @@ async function submitStudentApp(e){
   } catch(pdfErr){ console.warn('PDF build error:', pdfErr); }
 
   /* Read uploaded documents */
-  async function fileToBase64(inputId){
-    const input = document.getElementById(inputId);
-    if(!input || !input.files || !input.files[0]) return null;
-    const file = input.files[0];
-    if(file.size > 4*1024*1024){ showToast(file.name+' is too large (max 4MB)','error'); return null; }
-    return new Promise(res=>{
-      const r=new FileReader();
-      r.onload=e=>res({name:file.name,type:file.type,data:e.target.result.split(',')[1]});
-      r.onerror=()=>res(null);
-      r.readAsDataURL(file);
-    });
-  }
-  const [idDoc, casDoc] = await Promise.all([fileToBase64('idDocument'), fileToBase64('casDocument')]);
+  const [idDoc, casDoc] = await Promise.all([readUploadedFile('idDocument'), readUploadedFile('casDocument')]);
+  console.log('ID doc:', idDoc ? idDoc.name+' ('+idDoc.data.length+' chars)' : 'none');
+  console.log('CAS doc:', casDoc ? casDoc.name+' ('+casDoc.data.length+' chars)' : 'none');
 
   /* Send to PHP endpoint with Web3Forms fallback */
   const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
@@ -5144,6 +5134,28 @@ async function submitStudentApp(e){
 
 
 
+
+
+/* ── FILE UPLOAD READER ──────────────────────────────── */
+async function readUploadedFile(inputId){
+  const input = document.getElementById(inputId);
+  if(!input || !input.files || !input.files[0]) return null;
+  const file = input.files[0];
+  if(file.size > 5*1024*1024){
+    showToast(file.name+' is too large (max 5MB)','error');
+    return null;
+  }
+  return new Promise((resolve)=>{
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const dataUrl = e.target.result;
+      const base64  = dataUrl.split(',')[1];
+      resolve({ name: file.name, type: file.type, data: base64 });
+    };
+    reader.onerror = ()=> resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
 
 /* ── FILE UPLOAD PREVIEW ─────────────────────────────── */
 document.addEventListener('change', function(e){
