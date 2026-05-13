@@ -5011,83 +5011,69 @@ async function submitStudentApp(e){
         {title:'ADDITIONAL',           fields:fields.slice(19)},
       ];
 
-      /* ── COMPACT SINGLE-PAGE PDF LAYOUT ─────────────────── */
-      /* Header — slim */
-      doc.setFillColor(10,6,24); doc.rect(0,0,W,30,'F');
+      /* ── SINGLE PAGE PDF ─────────────────────────────────── */
+      doc.setFillColor(10,6,24); doc.rect(0,0,W,28,'F');
       try {
-        const logoEl = document.querySelector('.nav-logo img');
-        if(logoEl && logoEl.src && logoEl.src.startsWith('data:')){
-          doc.addImage(logoEl.src,'PNG',M,3,22,12);
-        }
-      } catch(le){}
-      doc.setTextColor(240,180,41); doc.setFontSize(13); doc.setFont('helvetica','bold');
-      doc.text('Student Accommodation Application', W/2, 12, {align:'center'});
-      doc.setTextColor(190,190,190); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
-      doc.text('Millennium Investments 2000 Ltd  ·  Est. 1998  ·  milleniuminvestments2000.co.uk', W/2, 19, {align:'center'});
-      doc.text('Submitted: '+new Date().toLocaleString('en-GB'), W/2, 25, {align:'center'});
-      y = 33;
+        const lg=document.querySelector('.nav-logo img');
+        if(lg&&lg.src.startsWith('data:')) doc.addImage(lg.src,'PNG',M,3,20,11);
+      }catch(e){}
+      doc.setTextColor(240,180,41);doc.setFontSize(13);doc.setFont('helvetica','bold');
+      doc.text('Student Accommodation Application',W/2,11,{align:'center'});
+      doc.setTextColor(190,190,190);doc.setFontSize(7);doc.setFont('helvetica','normal');
+      doc.text('Millennium Investments 2000 Ltd · Est.1998 · milleniuminvestments2000.co.uk',W/2,18,{align:'center'});
+      doc.text('Submitted: '+new Date().toLocaleString('en-GB'),W/2,24,{align:'center'});
+      y=31;
 
-      /* Two-column layout: left col = sections 0-2, right col = sections 3-4 */
-      const colW = (W - M*2 - 6) / 2;
-      const col2X = M + colW + 6;
+      /* Draw all fields in two columns */
+      const colW=(W-M*2-5)/2, col2X=M+colW+5;
+      const leftSections=[sections[0],sections[1],sections[2]];
+      const rightSections=[sections[3],sections[4]];
 
-      function drawSection(s, startX, startY, maxW){
-        let ly = startY;
-        doc.setFillColor(240,180,41); doc.rect(startX, ly, maxW, 5.5,'F');
-        doc.setTextColor(10,6,24); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
-        doc.text(s.title, startX+2, ly+4); ly+=7;
-        s.fields.forEach(f=>{
-          if(!f.value) return;
-          doc.setTextColor(110,110,110); doc.setFontSize(6.5); doc.setFont('helvetica','normal');
-          doc.text(f.label+':', startX, ly);
-          doc.setTextColor(15,15,15); doc.setFont('helvetica','bold');
-          const lines=doc.splitTextToSize(String(f.value), maxW-32);
-          doc.text(lines, startX+32, ly);
-          ly+=Math.max(5, lines.length*4.5);
-          doc.setDrawColor(220,220,220);
-          doc.line(startX, ly-0.5, startX+maxW, ly-0.5);
+      function renderSections(secList,startX,startY,mW){
+        let ly=startY;
+        secList.forEach(s=>{
+          doc.setFillColor(240,180,41);doc.rect(startX,ly,mW,5,'F');
+          doc.setTextColor(10,6,24);doc.setFontSize(6.5);doc.setFont('helvetica','bold');
+          doc.text(s.title,startX+2,ly+3.5);ly+=6.5;
+          s.fields.forEach(f=>{
+            if(!f.value)return;
+            doc.setTextColor(100,100,100);doc.setFontSize(6.5);doc.setFont('helvetica','normal');
+            doc.text(f.label+':',startX,ly);
+            doc.setTextColor(10,10,10);doc.setFont('helvetica','bold');
+            const lines=doc.splitTextToSize(String(f.value),mW-30);
+            doc.text(lines,startX+30,ly);
+            ly+=Math.max(5,lines.length*4.5);
+            doc.setDrawColor(225,225,225);doc.line(startX,ly-0.5,startX+mW,ly-0.5);
+          });
+          ly+=2;
         });
-        return ly+2;
+        return ly;
       }
 
-      /* Left column — Personal, University, Room Preferences */
-      let leftY = y;
-      leftY = drawSection(sections[0], M, leftY, colW);
-      leftY += 2;
-      leftY = drawSection(sections[1], M, leftY, colW);
-      leftY += 2;
-      leftY = drawSection(sections[2], M, leftY, colW);
+      const leftEnd=renderSections(leftSections,M,y,colW);
+      const rightEnd=renderSections(rightSections,col2X,y,colW);
+      y=Math.max(leftEnd,rightEnd)+3;
 
-      /* Right column — Emergency, Additional */
-      let rightY = y;
-      rightY = drawSection(sections[3], col2X, rightY, colW);
-      rightY += 2;
-      rightY = drawSection(sections[4], col2X, rightY, colW);
-
-      /* Signature — below both columns, full width */
-      y = Math.max(leftY, rightY) + 4;
-
-      /* Check if signature fits — if not, reduce sig box height */
-      const sigBoxH = Math.min(28, 278 - y - 16);
-      if(sigBoxH > 10 && studSigCanvas && studSigHasData){
-        doc.setFillColor(240,180,41); doc.rect(M,y,W-M*2,5.5,'F');
-        doc.setTextColor(10,6,24); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
-        doc.text('APPLICANT SIGNATURE', M+2, y+4); y+=7;
-        doc.setDrawColor(200,200,200); doc.setFillColor(252,252,252);
-        doc.roundedRect(M,y,W-M*2,sigBoxH,2,2,'FD');
-        try{ doc.addImage(studSigCanvas.toDataURL('image/png'),'PNG',M+3,y+2,W-M*2-6,sigBoxH-4); }catch(e){}
-        doc.setTextColor(120,120,120); doc.setFontSize(7); doc.setFont('helvetica','normal');
-        doc.text(applicantName+'  —  '+new Date().toLocaleDateString('en-GB'), M+2, y+sigBoxH+4);
-        y+=sigBoxH+8;
+      /* Signature — full width, fits remaining space */
+      const remainH=280-y-18;
+      const sigH=Math.max(12,Math.min(30,remainH));
+      doc.setFillColor(240,180,41);doc.rect(M,y,W-M*2,5,'F');
+      doc.setTextColor(10,6,24);doc.setFontSize(6.5);doc.setFont('helvetica','bold');
+      doc.text('APPLICANT SIGNATURE',M+2,y+3.5);y+=6.5;
+      doc.setDrawColor(200,200,200);doc.setFillColor(250,250,250);
+      doc.roundedRect(M,y,W-M*2,sigH,2,2,'FD');
+      if(studSigCanvas&&studSigHasData){
+        try{doc.addImage(studSigCanvas.toDataURL('image/png'),'PNG',M+2,y+1,W-M*2-4,sigH-2);}catch(e){}
       }
+      doc.setTextColor(120,120,120);doc.setFontSize(6.5);doc.setFont('helvetica','normal');
+      doc.text(applicantName+' — '+new Date().toLocaleDateString('en-GB'),M+2,y+sigH+3.5);
 
-      /* Footer — single page */
-      doc.setFillColor(10,6,24); doc.rect(0,287,W,10,'F');
-      doc.setTextColor(150,150,150); doc.setFontSize(6.5);
-      doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202 · milleniuminvestments2000.co.uk', M, 293);
-      doc.text('Page 1 of 1', W-M, 293, {align:'right'});
-
-      /* Get base64 WITHOUT downloading */
+      /* Footer */
+      doc.setFillColor(10,6,24);doc.rect(0,287,W,10,'F');
+      doc.setTextColor(160,160,160);doc.setFontSize(6.5);
+      doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202',M,293);
+      doc.text('Page 1 of 1',W-M,293,{align:'right'});
+            /* Get base64 WITHOUT downloading */
       pdfBase64 = doc.output('datauristring').split(',')[1];
     }
   } catch(pdfErr){ console.warn('PDF build error:', pdfErr); }
@@ -5688,127 +5674,6 @@ function generatePDF(title, sections){
 }
 
 
-async function generateStudentPDF(sections, sigDataUrl, applicantName){
-  /* Try jsPDF */
-  const tryPDF = async () => {
-    if(typeof window.jspdf === 'undefined') return false;
-    try {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
-      const W = 210, M = 14;
-      let y = 14;
-
-      /* Header */
-      doc.setFillColor(10,6,24);
-      doc.rect(0,0,W,32,'F');
-      doc.setTextColor(240,180,41);
-      doc.setFontSize(18); doc.setFont('helvetica','bold');
-      doc.text('Student Accommodation Application', W/2, 13, {align:'center'});
-      doc.setTextColor(180,180,180);
-      doc.setFontSize(9); doc.setFont('helvetica','normal');
-      doc.text('Millennium Investments 2000 Ltd  ·  milleniuminvestments2000.co.uk', W/2, 21, {align:'center'});
-      doc.text('Submitted: '+new Date().toLocaleString('en-GB'), W/2, 27, {align:'center'});
-      y = 40;
-
-      sections.forEach(s => {
-        if(s.label === 'ADDITIONAL INFORMATION' && sigDataUrl) return; /* handled below */
-        /* Section bar */
-        if(y > 265){ doc.addPage(); y = 14; }
-        doc.setFillColor(240,180,41);
-        doc.rect(M, y, W-M*2, 7, 'F');
-        doc.setTextColor(10,6,24);
-        doc.setFontSize(8); doc.setFont('helvetica','bold');
-        doc.text(s.label, M+3, y+5);
-        y += 10;
-
-        s.fields.forEach(f => {
-          if(!f.value || f.label === 'Signature') return;
-          if(y > 272){ doc.addPage(); y = 14; }
-          doc.setTextColor(100,100,100);
-          doc.setFontSize(8); doc.setFont('helvetica','normal');
-          doc.text(f.label+':', M, y);
-          doc.setTextColor(20,20,20);
-          doc.setFont('helvetica','bold');
-          const lines = doc.splitTextToSize(String(f.value), W-M*2-55);
-          doc.text(lines, M+55, y);
-          y += Math.max(6, lines.length*5);
-          doc.setDrawColor(230,230,230);
-          doc.line(M, y-1, W-M, y-1);
-        });
-        y += 3;
-      });
-
-      /* Signature section */
-      if(sigDataUrl){
-        if(y > 220){ doc.addPage(); y = 14; }
-        doc.setFillColor(240,180,41);
-        doc.rect(M, y, W-M*2, 7, 'F');
-        doc.setTextColor(10,6,24);
-        doc.setFontSize(8); doc.setFont('helvetica','bold');
-        doc.text('SIGNATURE', M+3, y+5);
-        y += 12;
-        doc.setDrawColor(200,200,200);
-        doc.setFillColor(252,252,252);
-        doc.roundedRect(M, y, W-M*2, 40, 3, 3, 'FD');
-        try { doc.addImage(sigDataUrl, 'PNG', M+5, y+5, W-M*2-10, 30); }
-        catch(e){}
-        doc.setTextColor(120,120,120);
-        doc.setFontSize(8); doc.setFont('helvetica','normal');
-        doc.text('Digital signature — '+applicantName, M+3, y+44);
-        y += 50;
-      }
-
-      /* Footer */
-      const pageCount = doc.internal.getNumberOfPages();
-      for(let i=1; i<=pageCount; i++){
-        doc.setPage(i);
-        doc.setFillColor(10,6,24);
-        doc.rect(0, 287, W, 10, 'F');
-        doc.setTextColor(150,150,150);
-        doc.setFontSize(7);
-        doc.text('Millennium Investments 2000 Ltd  ·  enquiries@forestrd.co.uk  ·  01206 500202', M, 293);
-        doc.text(`Page ${i} of ${pageCount}`, W-M, 293, {align:'right'});
-      }
-
-      const fname = 'Student_Application_'+applicantName.replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
-      /* Get base64 PDF for email attachment */
-      const pdfBase64 = doc.output('datauristring');
-      /* Send PDF via PHP endpoint on forestrd.co.uk */
-      try {
-        const appType = fname.includes('Private') ? 'Private Rental' : 'Student Accommodation';
-        const summaryLines = [];
-        sections.forEach(s=>s.fields.forEach(f=>{ if(f.value && f.label!=='Signature') summaryLines.push(f.label+': '+f.value); }));
-        const emailRes = await fetch('https://www.forestrd.co.uk/send-application.php', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            app_type: appType,
-            applicant_name: applicantName,
-            applicant_email: sections.flatMap(s=>s.fields).find(f=>f.label==='Email'||f.label==='Email Address')?.value||'',
-            summary: summaryLines.join('\n'),
-            pdf_base64: doc.output('datauristring').split(',')[1]
-          })
-        });
-        const emailJson = await emailRes.json();
-        console.log('PHP mailer result:', emailJson);
-        if(emailJson.success){
-          showToast('Application submitted — PDF sent to our team!','success');
-        }
-      } catch(e){ console.warn('PHP mailer error:', e); }
-      /* Do NOT auto-download — email is sent to the company instead */
-      return true;
-    } catch(err){ console.warn('PDF error:', err); return false; }
-  };
-
-  /* Try immediately, then retry after delay if jsPDF not loaded yet */
-  if(!await tryPDF()){
-    setTimeout(async ()=>{
-      if(!await tryPDF()){
-        showToast('PDF generation failed — please screenshot your application for your records.','error');
-      }
-    }, 2000);
-  }
-}
 
 /* ============================================================
    ADVERTS MANAGER
