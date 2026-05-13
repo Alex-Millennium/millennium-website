@@ -5080,26 +5080,31 @@ async function submitStudentApp(e){
   console.log('ID doc:', idDoc ? idDoc.name+' ('+idDoc.data.length+' chars)' : 'none');
   console.log('CAS doc:', casDoc ? casDoc.name+' ('+casDoc.data.length+' chars)' : 'none');
 
-  /* Send to PHP endpoint with Web3Forms fallback */
+  /* Send to PHP using FormData — proper multipart upload */
   const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
   let emailSent = false;
 
-  /* Try PHP first (sends PDF attachment) */
   try {
-    console.log('Sending to PHP... PDF size:', pdfBase64.length, 'bytes');
-    const res = await fetch('https://www.forestrd.co.uk/send-application.php', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        app_type: 'Student Accommodation Application',
-        applicant_name: applicantName,
-        applicant_email: gF('email'),
-        summary: summary,
-        pdf_base64: pdfBase64,
-        id_doc: idDoc,
-        cas_doc: casDoc
-      })
-    });
+    const fd = new FormData();
+    fd.append('app_type',        'Student Accommodation Application');
+    fd.append('applicant_name',  applicantName);
+    fd.append('applicant_email', gF('email'));
+    fd.append('summary',         summary);
+
+    /* Attach PDF as a blob */
+    if(pdfBase64){
+      const pdfBytes = Uint8Array.from(atob(pdfBase64), c=>c.charCodeAt(0));
+      fd.append('pdf_file', new Blob([pdfBytes],{type:'application/pdf'}), applicantName.replace(/ /g,'_')+'_Application.pdf');
+    }
+
+    /* Attach ID document directly from file input */
+    const idInput  = document.getElementById('idDocument');
+    const casInput = document.getElementById('casDocument');
+    if(idInput  && idInput.files[0])  fd.append('id_file',  idInput.files[0],  idInput.files[0].name);
+    if(casInput && casInput.files[0]) fd.append('cas_file', casInput.files[0], casInput.files[0].name);
+
+    console.log('Sending to PHP via FormData...');
+    const res  = await fetch('https://www.forestrd.co.uk/send-application.php', {method:'POST', body:fd});
     const json = await res.json();
     console.log('PHP result:', json);
     if(json.success) emailSent = true;
