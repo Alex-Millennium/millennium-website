@@ -4366,11 +4366,10 @@ async function doLogin(){
     } finally {
       if(btn){ btn.textContent='Sign In'; btn.disabled=false; }
     }
-  } else if(pwd === 'admin2000'){
-    /* Local dev fallback */
-    showAdminDash();
   } else {
-    showToast('Incorrect password.','error');
+    /* Firebase failed to load — do NOT allow password fallback */
+    showToast('Authentication service unavailable. Please check your connection and reload the page.','error');
+    console.error('Login blocked: Firebase SDK not loaded. Ensure firebase-app.js / firebase-auth.js load correctly.');
   }
 }
 
