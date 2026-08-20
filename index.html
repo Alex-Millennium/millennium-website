@@ -5193,32 +5193,242 @@ function closePrivateAppModal(){
 async function submitPrivateApp(e){
   e.preventDefault();
   const form = document.getElementById('privateAppForm');
+
+  /* Signature required */
   if(!privSigHasData){
     showToast('Please add your signature before submitting.','error');
-    privSigCanvas.scrollIntoView({behavior:'smooth',block:'center'});
+    if(privSigCanvas) privSigCanvas.scrollIntoView({behavior:'smooth',block:'center'});
     return;
   }
   const sigInput = document.getElementById('privSigData');
   if(sigInput) sigInput.value = privSigCanvas.toDataURL('image/png');
+
   const btn = form.querySelector('[type="submit"]');
   if(btn){ btn.textContent='Submitting…'; btn.disabled=true; }
+
+  const gF = name => { const el=form.querySelector(`[name="${name}"]`); return el?el.value.trim():''; };
+  const gC = name => { const el=form.querySelector(`[name="${name}"]`); return el?el.checked:false; };
+
+  /* Collect all fields — order determines PDF section grouping */
+  const fields = [
+    /* Personal Details (0-8) */
+    {label:'First Name',           value:gF('first_name')},
+    {label:'Last Name',            value:gF('last_name')},
+    {label:'Date of Birth',        value:gF('dob')},
+    {label:'Nationality',          value:gF('nationality')},
+    {label:'Email',                value:gF('email')},
+    {label:'Phone',                value:gF('phone')},
+    {label:'NI Number',            value:gF('ni_number')},
+    {label:'Right to Rent Status', value:gF('right_to_rent')},
+    {label:'Current Address',      value:gF('current_address')},
+    /* Employment (9-12) */
+    {label:'Employment Status',    value:gF('employment_status')},
+    {label:'Employer',             value:gF('employer')},
+    {label:'Annual Income',        value:gF('annual_income')},
+    {label:'Length of Employment', value:gF('employment_length')},
+    /* Property Preferences (13-20) */
+    {label:'Preferred Location',   value:gF('preferred_location')},
+    {label:'Bedrooms',             value:gF('bedrooms')},
+    {label:'Monthly Budget',       value:gF('budget')},
+    {label:'Move-In Date',         value:gF('move_in_date')},
+    {label:'Tenancy Length',       value:gF('tenancy_length')},
+    {label:'Number of Occupants',  value:gF('occupants')},
+    {label:'Pets',                 value:gF('pets')},
+    {label:'Smoker',               value:gF('smoker')},
+    /* References (21-22) */
+    {label:'Previous Landlord Name',    value:gF('reference_name')},
+    {label:'Previous Landlord Contact', value:gF('reference_contact')},
+    /* Emergency Contact (23-24) */
+    {label:'Emergency Contact Name',    value:gF('emergency_name')},
+    {label:'Emergency Contact Details', value:gF('emergency_contact')},
+    /* Additional (25) */
+    {label:'Additional Information',    value:gF('additional_info')},
+    /* Consents (26-28) */
+    {label:'Declaration Confirmed',            value:gC('declaration')?'YES (ticked)':'NO'},
+    {label:'Credit & Tracing Consent (Sch. C)', value:gC('credit_consent')?'YES (ticked)':'NO'},
+    {label:'Terms & Conditions Agreed',        value:gC('terms_agree')?'YES (ticked)':'NO'},
+  ];
+
+  const applicantName = gF('first_name')+' '+gF('last_name');
+
+  /* Generate PDF — same style as student version */
+  let pdfBase64 = '';
   try {
-    const data = new FormData(form);
-    data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
-    data.append('subject', 'New Private Rental Application — Millennium Investments');
-    data.append('from_name', 'Millennium Investments Website');
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method:'POST',
-      body: data
-    });
-    const json = await res.json();
-    if(!json.success) throw new Error(json.message);
-  } catch(err){
-    console.warn('Form submission:', err);
-  }
+    if(typeof window.jspdf !== 'undefined'){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+      const W=210, M=14; let y=14;
+      const sections = [
+        {title:'PERSONAL DETAILS',      fields:fields.slice(0,9)},
+        {title:'EMPLOYMENT DETAILS',    fields:fields.slice(9,13)},
+        {title:'PROPERTY PREFERENCES',  fields:fields.slice(13,21)},
+        {title:'REFERENCES',            fields:fields.slice(21,23)},
+        {title:'EMERGENCY CONTACT',     fields:fields.slice(23,25)},
+        {title:'ADDITIONAL INFORMATION',fields:fields.slice(25,26)},
+        {title:'CONSENTS & DECLARATIONS',fields:fields.slice(26)},
+      ];
+
+      /* Header banner */
+      doc.setFillColor(10,6,24); doc.rect(0,0,W,28,'F');
+      try {
+        const lg=document.querySelector('.nav-logo img');
+        if(lg&&lg.src.startsWith('data:')) doc.addImage(lg.src,'PNG',M,3,20,11);
+      }catch(e){}
+      doc.setTextColor(240,180,41);doc.setFontSize(13);doc.setFont('helvetica','bold');
+      doc.text('Private Rental Application',W/2,11,{align:'center'});
+      doc.setTextColor(190,190,190);doc.setFontSize(7);doc.setFont('helvetica','normal');
+      doc.text('Millennium Investments 2000 Ltd · Est.1998 · milleniuminvestments2000.co.uk',W/2,18,{align:'center'});
+      doc.text('Submitted: '+new Date().toLocaleString('en-GB'),W/2,24,{align:'center'});
+      y=31; const LM=10;
+
+      function renderSecPriv(s,sy){
+        if(sy > 240) { doc.addPage(); sy = 14; }
+        doc.setFillColor(240,180,41);doc.rect(LM,sy,W-LM*2,8,'F');
+        doc.setTextColor(10,6,24);doc.setFontSize(9.5);doc.setFont('helvetica','bold');
+        doc.text(s.title,LM+3,sy+6);sy+=10;
+        const colLabel=70, colVal=W-LM*2-colLabel;
+        s.fields.forEach(f=>{
+          if(!f.value)return;
+          if(sy > 275) { doc.addPage(); sy = 14; }
+          doc.setFillColor(248,248,248);doc.rect(LM,sy-1,colLabel,8,'F');
+          doc.setTextColor(90,90,90);doc.setFontSize(8.5);doc.setFont('helvetica','normal');
+          doc.text(f.label,LM+2,sy+5);
+          doc.setFillColor(255,255,255);doc.rect(LM+colLabel,sy-1,colVal,8,'F');
+          doc.setTextColor(15,15,15);doc.setFont('helvetica','bold');
+          const lines=doc.splitTextToSize(String(f.value),colVal-4);
+          doc.text(lines,LM+colLabel+2,sy+5);
+          const rowH=Math.max(8,lines.length*6);
+          sy+=rowH;
+          doc.setDrawColor(220,220,220);
+          doc.line(LM,sy-1,W-LM,sy-1);
+        });
+        return sy+3;
+      }
+
+      sections.forEach(s=>{ y=renderSecPriv(s,y); });
+
+      /* Declaration */
+      if(y > 200){ doc.addPage(); y=14; }
+      doc.setFillColor(240,180,41);doc.rect(LM,y,W-LM*2,8,'F');
+      doc.setTextColor(10,6,24);doc.setFontSize(9.5);doc.setFont('helvetica','bold');
+      doc.text('DECLARATION',LM+3,y+6); y+=10;
+      doc.setDrawColor(220,220,220);doc.setFillColor(252,252,252);
+      const declH = 62;
+      doc.roundedRect(LM,y,W-LM*2,declH,1.5,1.5,'FD');
+      doc.setTextColor(40,40,40);doc.setFontSize(8.2);doc.setFont('helvetica','bold');
+      doc.text('By signing and submitting this application I confirm that:',LM+3,y+5);
+      doc.setFont('helvetica','normal');doc.setFontSize(7.8);doc.setTextColor(55,55,55);
+      const declPoints = [
+        '1. I have attached a clear photograph or scan of my photo ID (passport, BRP or driving licence).',
+        '2. I have attached proof of my income (recent payslips, employment contract, or 3 months bank statements).',
+        '3. All information given in this form is correct, accurate and true to the best of my knowledge.',
+        '4. I have read, understood and agreed to the Terms and Conditions and the Privacy Policy.',
+        '5. I consent to credit reference and tracing searches under Schedule C of the tenancy agreement.',
+        '6. I understand this is an application only and does not guarantee a tenancy. Millennium Investments',
+        '    2000 Ltd will contact me to discuss the next steps.'
+      ];
+      let dy = y+10;
+      declPoints.forEach(line=>{ doc.text(line,LM+3,dy); dy+=4.6; });
+      y += declH + 4;
+
+      /* Signature */
+      if(y > 250){ doc.addPage(); y=14; }
+      const remH=Math.max(28,278-y-12);
+      const sigH=Math.min(36,remH);
+      doc.setFillColor(240,180,41);doc.rect(LM,y,W-LM*2,8,'F');
+      doc.setTextColor(10,6,24);doc.setFontSize(9.5);doc.setFont('helvetica','bold');
+      doc.text('APPLICANT SIGNATURE',LM+3,y+6);y+=10;
+      doc.setDrawColor(200,200,200);doc.setFillColor(252,252,252);
+      doc.roundedRect(LM,y,W-LM*2,sigH,2,2,'FD');
+      if(privSigCanvas&&privSigHasData){
+        try{doc.addImage(privSigCanvas.toDataURL('image/png'),'PNG',LM+4,y+2,W-LM*2-8,sigH-4);}catch(e){}
+      }
+      doc.setTextColor(90,90,90);doc.setFontSize(8.5);doc.setFont('helvetica','normal');
+      doc.text(applicantName+' — '+new Date().toLocaleDateString('en-GB'),LM+2,y+sigH+5);
+
+      /* Footer on every page */
+      const pageCount = doc.internal.getNumberOfPages();
+      for(let p=1; p<=pageCount; p++){
+        doc.setPage(p);
+        doc.setFillColor(10,6,24);doc.rect(0,287,W,10,'F');
+        doc.setTextColor(160,160,160);doc.setFontSize(8);
+        doc.text('Millennium Investments 2000 Ltd · enquiries@forestrd.co.uk · 01206 500202',LM,293);
+        doc.text('Page '+p+' of '+pageCount,W-LM,293,{align:'right'});
+      }
+      pdfBase64 = doc.output('datauristring').split(',')[1];
+    }
+  } catch(pdfErr){ console.warn('PDF build error:', pdfErr); }
+
+  /* Build summary text and send via PHP backend */
+  const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
+  let emailSent = false;
+
+  try {
+    const fd = new FormData();
+    fd.append('app_type',        'Private Rental Application');
+    fd.append('applicant_name',  applicantName);
+    fd.append('applicant_email', gF('email'));
+    fd.append('summary',         summary);
+
+    /* Attach PDF */
+    try{
+      if(pdfBase64){
+        const bytes = Uint8Array.from(atob(pdfBase64), c=>c.charCodeAt(0));
+        fd.append('pdf_file', new Blob([bytes],{type:'application/pdf'}),
+          applicantName.replace(/\s+/g,'_')+'_Private_Application.pdf');
+        console.log('PDF added to FormData, size:', bytes.length);
+      }
+    }catch(pdfErr){ console.warn('PDF attach error:', pdfErr); }
+
+    /* Attach documents */
+    const idEl  = document.getElementById('idDocument');
+    const incEl = document.getElementById('privIncomeDocument');
+    console.log('ID input:', idEl, 'files:', idEl && idEl.files ? idEl.files.length : 'none');
+    console.log('Income input:', incEl, 'files:', incEl && incEl.files ? incEl.files.length : 'none');
+
+    if(idEl && idEl.files && idEl.files.length > 0){
+      fd.append('id_file', idEl.files[0], idEl.files[0].name);
+      console.log('ID file added:', idEl.files[0].name, idEl.files[0].size, 'bytes');
+    } else { console.warn('No ID file found'); }
+
+    if(incEl && incEl.files && incEl.files.length > 0){
+      fd.append('income_file', incEl.files[0], incEl.files[0].name);
+      console.log('Income file added:', incEl.files[0].name, incEl.files[0].size, 'bytes');
+    } else { console.warn('No income file found'); }
+
+    for(let pair of fd.entries()){ console.log('FormData:', pair[0], typeof pair[1] === 'object' ? pair[1].name||pair[1].size : pair[1]); }
+
+    const res  = await fetch('https://www.forestrd.co.uk/send-application.php', {method:'POST', body:fd});
+    const text = await res.text();
+    console.log('PHP raw response:', text);
+    try{
+      const json = JSON.parse(text);
+      console.log('PHP result:', json);
+      if(json.success) emailSent = true;
+    }catch(e){ console.warn('PHP response parse error:', e, text); }
+  } catch(err){ console.warn('PHP send error:', err); }
+
+  /* Web3Forms backup (plain text) */
+  try {
+    const w3data = new FormData();
+    w3data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
+    w3data.append('subject', 'Private Rental Application: '+applicantName);
+    w3data.append('from_name', 'Millennium Investments Website');
+    w3data.append('message', summary);
+    fields.filter(f=>f.value).forEach(f=>w3data.append(f.label, f.value));
+    const w3res = await fetch('https://api.web3forms.com/submit', {method:'POST', body:w3data});
+    const w3json = await w3res.json();
+    console.log('Web3Forms result:', w3json);
+    if(w3json.success) emailSent = true;
+  } catch(err){ console.warn('Web3Forms error:', err); }
+
+  console.log('Email sent:', emailSent);
+
+  /* Show success */
   form.style.display='none';
   const success = document.getElementById('privAppSuccess');
-  if(success){ success.style.display='block'; }
+  if(success) success.style.display='block';
+  if(btn){ btn.textContent='Submit Application →'; btn.disabled=false; }
   showToast('Application submitted! We will contact you within 24 hours.','success');
 }
 
