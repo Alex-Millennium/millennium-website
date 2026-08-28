@@ -5725,24 +5725,31 @@ async function submitPrivateApp(e){
         doc.text(l1.toUpperCase(), M, y);
         doc.setTextColor(15,15,15); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
         const v1lines = doc.splitTextToSize(String(v1||'—'), halfW);
-        doc.text(v1lines[0]||'—', M, y+3.2);
+        const v1show = v1lines.slice(0,2);
+        doc.text(v1show, M, y+3.5);
         /* Right field */
+        let v2show = [''];
         if(l2 !== undefined){
           doc.setTextColor(130,120,105); doc.setFontSize(6); doc.setFont('helvetica','normal');
           doc.text(l2.toUpperCase(), M+halfW+4, y);
           doc.setTextColor(15,15,15); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
           const v2lines = doc.splitTextToSize(String(v2||'—'), halfW);
-          doc.text(v2lines[0]||'—', M+halfW+4, y+3.2);
+          v2show = v2lines.slice(0,2);
+          doc.text(v2show, M+halfW+4, y+3.5);
         }
-        y += 6.5;
+        /* Row height = whichever column has more lines */
+        const maxLines = Math.max(v1show.length, v2show.length);
+        y += 3.5 + (maxLines * 3.5) + 1;
       }
       function fieldFullWidth(label, value){
         doc.setTextColor(130,120,105); doc.setFontSize(6); doc.setFont('helvetica','normal');
         doc.text(label.toUpperCase(), M, y);
         doc.setTextColor(15,15,15); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
         const lines = doc.splitTextToSize(String(value||'—'), contentW);
-        doc.text(lines.slice(0,2), M, y+3.2);
-        y += 3.2 + (lines.length>1?4:2.5) + 1;
+        const shown = lines.slice(0,3);
+        doc.text(shown, M, y+3.5);
+        /* Proper per-line spacing so following section doesn't overlap */
+        y += 3.5 + (shown.length * 3.7) + 2.5;
       }
 
       /* ═══════ PERSONAL DETAILS ═══════ */
@@ -5779,17 +5786,58 @@ async function submitPrivateApp(e){
 
       /* ═══════ CONSENTS ═══════ */
       sectionTitle('Consents & Declarations');
-      doc.setFillColor(248,244,232); doc.setDrawColor(240,180,41); doc.setLineWidth(0.2);
-      doc.roundedRect(M, y, contentW, 20, 1, 1, 'FD');
-      doc.setTextColor(60,60,60); doc.setFontSize(7.2); doc.setFont('helvetica','normal');
-      const consentLines = [
-        (F['Declaration Confirmed']==='YES (ticked)'?'[X]':'[ ]')+'  Declaration — all information provided is accurate and truthful',
-        (F['Credit & Tracing Consent (Sch. C)']==='YES (ticked)'?'[X]':'[ ]')+'  Credit & Tracing Consent — Schedule C of tenancy agreement',
-        (F['Terms & Conditions Agreed']==='YES (ticked)'?'[X]':'[ ]')+'  Terms & Conditions agreed'
+      /* Helper to draw a real green tick mark inside a rounded green square */
+      function drawTick(tx, ty){
+        doc.setFillColor(46, 160, 67);   /* solid green */
+        doc.roundedRect(tx, ty, 4.5, 4.5, 0.6, 0.6, 'F');
+        doc.setDrawColor(255,255,255); doc.setLineWidth(0.7);
+        /* Two lines forming a checkmark */
+        doc.line(tx+0.9, ty+2.4, tx+1.9, ty+3.4);
+        doc.line(tx+1.9, ty+3.4, tx+3.7, ty+1.5);
+      }
+      /* Helper to draw an empty red square (for un-ticked, unlikely but for safety) */
+      function drawEmpty(tx, ty){
+        doc.setDrawColor(200,60,60); doc.setLineWidth(0.3);
+        doc.setFillColor(255,240,240);
+        doc.roundedRect(tx, ty, 4.5, 4.5, 0.6, 0.6, 'FD');
+      }
+
+      const consents = [
+        {
+          ticked: F['Declaration Confirmed']==='YES (ticked)',
+          title: 'DECLARATION ACKNOWLEDGED',
+          text: 'The applicant confirms all information provided above is accurate, complete and truthful to the best of their knowledge.'
+        },
+        {
+          ticked: F['Credit & Tracing Consent (Sch. C)']==='YES (ticked)',
+          title: 'CREDIT & TRACING CONSENT GIVEN',
+          text: 'The applicant consents to credit reference and tracing searches under Schedule C of the tenancy agreement.'
+        },
+        {
+          ticked: F['Terms & Conditions Agreed']==='YES (ticked)',
+          title: 'TERMS & CONDITIONS ACCEPTED',
+          text: 'The applicant has read and agreed to the Terms & Conditions applicable to private rentals with Millennium Investments 2000 Ltd.'
+        }
       ];
-      let cy = y+5;
-      consentLines.forEach(l=>{ doc.text(l, M+3, cy); cy+=5; });
-      y += 24;
+      /* Card box */
+      const consentBoxH = 8 + consents.length * 9;
+      doc.setFillColor(250,248,240); doc.setDrawColor(240,180,41); doc.setLineWidth(0.35);
+      doc.roundedRect(M, y, contentW, consentBoxH, 1.5, 1.5, 'FD');
+      /* Small header inside box */
+      doc.setTextColor(120,90,15); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
+      doc.text('THE APPLICANT HAS PROVIDED THE FOLLOWING CONSENTS:', M+4, y+4.5);
+      /* Rows */
+      let cy = y + 8;
+      consents.forEach(c => {
+        if(c.ticked) drawTick(M+4, cy); else drawEmpty(M+4, cy);
+        doc.setTextColor(20,90,30); doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+        doc.text(c.title, M+11, cy+2);
+        doc.setTextColor(60,60,60); doc.setFontSize(6.8); doc.setFont('helvetica','normal');
+        const txt = doc.splitTextToSize(c.text, contentW - 16);
+        doc.text(txt[0], M+11, cy+5.2);
+        cy += 9;
+      });
+      y += consentBoxH + 4;
 
       /* ═══════ SIGNATURE ═══════ */
       sectionTitle('Applicant Signature');
@@ -6044,23 +6092,29 @@ async function submitStudentApp(e){
         doc.text(l1.toUpperCase(), M, y);
         doc.setTextColor(15,15,15); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
         const v1lines = doc.splitTextToSize(String(v1||'—'), halfW);
-        doc.text(v1lines[0]||'—', M, y+3.2);
+        const v1show = v1lines.slice(0,2);
+        doc.text(v1show, M, y+3.5);
+        let v2show = [''];
         if(l2 !== undefined){
           doc.setTextColor(130,120,105); doc.setFontSize(6); doc.setFont('helvetica','normal');
           doc.text(l2.toUpperCase(), M+halfW+4, y);
           doc.setTextColor(15,15,15); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
           const v2lines = doc.splitTextToSize(String(v2||'—'), halfW);
-          doc.text(v2lines[0]||'—', M+halfW+4, y+3.2);
+          v2show = v2lines.slice(0,2);
+          doc.text(v2show, M+halfW+4, y+3.5);
         }
-        y += 6.5;
+        const maxLines = Math.max(v1show.length, v2show.length);
+        y += 3.5 + (maxLines * 3.5) + 1;
       }
       function fieldFullWidth(label, value){
         doc.setTextColor(130,120,105); doc.setFontSize(6); doc.setFont('helvetica','normal');
         doc.text(label.toUpperCase(), M, y);
         doc.setTextColor(15,15,15); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
         const lines = doc.splitTextToSize(String(value||'—'), contentW);
-        doc.text(lines.slice(0,2), M, y+3.2);
-        y += 3.2 + (lines.length>1?4:2.5) + 1;
+        const shown = lines.slice(0,3);
+        doc.text(shown, M, y+3.5);
+        /* Proper per-line spacing so following section doesn't overlap */
+        y += 3.5 + (shown.length * 3.7) + 2.5;
       }
 
       /* ═══════ PERSONAL DETAILS ═══════ */
@@ -6094,16 +6148,47 @@ async function submitStudentApp(e){
 
       /* ═══════ CONSENTS ═══════ */
       sectionTitle('Consents & Declarations');
-      doc.setFillColor(248,244,232); doc.setDrawColor(240,180,41); doc.setLineWidth(0.2);
-      doc.roundedRect(M, y, contentW, 15, 1, 1, 'FD');
-      doc.setTextColor(60,60,60); doc.setFontSize(7.2); doc.setFont('helvetica','normal');
-      const consentLines = [
-        (F['Declaration Confirmed']==='YES (ticked)'?'[X]':'[ ]')+'  Declaration — all four points of the declaration acknowledged',
-        (F['Terms & Conditions Agreed']==='YES (ticked)'?'[X]':'[ ]')+'  Terms & Conditions agreed'
+      function drawTick(tx, ty){
+        doc.setFillColor(46, 160, 67);
+        doc.roundedRect(tx, ty, 4.5, 4.5, 0.6, 0.6, 'F');
+        doc.setDrawColor(255,255,255); doc.setLineWidth(0.7);
+        doc.line(tx+0.9, ty+2.4, tx+1.9, ty+3.4);
+        doc.line(tx+1.9, ty+3.4, tx+3.7, ty+1.5);
+      }
+      function drawEmpty(tx, ty){
+        doc.setDrawColor(200,60,60); doc.setLineWidth(0.3);
+        doc.setFillColor(255,240,240);
+        doc.roundedRect(tx, ty, 4.5, 4.5, 0.6, 0.6, 'FD');
+      }
+
+      const consents = [
+        {
+          ticked: F['Declaration Confirmed']==='YES (ticked)',
+          title: 'DECLARATION ACKNOWLEDGED',
+          text: 'The applicant confirms all four points of the declaration: ID attached, CAS letter or Student Certificate provided, information accurate, and this is an application only.'
+        },
+        {
+          ticked: F['Terms & Conditions Agreed']==='YES (ticked)',
+          title: 'TERMS & CONDITIONS ACCEPTED',
+          text: 'The applicant has read and agreed to the Terms & Conditions applicable to student accommodation with Millennium Investments 2000 Ltd.'
+        }
       ];
-      let cy = y+5;
-      consentLines.forEach(l=>{ doc.text(l, M+3, cy); cy+=5; });
-      y += 19;
+      const consentBoxH = 8 + consents.length * 9;
+      doc.setFillColor(250,248,240); doc.setDrawColor(240,180,41); doc.setLineWidth(0.35);
+      doc.roundedRect(M, y, contentW, consentBoxH, 1.5, 1.5, 'FD');
+      doc.setTextColor(120,90,15); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
+      doc.text('THE APPLICANT HAS PROVIDED THE FOLLOWING CONSENTS:', M+4, y+4.5);
+      let cy = y + 8;
+      consents.forEach(c => {
+        if(c.ticked) drawTick(M+4, cy); else drawEmpty(M+4, cy);
+        doc.setTextColor(20,90,30); doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+        doc.text(c.title, M+11, cy+2);
+        doc.setTextColor(60,60,60); doc.setFontSize(6.8); doc.setFont('helvetica','normal');
+        const txt = doc.splitTextToSize(c.text, contentW - 16);
+        doc.text(txt[0], M+11, cy+5.2);
+        cy += 9;
+      });
+      y += consentBoxH + 4;
 
       /* ═══════ SIGNATURE ═══════ */
       sectionTitle('Applicant Signature');
