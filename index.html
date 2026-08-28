@@ -2131,7 +2131,7 @@ function initFirebase(){
   <!-- FILTERS -->
   <section class="section bg-dark" style="padding-bottom:0">
     <div class="sec-in">
-      <div class="filter-bar">
+      <div class="filter-bar" id="privFilterBar">
         <div class="fg">
           <label>Location</label>
           <select class="f-sel" id="locFilter" onchange="filterPrivate()">
@@ -3459,102 +3459,27 @@ const DEFAULT_PROPS = [
     id:1, type:'student', title:'Forest Road House',
     location:'colchester', address:'Forest Road, Colchester, CO4 3XA',
     bedrooms:1, price:96.92, priceUnit:'pw',
-    description:'Our flagship student complex ideally situated on Forest Road, minutes from the University of Essex. Groups of up to 6 welcome.',
+    description:'Our flagship student complex ideally situated on Forest Road, minutes from the University of Essex. En-suite rooms available.',
     features:['Bills Included','No Deposit','Free WiFi 100Mb','24/7 CCTV','Free Parking','No Agency Fees','Free Insurance','On-Site Support'],
-    images:[
-      'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&q=80',
-      'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80',
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80'
-    ],
+    images:[],
     available:true, featured:true
   },
   {
     id:2, type:'student', title:'Candan House',
-    location:'colchester', address:'Forest Road, Colchester, CO4 3XA',
+    location:'colchester', address:'Colchester, CO4',
     bedrooms:1, price:101.54, priceUnit:'pw',
-    description:'Our newest student accommodation complex on Forest Road — contemporary en-suite rooms with all the features you need for a comfortable university life.',
-    features:['Bills Included','No Deposit','Free WiFi','24/7 Support','Free Insurance','Free Summer Storage','First Refusal'],
-    images:[
-      'https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=800&q=80',
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80'
-    ],
-    available:true, featured:true
-  },
-  {
-    id:3, type:'student', title:'Greenstead House',
-    location:'colchester', address:'Greenstead Road, Colchester, CO4',
-    bedrooms:1, price:106.15, priceUnit:'pw',
-    description:"Located on Greenstead Road, a stone's throw from a major supermarket. Spacious rooms, all bills included.",
-    features:['Bills Included','No Deposit','Free WiFi','Near Supermarket','Free Parking','Free Summer Storage'],
-    images:[
-      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
-      'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80',
-      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80'
-    ],
+    description:'Modern student accommodation in Colchester with excellent facilities and close to the University of Essex.',
+    features:['Bills Included','No Deposit','Free WiFi 100Mb','24/7 CCTV','Free Parking','No Agency Fees','Free Insurance','On-Site Support'],
+    images:[],
     available:true, featured:false
   },
   {
-    id:4, type:'private', title:'3-Bed Victorian Terrace',
-    location:'colchester', address:'Lexden Road, Colchester, CO3',
-    bedrooms:3, price:1350, priceUnit:'pm',
-    description:'A beautifully maintained 3-bedroom Victorian terraced house in the sought-after Lexden area. Large rear garden, modern kitchen, off-street parking.',
-    features:['Off-Street Parking','Rear Garden','Modern Kitchen','Gas Central Heating','Double Glazed','Near Town Centre'],
-    images:[
-      'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80',
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80'
-    ],
-    available:true, featured:true
-  },
-  {
-    id:5, type:'private', title:'2-Bed Modern Apartment',
-    location:'colchester', address:'Balkerne Hill, Colchester, CO1',
-    bedrooms:2, price:1050, priceUnit:'pm',
-    description:'A stylish 2-bedroom apartment in the heart of Colchester. Walking distance from the high street, train station, and all amenities.',
-    features:['City Centre','Modern Finishes','Secure Entry','Allocated Parking','En-Suite Master','Near Train Station'],
-    images:[
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80',
-      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80'
-    ],
-    available:true, featured:true
-  },
-  {
-    id:6, type:'private', title:'4-Bed Detached Home',
-    location:'ipswich', address:'Christchurch Street, Ipswich, IP4',
-    bedrooms:4, price:1600, priceUnit:'pm',
-    description:'A substantial 4-bedroom detached family home in a quiet Ipswich residential area. Large south-facing garden, double garage, recently renovated kitchen.',
-    features:['Double Garage','South Garden','Renovated Kitchen','4 Double Bedrooms','Gas Central Heating','Quiet Location'],
-    images:[
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
-      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80'
-    ],
-    available:true, featured:true
-  },
-  {
-    id:7, type:'private', title:'1-Bed Studio Apartment',
-    location:'ipswich', address:'Tavern Street, Ipswich, IP1',
-    bedrooms:1, price:750, priceUnit:'pm',
-    description:'A compact and well-appointed studio in central Ipswich — ideal for a single professional or couple. Open-plan living, modern bathroom.',
-    features:['Central Location','Open-Plan Living','Modern Bathroom','Great Transport Links','Broadband Ready','Low Bills'],
-    images:[
-      'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800&q=80',
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80'
-    ],
-    available:false, featured:false
-  },
-  {
-    id:8, type:'private', title:'2-Bed Semi-Detached',
-    location:'ipswich', address:'Cauldwell Hall Road, Ipswich, IP4',
-    bedrooms:2, price:925, priceUnit:'pm',
-    description:'A charming 2-bedroom semi with mature rear garden, conservatory, and garage. Popular residential area with excellent school catchments.',
-    features:['Rear Garden','Conservatory','Garage','School Catchment','Gas Central Heating','Quiet Street'],
-    images:[
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
-      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&q=80'
-    ],
+    id:3, type:'student', title:'Greenstead House',
+    location:'colchester', address:'Greenstead, Colchester',
+    bedrooms:1, price:106.15, priceUnit:'pw',
+    description:'Well-located student accommodation in Greenstead offering modern living for students of the University of Essex.',
+    features:['Bills Included','No Deposit','Free WiFi 100Mb','24/7 CCTV','Free Parking','No Agency Fees','Free Insurance','On-Site Support'],
+    images:[],
     available:true, featured:false
   }
 ];
@@ -3631,6 +3556,15 @@ function loadFromLocal(){
   try {
     const s = localStorage.getItem('mi_props');
     properties = s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_PROPS));
+    /* Migration: strip old template private properties (fake data) */
+    const oldTemplateTitles = ['3-Bed Victorian Terrace','2-Bed Modern Apartment','4-Bed Detached Home','1-Bed Studio Apartment','2-Bed Semi-Detached'];
+    const before = properties.length;
+    properties = properties.filter(p => !oldTemplateTitles.includes(p.title));
+    if(properties.length !== before){
+      /* Persist the cleanup */
+      try { localStorage.setItem('mi_props', JSON.stringify(properties)); } catch(e){}
+      console.log('[Migration] Removed', before - properties.length, 'old template private properties');
+    }
   } catch(e){
     properties = JSON.parse(JSON.stringify(DEFAULT_PROPS));
   }
@@ -3787,19 +3721,30 @@ function closeMobMenu(){
    PROPERTY CARD BUILDER
 ============================================================ */
 function buildCard(p){
-  const img  = (p.images && p.images.length) ? p.images[0] : 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80';
+  const hasImages = p.images && p.images.length > 0;
   const priceStr = p.priceUnit === 'pw'
     ? '£' + p.price.toFixed(2)
     : '£' + Math.round(p.price).toLocaleString();
   const unit  = p.priceUnit === 'pw' ? '/pw' : '/month';
   const beds  = (p.bedrooms === 1 && p.type === 'student') ? 'En-suite Room' : p.bedrooms + ' Bedroom' + (p.bedrooms !== 1 ? 's' : '');
   const feats = (p.features || []).slice(0, 3).map(f => `<span class="pfeat">${f}</span>`).join('');
-  const gcnt  = (p.images && p.images.length > 1) ? `<div class="pgcount">📷 ${p.images.length}</div>` : '';
+  const gcnt  = hasImages && p.images.length > 1 ? `<div class="pgcount">📷 ${p.images.length}</div>` : '';
+  const typeIcon = p.type === 'student' ? '🎓' : '🏠';
+
+  /* Image OR beautiful placeholder */
+  const imgBlock = hasImages
+    ? `<img src="${p.images[0]}" alt="${p.title}" loading="lazy">`
+    : `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a0f2e 0%,#0a0618 50%,#2a1550 100%);color:#F0B429;text-align:center;padding:20px">
+         <div style="font-size:3.4rem;line-height:1;margin-bottom:10px;filter:drop-shadow(0 4px 12px rgba(240,180,41,0.4))">${typeIcon}</div>
+         <div style="font-size:.72rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#F0B429;margin-bottom:4px">Photos Coming Soon</div>
+         <div style="font-size:.7rem;color:rgba(255,255,255,.55);max-width:200px;line-height:1.5">Book a viewing to see the property in person</div>
+       </div>`;
+
   return `
 <div class="pcard fade-in" data-id="${p.id}" data-type="${p.type}" data-loc="${p.location}" data-beds="${p.bedrooms}" data-price="${p.price}" data-punit="${p.priceUnit}">
-  <div class="pcard-img" onclick="lbOpen(${p.id})">
-    <img src="${img}" alt="${p.title}" loading="lazy">
-    <div class="pbadge ${p.type}">${p.type === 'student' ? '🎓 Student' : '🏠 Private'}</div>
+  <div class="pcard-img" onclick="${hasImages ? 'lbOpen('+p.id+')' : 'enquireAbout(\''+p.title.replace(/'/g,"\\'")+'\')'}" style="cursor:pointer">
+    ${imgBlock}
+    <div class="pbadge ${p.type}">${typeIcon} ${p.type === 'student' ? 'Student' : 'Private'}</div>
     <div class="pstatus ${p.available ? 'av' : 'let'}">${p.available ? '✓ Available' : 'Let'}</div>
     ${gcnt}
   </div>
@@ -3813,7 +3758,7 @@ function buildCard(p){
     <div style="font-size:.77rem;color:rgba(255,255,255,.4);margin-bottom:11px">🛏 ${beds}</div>
     <div class="pfeats">${feats}</div>
     <div class="pactions">
-      <button class="btn-view" onclick="lbOpen(${p.id})">View Photos</button>
+      ${hasImages ? `<button class="btn-view" onclick="lbOpen(${p.id})">View Photos</button>` : `<button class="btn-view" onclick="enquireAbout('${p.title.replace(/'/g,"\\'")}')" style="background:linear-gradient(135deg,#F0B429,#C88A0F);color:#0a0618;border:none">📅 Book Viewing</button>`}
       <button class="btn-enq" onclick="enquireAbout('${p.title.replace(/'/g,"\\'")}')">Enquire</button>
     </div>
   </div>
@@ -3834,7 +3779,24 @@ function renderHome(){
   const pg = document.getElementById('homePrivGrid');
   if(pg){
     const privList = properties.filter(p=>p.type==='private').slice(0,3);
-    pg.innerHTML = privList.map(buildCard).join('') || '<p style="color:rgba(255,255,255,.4);text-align:center;padding:40px">No private properties found.</p>';
+    if(privList.length > 0){
+      pg.innerHTML = privList.map(buildCard).join('');
+    } else {
+      /* Beautiful empty state for home page private section */
+      pg.innerHTML = `
+        <div class="fade-in" style="grid-column:1/-1;background:linear-gradient(135deg,#1a0f2e 0%,#0a0618 100%);border:1.5px solid rgba(240,180,41,0.4);border-radius:20px;padding:48px 40px;text-align:center;max-width:800px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,0.35)">
+          <div style="font-size:3.4rem;margin-bottom:14px;filter:drop-shadow(0 4px 14px rgba(240,180,41,0.5))">🏡</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#fff;margin:0 0 8px;letter-spacing:-.02em">100+ Private Rentals</div>
+          <div style="font-size:1rem;color:#F0B429;font-weight:700;margin-bottom:16px">Across Colchester &amp; Ipswich</div>
+          <p style="color:rgba(255,255,255,.7);font-size:.92rem;line-height:1.7;max-width:560px;margin:0 auto 22px">
+            Availability changes weekly. Contact us for current listings matched to your needs.
+          </p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-gold" onclick="showPage('private')" style="padding:12px 26px">See Private Rentals →</button>
+            <button class="btn" onclick="openPrivateAppModal()" style="padding:12px 26px;background:rgba(255,255,255,0.08);color:#fff;border:1.5px solid rgba(255,255,255,0.2)">✍️ Apply Now</button>
+          </div>
+        </div>`;
+    }
   }
   setTimeout(triggerFadeIns, 60);
 }
@@ -3861,12 +3823,86 @@ function renderPrivate(list){
   const grid = document.getElementById('privPropGrid');
   const cntEl = document.getElementById('privCount');
   const noRes = document.getElementById('noResults');
+  const filterBar = document.getElementById('privFilterBar');
   if(!grid) return;
   const data = (list !== undefined) ? list : properties.filter(p => p.type === 'private');
-  grid.innerHTML = data.map(buildCard).join('');
-  if(cntEl) cntEl.textContent = `Showing ${data.length} propert${data.length !== 1 ? 'ies' : 'y'}`;
-  if(noRes) noRes.classList.toggle('hidden', data.length > 0);
+
+  if(data.length === 0){
+    /* Beautiful empty state — hide filters, show hero callout */
+    if(filterBar) filterBar.style.display = 'none';
+    if(cntEl) cntEl.style.display = 'none';
+    if(noRes) noRes.classList.add('hidden');
+    grid.style.display = 'block';
+    grid.innerHTML = buildPrivateEmptyState();
+  } else {
+    if(filterBar) filterBar.style.display = '';
+    if(cntEl){ cntEl.style.display = ''; cntEl.textContent = `Showing ${data.length} propert${data.length !== 1 ? 'ies' : 'y'}`; }
+    if(noRes) noRes.classList.toggle('hidden', data.length > 0);
+    grid.style.display = '';
+    grid.innerHTML = data.map(buildCard).join('');
+  }
   setTimeout(triggerFadeIns, 60);
+}
+
+/* Beautiful empty state for private rentals page */
+function buildPrivateEmptyState(){
+  return `
+    <div class="fade-in" style="max-width:960px;margin:0 auto;padding:0 12px">
+      <!-- Hero callout -->
+      <div style="background:linear-gradient(135deg,#0a0618 0%,#1a0f2e 100%);border:1.5px solid rgba(240,180,41,0.4);border-radius:20px;padding:48px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);margin-bottom:32px">
+        <div style="font-size:3.6rem;margin-bottom:16px;filter:drop-shadow(0 4px 16px rgba(240,180,41,0.5))">🏡</div>
+        <h3 style="font-size:1.9rem;font-weight:800;color:#fff;margin:0 0 12px;letter-spacing:-.02em">100+ Private Rentals</h3>
+        <div style="font-size:1.15rem;color:#F0B429;font-weight:700;margin-bottom:20px">Across Colchester &amp; Ipswich</div>
+        <p style="color:rgba(255,255,255,.75);font-size:1rem;line-height:1.75;max-width:640px;margin:0 auto 28px">
+          We manage over 100 private rental properties across Colchester and Ipswich. Availability changes weekly — <strong style="color:#fff">contact us for current listings</strong> matched to your needs. Every applicant gets a personal service from our team.
+        </p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="openPrivateAppModal()" style="padding:14px 32px;font-size:1rem">✍️ Apply Now</button>
+          <a href="tel:01206500202" class="btn" style="padding:14px 32px;font-size:1rem;background:rgba(255,255,255,0.08);color:#fff;border:1.5px solid rgba(255,255,255,0.2);text-decoration:none">📞 01206 500202</a>
+        </div>
+      </div>
+
+      <!-- 4 feature cards: why choose us -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:32px">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+          <div style="font-size:2rem;margin-bottom:10px">💰</div>
+          <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">No Tenancy Deposit</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">Alternative protections instead — keep your cash</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+          <div style="font-size:2rem;margin-bottom:10px">🤝</div>
+          <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">Direct Landlord</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">No agency fees, no middlemen — deal with us directly</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+          <div style="font-size:2rem;margin-bottom:10px">🏆</div>
+          <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">28 Years Experience</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">Family-run since 1998, trusted by hundreds of tenants</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+          <div style="font-size:2rem;margin-bottom:10px">🛠️</div>
+          <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">24/7 Support</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">Fast maintenance response, always someone to call</div>
+        </div>
+      </div>
+
+      <!-- Location coverage -->
+      <div style="background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.22);border-radius:14px;padding:24px 28px;text-align:center">
+        <div style="font-size:.72rem;font-weight:800;color:#F0B429;letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px">📍 Locations We Cover</div>
+        <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:1.4rem;font-weight:800;color:#fff">Colchester</div>
+            <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px">Central, Greenstead, Forest Rd &amp; more</div>
+          </div>
+          <div style="width:1px;background:rgba(240,180,41,0.3)"></div>
+          <div>
+            <div style="font-size:1.4rem;font-weight:800;color:#fff">Ipswich</div>
+            <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px">Town centre and surrounding areas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 function filterPrivate(){
   const loc   = document.getElementById('locFilter').value;
