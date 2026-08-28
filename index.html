@@ -934,6 +934,197 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .rev-source-google{background:rgba(66,133,244,.15);color:#7baaf7;border:1px solid rgba(66,133,244,.3)}
 .rev-source-manual{background:rgba(240,180,41,.12);color:var(--gold-400);border:1px solid rgba(240,180,41,.25)}
 .rev-hidden-badge{background:rgba(196,30,58,.12);color:#F07080;border:1px solid rgba(196,30,58,.25);font-size:.68rem;padding:2px 8px;border-radius:100px}
+
+/* ═══════════════════════════════════════════════════════════
+   APPLICATION FORM WIZARD — Multi-step form UI
+═══════════════════════════════════════════════════════════ */
+
+/* Card that holds the whole wizard — white on dark background */
+.wiz-card{
+  background:linear-gradient(180deg,#fdfcfa 0%,#f7f5f0 100%);
+  color:#1a1a1a;
+  border-radius:16px;
+  padding:28px 30px 24px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4),0 4px 12px rgba(240,180,41,0.15);
+  border:1px solid rgba(240,180,41,0.3);
+}
+@media (max-width:640px){
+  .wiz-card{padding:20px 18px 18px;border-radius:12px}
+}
+
+/* Header with title */
+.wiz-head{text-align:center;margin-bottom:22px}
+.wiz-head-icon{font-size:1.8rem;line-height:1;margin-bottom:6px}
+.wiz-head-title{font-size:1.3rem;font-weight:800;color:#0a0618;margin:0 0 4px;letter-spacing:-.01em}
+.wiz-head-title .gold-text{color:#c88a0f}
+.wiz-head-sub{font-size:.82rem;color:#6b6b6b;margin:0}
+
+/* Progress bar (top of card) */
+.wiz-prog{display:flex;flex-direction:column;gap:10px;margin:18px 0 26px}
+.wiz-prog-bar-wrap{
+  position:relative;height:8px;background:#e6e0d0;border-radius:99px;overflow:hidden;
+}
+.wiz-prog-bar-fill{
+  position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#F0B429,#C88A0F);
+  border-radius:99px;transition:width .35s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 8px rgba(240,180,41,0.5);
+}
+.wiz-prog-labels{
+  display:flex;justify-content:space-between;font-size:.72rem;color:#6b6b6b;font-weight:600
+}
+.wiz-prog-labels span{flex:1;text-align:center;padding:0 4px;transition:color .2s}
+.wiz-prog-labels span.active{color:#c88a0f;font-weight:800}
+.wiz-prog-labels span.done{color:#3a7d3a}
+@media (max-width:640px){
+  .wiz-prog-labels{display:none}
+}
+
+/* Step counter (visible on mobile) */
+.wiz-step-count{
+  text-align:center;font-size:.75rem;color:#8a7a4a;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px
+}
+
+/* Individual step — hidden unless active */
+.wiz-step{display:none;animation:wiz-fade .3s ease-out}
+.wiz-step.active{display:block}
+@keyframes wiz-fade{
+  from{opacity:0;transform:translateX(12px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* Section title inside a step */
+.wiz-step-title{
+  font-size:1.05rem;font-weight:800;color:#0a0618;margin:0 0 4px;letter-spacing:-.01em
+}
+.wiz-step-desc{
+  font-size:.82rem;color:#6b6b6b;margin:0 0 20px;line-height:1.5
+}
+
+/* Form controls (override the dark theme .form-input etc within the card) */
+.wiz-card .form-label{
+  color:#3a3a3a;font-weight:600;font-size:.82rem;margin-bottom:6px;display:block
+}
+.wiz-card .form-input,.wiz-card .form-select,.wiz-card .form-textarea{
+  background:#fff;border:1.5px solid #d8d0bc;color:#1a1a1a;
+  border-radius:8px;padding:11px 14px;font-size:.9rem;transition:border-color .2s,box-shadow .2s;
+  width:100%;font-family:inherit
+}
+.wiz-card .form-input:hover,.wiz-card .form-select:hover,.wiz-card .form-textarea:hover{
+  border-color:#c8b878
+}
+.wiz-card .form-input:focus,.wiz-card .form-select:focus,.wiz-card .form-textarea:focus{
+  outline:none;border-color:#F0B429;box-shadow:0 0 0 3px rgba(240,180,41,0.18)
+}
+.wiz-card .form-input::placeholder{color:#a8a099}
+.wiz-card .form-textarea{min-height:80px;resize:vertical}
+.wiz-card .form-input[type="file"]{padding:8px;background:#faf7ec;border-style:dashed}
+.wiz-card .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.wiz-card .form-row.full,.wiz-card .form-row.one{grid-template-columns:1fr}
+@media (max-width:640px){.wiz-card .form-row{grid-template-columns:1fr}}
+.wiz-card .form-group{display:flex;flex-direction:column}
+.wiz-card .form-group p{color:#6b6b6b !important}
+
+/* Field help text */
+.wiz-card .form-group p{font-size:.72rem;color:#6b6b6b;margin-top:4px;line-height:1.5}
+
+/* Required note & indicator */
+.wiz-req-note{font-size:.72rem;color:#8a7a4a;margin:0 0 4px;font-style:italic}
+
+/* Nav (back / next / submit buttons) */
+.wiz-nav{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  margin-top:26px;padding-top:20px;border-top:1px solid #e6e0d0
+}
+.wiz-btn{
+  padding:12px 24px;border-radius:10px;font-weight:700;font-size:.88rem;cursor:pointer;
+  transition:all .2s;font-family:inherit;border:none;display:inline-flex;align-items:center;gap:6px
+}
+.wiz-btn-back{
+  background:transparent;color:#6b6b6b;border:1.5px solid #d8d0bc
+}
+.wiz-btn-back:hover{background:#f2ede0;color:#1a1a1a}
+.wiz-btn-back:disabled{opacity:.35;cursor:not-allowed}
+.wiz-btn-next,.wiz-btn-submit{
+  background:linear-gradient(135deg,#F0B429,#C88A0F);color:#0a0618;
+  box-shadow:0 4px 14px rgba(240,180,41,0.4)
+}
+.wiz-btn-next:hover,.wiz-btn-submit:hover{
+  transform:translateY(-1px);box-shadow:0 6px 18px rgba(240,180,41,0.55)
+}
+.wiz-btn-submit{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;box-shadow:0 4px 14px rgba(46,204,113,0.4)}
+.wiz-btn-submit:hover{box-shadow:0 6px 18px rgba(46,204,113,0.55)}
+
+/* Review step (final summary before submit) */
+.wiz-review{
+  background:#faf7ec;border:1px solid #e6d8a8;border-radius:10px;padding:18px 20px;
+  margin-bottom:18px
+}
+.wiz-review-title{
+  font-size:.78rem;font-weight:800;color:#8a5f0f;letter-spacing:.08em;
+  text-transform:uppercase;margin:0 0 12px
+}
+.wiz-review-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;font-size:.82rem}
+@media (max-width:640px){.wiz-review-grid{grid-template-columns:1fr}}
+.wiz-review-grid dt{color:#6b6b6b;font-weight:600}
+.wiz-review-grid dd{color:#1a1a1a;font-weight:700;margin:0}
+
+/* File upload preview */
+.wiz-file-preview{
+  display:none;margin-top:8px;padding:10px 12px;background:#e8f5e8;border-radius:8px;
+  border:1px solid #a0d0a0;color:#2a662a;font-size:.78rem;font-weight:600;
+  align-items:center;gap:8px
+}
+.wiz-file-preview.show{display:flex}
+.wiz-file-preview svg{flex-shrink:0}
+.wiz-file-thumb{
+  width:36px;height:36px;object-fit:cover;border-radius:4px;flex-shrink:0;
+  border:1px solid #a0d0a0
+}
+
+/* Field error message */
+.wiz-field-error{
+  display:none;font-size:.75rem;color:#c53030;margin-top:4px;font-weight:600
+}
+.wiz-field-error.show{display:block}
+.wiz-card .form-input.wiz-error,.wiz-card .form-select.wiz-error,.wiz-card .form-textarea.wiz-error{
+  border-color:#c53030;background:#fef5f5
+}
+
+/* Consent/T&C checkbox groups (override for light card) */
+.wiz-card .wiz-consent{
+  display:flex;align-items:flex-start;gap:10px;background:#faf7ec;
+  border:1.5px solid #e6d8a8;border-radius:10px;padding:12px 14px;margin-bottom:12px
+}
+.wiz-card .wiz-consent input[type=checkbox]{
+  margin-top:3px;accent-color:#c88a0f;width:16px;height:16px;flex-shrink:0
+}
+.wiz-card .wiz-consent label{
+  font-size:.82rem;color:#3a3a3a;cursor:pointer;line-height:1.5;font-weight:500
+}
+.wiz-card .wiz-consent label strong{color:#0a0618;font-weight:800}
+.wiz-card .wiz-consent.blue{background:#eaf2f8;border-color:#a8c8de}
+.wiz-card .wiz-consent.blue label strong{color:#1a4d7a}
+
+/* Signature canvas (override for light card) */
+.wiz-card .sig-wrap{background:#fff;border:1.5px solid #d8d0bc;border-radius:8px;padding:6px}
+.wiz-card .sig-wrap canvas{background:#fff;border:1px dashed #c8b878;border-radius:6px;width:100%;touch-action:none;cursor:crosshair}
+.wiz-card .sig-actions{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:0 4px}
+.wiz-card .sig-clear{background:none;border:none;color:#8a5f0f;font-size:.75rem;font-weight:700;cursor:pointer;text-decoration:underline}
+.wiz-card .sig-status{font-size:.72rem;color:#6b6b6b}
+
+/* Save-progress indicator */
+.wiz-saved-note{
+  text-align:center;font-size:.7rem;color:#8a7a4a;font-style:italic;margin-top:12px
+}
+
+/* Loading spinner for submit */
+.wiz-spinner{
+  width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+  border-radius:50%;animation:wiz-spin .8s linear infinite;display:inline-block
+}
+@keyframes wiz-spin{to{transform:rotate(360deg)}}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -5144,12 +5335,10 @@ function initPrivSigPad(){
   privSigCanvas.width  = Math.floor(rect.width) || 600;
   privSigCanvas.height = 160;
   privSigCtx = privSigCanvas.getContext('2d');
-  privSigCtx.strokeStyle = '#F0B429';
-  privSigCtx.lineWidth   = 2.5;
+  privSigCtx.strokeStyle = '#0a0618';
+  privSigCtx.lineWidth   = 2.2;
   privSigCtx.lineCap     = 'round';
   privSigCtx.lineJoin    = 'round';
-  privSigCtx.shadowColor = 'rgba(240,180,41,0.4)';
-  privSigCtx.shadowBlur  = 3;
 
   function getXY(e){
     const r = privSigCanvas.getBoundingClientRect();
@@ -5176,18 +5365,237 @@ function updatePrivSigStatus(){
   const s=document.getElementById('privSigStatus');
   if(!s) return;
   s.textContent = privSigHasData ? '✓ Signature captured' : 'Draw your signature above';
-  s.style.color  = privSigHasData ? '#34d399' : 'rgba(255,255,255,.35)';
+  s.style.color  = privSigHasData ? '#2a662a' : '#8a7a4a';
 }
 
 function openPrivateAppModal(){
   document.getElementById('privateAppModal').classList.add('open');
   document.body.style.overflow='hidden';
-  setTimeout(initPrivSigPad, 300);
+  /* Init wizard (once) and always reset to step 1 */
+  if(!WIZ['privateAppForm']){
+    initWizard('privateAppForm', {
+      labels: ['About You','Employment','Property','Documents','Review & Sign'],
+      saveKey: 'mi_priv_app_draft',
+      onReview: (form) => {
+        wizBuildReview(form, 'privReviewSummary');
+        /* Init signature pad on first visit to review step */
+        setTimeout(() => { if(!privSigCtx) initPrivSigPad(); }, 100);
+      }
+    });
+    /* File preview bindings — one-time */
+    wizBindFilePreview('idDocument', 'idDocPreview');
+    wizBindFilePreview('privIncomeDocument', 'privIncomeDocPreview');
+  } else {
+    wizGoTo('privateAppForm', 0);
+  }
 }
 
 function closePrivateAppModal(){
   document.getElementById('privateAppModal').classList.remove('open');
   document.body.style.overflow='';
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   WIZARD ENGINE — Multi-step form controller
+═══════════════════════════════════════════════════════════ */
+const WIZ = {};  /* per-form state */
+
+function initWizard(formId, opts){
+  const form = document.getElementById(formId);
+  if(!form) return;
+  const steps = form.querySelectorAll('.wiz-step');
+  if(!steps.length) return;
+
+  WIZ[formId] = {
+    form: form,
+    steps: Array.from(steps),
+    current: 0,
+    labels: opts.labels || [],
+    onReview: opts.onReview || null,
+    saveKey: opts.saveKey || null,
+  };
+
+  /* Bind next/back buttons */
+  form.querySelectorAll('[data-wiz-action="next"]').forEach(b=>{
+    b.addEventListener('click', e=>{ e.preventDefault(); wizNext(formId); });
+  });
+  form.querySelectorAll('[data-wiz-action="back"]').forEach(b=>{
+    b.addEventListener('click', e=>{ e.preventDefault(); wizBack(formId); });
+  });
+
+  /* Auto-save on input change */
+  if(WIZ[formId].saveKey){
+    form.addEventListener('input', ()=>wizSave(formId));
+    wizLoad(formId);  /* restore any saved data */
+  }
+
+  /* Initial render */
+  wizGoTo(formId, 0);
+}
+
+function wizGoTo(formId, index){
+  const w = WIZ[formId];
+  if(!w) return;
+  if(index < 0 || index >= w.steps.length) return;
+  w.current = index;
+  w.steps.forEach((s,i)=>{
+    s.classList.toggle('active', i === index);
+  });
+  wizUpdateProgress(formId);
+  /* Scroll wizard card into view */
+  const card = w.form.closest('.wiz-card') || w.form;
+  card.scrollIntoView({behavior:'smooth', block:'start'});
+  /* Fire review callback if entering last step */
+  if(index === w.steps.length - 1 && w.onReview){
+    try { w.onReview(w.form); } catch(e){ console.warn('onReview error:', e); }
+  }
+}
+
+function wizNext(formId){
+  const w = WIZ[formId];
+  if(!w) return;
+  if(!wizValidateStep(w.steps[w.current])) return;
+  if(w.current < w.steps.length - 1){
+    wizGoTo(formId, w.current + 1);
+  }
+}
+
+function wizBack(formId){
+  const w = WIZ[formId];
+  if(!w) return;
+  if(w.current > 0) wizGoTo(formId, w.current - 1);
+}
+
+function wizValidateStep(stepEl){
+  /* Native HTML5 validation on all inputs within this step */
+  const inputs = stepEl.querySelectorAll('input,select,textarea');
+  let firstInvalid = null;
+  inputs.forEach(el=>{
+    el.classList.remove('wiz-error');
+    const errEl = el.parentElement.querySelector('.wiz-field-error');
+    if(errEl) errEl.classList.remove('show');
+    if(!el.checkValidity()){
+      el.classList.add('wiz-error');
+      if(errEl){
+        errEl.textContent = el.validationMessage || 'Please check this field';
+        errEl.classList.add('show');
+      }
+      if(!firstInvalid) firstInvalid = el;
+    }
+  });
+  if(firstInvalid){
+    firstInvalid.focus({preventScroll:false});
+    firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+    return false;
+  }
+  return true;
+}
+
+function wizUpdateProgress(formId){
+  const w = WIZ[formId];
+  const total = w.steps.length;
+  const pct = ((w.current + 1) / total) * 100;
+  const card = w.form.closest('.wiz-card') || w.form;
+  const fill = card.querySelector('.wiz-prog-bar-fill');
+  const labels = card.querySelectorAll('.wiz-prog-labels span');
+  const counter = card.querySelector('.wiz-step-count');
+  if(fill) fill.style.width = pct + '%';
+  labels.forEach((el,i)=>{
+    el.classList.toggle('active', i === w.current);
+    el.classList.toggle('done', i < w.current);
+  });
+  if(counter) counter.textContent = 'Step ' + (w.current+1) + ' of ' + total + (w.labels[w.current] ? ' — ' + w.labels[w.current] : '');
+}
+
+function wizSave(formId){
+  const w = WIZ[formId];
+  if(!w || !w.saveKey) return;
+  try{
+    const data = {};
+    w.form.querySelectorAll('input,select,textarea').forEach(el=>{
+      if(el.type === 'file' || el.type === 'submit' || el.type === 'button') return;
+      if(!el.name) return;
+      if(el.type === 'checkbox' || el.type === 'radio') data[el.name] = el.checked;
+      else data[el.name] = el.value;
+    });
+    data.__savedAt = Date.now();
+    localStorage.setItem(w.saveKey, JSON.stringify(data));
+  }catch(e){/* localStorage might be full or blocked */}
+}
+
+function wizLoad(formId){
+  const w = WIZ[formId];
+  if(!w || !w.saveKey) return;
+  try{
+    const raw = localStorage.getItem(w.saveKey);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    /* Expire after 24 hours */
+    if(!data.__savedAt || Date.now() - data.__savedAt > 24*60*60*1000){
+      localStorage.removeItem(w.saveKey); return;
+    }
+    Object.keys(data).forEach(name=>{
+      if(name.startsWith('__')) return;
+      const el = w.form.querySelector('[name="'+name+'"]');
+      if(!el) return;
+      if(el.type === 'checkbox' || el.type === 'radio') el.checked = data[name];
+      else if(el.type !== 'file') el.value = data[name];
+    });
+    /* Show a saved-note in the first step */
+    const card = w.form.closest('.wiz-card') || w.form;
+    const note = card.querySelector('.wiz-saved-note');
+    if(note){ note.style.display='block'; note.textContent = '✓ Your previous progress has been restored'; }
+  }catch(e){}
+}
+
+function wizClearSaved(formId){
+  const w = WIZ[formId];
+  if(w && w.saveKey){ try{ localStorage.removeItem(w.saveKey); }catch(e){} }
+}
+
+/* File preview — call once per file input */
+function wizBindFilePreview(inputId, previewId){
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  if(!input || !preview) return;
+  input.addEventListener('change', ()=>{
+    if(!input.files || !input.files[0]){ preview.classList.remove('show'); return; }
+    const file = input.files[0];
+    const sizeKB = (file.size/1024).toFixed(0);
+    const isImg = file.type.startsWith('image/');
+    let thumbHtml = '';
+    if(isImg){
+      const url = URL.createObjectURL(file);
+      thumbHtml = '<img src="'+url+'" class="wiz-file-thumb" alt="Preview">';
+    } else {
+      thumbHtml = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+    }
+    preview.innerHTML = thumbHtml + '<span>' + file.name + ' &middot; ' + sizeKB + ' KB &middot; ready to submit</span>';
+    preview.classList.add('show');
+  });
+}
+
+/* Build a review summary — populates a target element from all form fields */
+function wizBuildReview(form, targetId){
+  const target = document.getElementById(targetId);
+  if(!target) return;
+  const parts = [];
+  form.querySelectorAll('input,select,textarea').forEach(el=>{
+    if(el.type === 'file' || el.type === 'submit' || el.type === 'button' || el.type === 'hidden') return;
+    if(el.type === 'checkbox' && !el.checked) return;
+    if(!el.name || el.name.startsWith('__')) return;
+    const label = el.closest('.form-group')?.querySelector('.form-label')?.textContent?.replace(/\*$/,'').trim();
+    if(!label) return;
+    let val = el.type === 'checkbox' ? '✓ Yes' : (el.value || '').trim();
+    if(!val) return;
+    /* For select, use option text */
+    if(el.tagName === 'SELECT' && el.selectedIndex >= 0){
+      val = el.options[el.selectedIndex].text;
+    }
+    parts.push('<dt>'+label+'</dt><dd>'+ val.replace(/</g,'&lt;') +'</dd>');
+  });
+  target.innerHTML = parts.join('');
 }
 
 async function submitPrivateApp(e){
@@ -5204,7 +5612,7 @@ async function submitPrivateApp(e){
   if(sigInput) sigInput.value = privSigCanvas.toDataURL('image/png');
 
   const btn = form.querySelector('[type="submit"]');
-  if(btn){ btn.textContent='Submitting…'; btn.disabled=true; }
+  if(btn){ btn.innerHTML='<span class="wiz-spinner"></span> Submitting…'; btn.disabled=true; }
 
   const gF = name => { const el=form.querySelector(`[name="${name}"]`); return el?el.value.trim():''; };
   const gC = name => { const el=form.querySelector(`[name="${name}"]`); return el?el.checked:false; };
@@ -5428,7 +5836,9 @@ async function submitPrivateApp(e){
   form.style.display='none';
   const success = document.getElementById('privAppSuccess');
   if(success) success.style.display='block';
-  if(btn){ btn.textContent='Submit Application →'; btn.disabled=false; }
+  if(btn){ btn.innerHTML='✓ Submit Application'; btn.disabled=false; }
+  /* Clear saved draft — application submitted successfully */
+  wizClearSaved('privateAppForm');
   showToast('Application submitted! We will contact you within 24 hours.','success');
 }
 
@@ -5443,8 +5853,10 @@ function initStudSigPad(){
   studSigCanvas.width  = Math.floor(rect.width) || 600;
   studSigCanvas.height = 160;
   studSigCtx = studSigCanvas.getContext('2d');
-  studSigCtx.strokeStyle='#F0B429';studSigCtx.lineWidth=2.5;studSigCtx.lineCap='round';studSigCtx.lineJoin='round';
-  studSigCtx.shadowColor='rgba(240,180,41,0.4)';studSigCtx.shadowBlur=3;
+  studSigCtx.strokeStyle = '#0a0618';
+  studSigCtx.lineWidth   = 2.2;
+  studSigCtx.lineCap     = 'round';
+  studSigCtx.lineJoin    = 'round';
   function getXY(e){ const r=studSigCanvas.getBoundingClientRect(); if(e.touches) return{x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top}; return{x:e.clientX-r.left,y:e.clientY-r.top}; }
   studSigCanvas.addEventListener('mousedown',  e=>{ studSigDrawing=true; const p=getXY(e); studSigCtx.beginPath(); studSigCtx.moveTo(p.x,p.y); e.preventDefault(); });
   studSigCanvas.addEventListener('mousemove',  e=>{ if(!studSigDrawing)return; const p=getXY(e); studSigCtx.lineTo(p.x,p.y); studSigCtx.stroke(); studSigCtx.beginPath(); studSigCtx.moveTo(p.x,p.y); studSigHasData=true; updateStudSigStatus(); e.preventDefault(); });
@@ -5455,34 +5867,51 @@ function initStudSigPad(){
   studSigCanvas.addEventListener('touchend', ()=>{ studSigDrawing=false; });
 }
 function clearStudSig(){ if(!studSigCtx)return; studSigCtx.clearRect(0,0,studSigCanvas.width,studSigCanvas.height); studSigHasData=false; updateStudSigStatus(); }
-function updateStudSigStatus(){ const s=document.getElementById('studSigStatus'); if(!s)return; s.textContent=studSigHasData?'✓ Signature captured':'Draw your signature above'; s.style.color=studSigHasData?'#34d399':'rgba(255,255,255,.35)'; }
+function updateStudSigStatus(){
+  const s=document.getElementById('studSigStatus');
+  if(!s) return;
+  s.textContent = studSigHasData ? '✓ Signature captured' : 'Draw your signature above';
+  s.style.color  = studSigHasData ? '#2a662a' : '#8a7a4a';
+}
+function closeStudentAppModal(){ document.getElementById('studentAppModal').classList.remove('open'); document.body.style.overflow=''; }
+
 function openStudentAppModal(){
-  /* Reset form state each time modal opens */
   const form = document.getElementById('studAppModalForm');
   const success = document.getElementById('studAppSuccess');
   if(form){
     form.style.display='';
     form.reset();
-    /* Explicitly reset all selects to prevent browser autofill */
     form.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
   }
   if(success){ success.style.display='none'; }
-  /* Reset signature */
   studSigHasData=false;
   if(studSigCtx && studSigCanvas) studSigCtx.clearRect(0,0,studSigCanvas.width,studSigCanvas.height);
   updateStudSigStatus();
   document.getElementById('studentAppModal').classList.add('open');
   document.body.style.overflow='hidden';
-  setTimeout(initStudSigPad,300);
+  /* Init wizard once, reset to step 1 each time */
+  if(!WIZ['studAppModalForm']){
+    initWizard('studAppModalForm', {
+      labels: ['About You','Studies & Room','Documents','Review & Sign'],
+      saveKey: 'mi_stud_app_draft',
+      onReview: (form) => {
+        wizBuildReview(form, 'studReviewSummary');
+        setTimeout(() => { if(!studSigCtx) initStudSigPad(); }, 100);
+      }
+    });
+    wizBindFilePreview('studIdDocument', 'studIdDocPreview');
+    wizBindFilePreview('studCasDocument', 'studCasDocPreview');
+  } else {
+    wizGoTo('studAppModalForm', 0);
+  }
 }
-function closeStudentAppModal(){ document.getElementById('studentAppModal').classList.remove('open'); document.body.style.overflow=''; }
 async function submitStudentApp(e){
   e.preventDefault();
   const form = document.getElementById('studAppModalForm');
   if(!studSigHasData){ showToast('Please add your signature.','error'); return; }
 
   const btn = form.querySelector('[type="submit"]');
-  if(btn){ btn.textContent='Submitting…'; btn.disabled=true; }
+  if(btn){ btn.innerHTML='<span class="wiz-spinner"></span> Submitting…'; btn.disabled=true; }
 
   const gF = name => { const el=form.querySelector(`[name="${name}"]`); return el?el.value.trim():''; };
 
@@ -5696,7 +6125,8 @@ async function submitStudentApp(e){
   form.style.display='none';
   const success = document.getElementById('studAppSuccess');
   if(success) success.style.display='block';
-  if(btn){ btn.textContent='Submit Application →'; btn.disabled=false; }
+  if(btn){ btn.innerHTML='✓ Submit Application'; btn.disabled=false; }
+  wizClearSaved('studAppModalForm');
   showToast('Application submitted! We will contact you within 24 hours.','success');
 }
 
@@ -6742,263 +7172,331 @@ document.addEventListener('DOMContentLoaded', () => {
     <form id="privateAppForm"
           name="private-rental-application"
           method="POST"
-          onsubmit="submitPrivateApp(event)">
-      
+          onsubmit="submitPrivateApp(event)"
+          class="wiz-card"
+          novalidate>
 
-      <div style="text-align:center;margin-bottom:28px">
-        <div style="font-size:1.8rem;margin-bottom:8px">🏡</div>
-        <h2 class="sec-title" style="font-size:1.4rem;margin-bottom:6px">Private Rental <span class="gold-text">Application</span></h2>
-        <p style="font-size:.85rem;color:rgba(255,255,255,.5)">Complete the form below and we will be in touch within 24 hours.</p>
-      </div>
-      <p class="required-note">Fields marked * are required</p>
-
-      <!-- PERSONAL DETAILS -->
-      <div class="form-section-title">👤 Personal Details</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">First Name *</label>
-          <input type="text" name="first_name" class="form-input" placeholder="John" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Last Name *</label>
-          <input type="text" name="last_name" class="form-input" placeholder="Smith" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Date of Birth *</label>
-          <input type="date" name="dob" class="form-input" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Nationality</label>
-          <input type="text" name="nationality" class="form-input" placeholder="e.g. British">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Email Address *</label>
-          <input type="email" name="email" class="form-input" placeholder="john@example.com" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Phone Number *</label>
-          <input type="tel" name="phone" class="form-input" placeholder="07700 000000" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">National Insurance Number *</label>
-          <input type="text" name="ni_number" class="form-input" placeholder="e.g. AB123456C" pattern="[A-Za-z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-Za-z]" required maxlength="13" style="text-transform:uppercase">
-          <p style="font-size:.7rem;color:rgba(255,255,255,.45);margin-top:4px;line-height:1.5">Required for tenancy referencing &amp; tracing. Format: 2 letters + 6 digits + 1 letter. Stored securely under UK GDPR.</p>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Right to Rent — UK Status *</label>
-          <select name="right_to_rent" class="form-input form-select" required>
-            <option value="">Select…</option>
-            <option>British / Irish citizen</option>
-            <option>Settled / Pre-Settled Status (EU)</option>
-            <option>Indefinite Leave to Remain</option>
-            <option>Time-Limited Visa (BRP)</option>
-            <option>Other (we will discuss)</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row full">
-        <div class="form-group">
-          <label class="form-label">Current Address *</label>
-          <textarea name="current_address" class="form-input form-textarea" placeholder="Full address including postcode" style="min-height:70px" required></textarea>
-        </div>
+      <!-- HEADER -->
+      <div class="wiz-head">
+        <div class="wiz-head-icon">🏡</div>
+        <h2 class="wiz-head-title">Private Rental <span class="gold-text">Application</span></h2>
+        <p class="wiz-head-sub">Takes about 5 minutes to complete</p>
       </div>
 
-      <!-- EMPLOYMENT -->
-      <div class="form-section-title">💼 Employment Details</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Employment Status *</label>
-          <select name="employment_status" class="form-input form-select" required>
-            <option value="">Select…</option>
-            <option>Employed Full-Time</option>
-            <option>Employed Part-Time</option>
-            <option>Self-Employed</option>
-            <option>Student</option>
-            <option>Retired</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Employer / Company Name</label>
-          <input type="text" name="employer" class="form-input" placeholder="e.g. ABC Ltd">
+      <!-- PROGRESS -->
+      <div class="wiz-prog">
+        <div class="wiz-prog-bar-wrap"><div class="wiz-prog-bar-fill" style="width:20%"></div></div>
+        <div class="wiz-prog-labels">
+          <span class="active">About You</span>
+          <span>Employment</span>
+          <span>Property</span>
+          <span>Documents</span>
+          <span>Review &amp; Sign</span>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Annual Income (£) *</label>
-          <input type="text" name="annual_income" class="form-input" placeholder="e.g. 30,000" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Length of Employment</label>
-          <input type="text" name="employment_length" class="form-input" placeholder="e.g. 2 years">
-        </div>
-      </div>
+      <div class="wiz-step-count">Step 1 of 5 — About You</div>
 
-      <!-- PROPERTY PREFERENCES -->
-      <div class="form-section-title">🏠 Property Preferences</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Preferred Location *</label>
-          <select name="preferred_location" class="form-input form-select" required>
-            <option value="">Select…</option>
-            <option>Colchester</option>
-            <option>Ipswich</option>
-            <option>Either / No preference</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Number of Bedrooms *</label>
-          <select name="bedrooms" class="form-input form-select" required>
-            <option value="">Select…</option>
-            <option>1 Bedroom (Studio)</option>
-            <option>2 Bedrooms</option>
-            <option>3 Bedrooms</option>
-            <option>4+ Bedrooms</option>
-            <option>No preference</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Maximum Monthly Budget (£) *</label>
-          <input type="text" name="budget" class="form-input" placeholder="e.g. 1,200" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Desired Move-In Date *</label>
-          <input type="date" name="move_in_date" class="form-input" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Tenancy Length *</label>
-          <select name="tenancy_length" class="form-input form-select" required>
-            <option value="">Select tenancy length…</option>
-            <option>11 Months</option>
-            <option>12 Months</option>
-            <option>Flexible</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Number of Occupants *</label>
-          <input type="number" name="occupants" class="form-input" placeholder="e.g. 2" min="1" max="10" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Pets?</label>
-          <select name="pets" class="form-input form-select">
-            <option value="No">No pets</option>
-            <option value="Yes - Cat">Yes — Cat</option>
-            <option value="Yes - Dog">Yes — Dog</option>
-            <option value="Yes - Other">Yes — Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Smoker?</label>
-          <select name="smoker" class="form-input form-select">
-            <option value="No">No</option>
-            <option value="Yes">Yes</option>
-          </select>
-        </div>
-      </div>
+      <!-- ═════════════════════════════════════════ STEP 1: ABOUT YOU ═════════════════════════════════════════ -->
+      <div class="wiz-step active" data-step="1">
+        <h3 class="wiz-step-title">Tell us about yourself</h3>
+        <p class="wiz-step-desc">We need a few basic details to process your application.</p>
+        <p class="wiz-req-note">Fields marked * are required</p>
 
-      <!-- REFERENCES -->
-      <div class="form-section-title">📋 Reference Details</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Previous Landlord / Reference Name</label>
-          <input type="text" name="reference_name" class="form-input" placeholder="Full name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Reference Phone / Email</label>
-          <input type="text" name="reference_contact" class="form-input" placeholder="Contact details">
-        </div>
-      </div>
-
-      <!-- EMERGENCY CONTACT -->
-      <div class="form-section-title">🆘 Emergency Contact</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Full Name *</label>
-          <input type="text" name="emergency_name" class="form-input" placeholder="Emergency contact name" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Relationship & Phone *</label>
-          <input type="text" name="emergency_contact" class="form-input" placeholder="e.g. Sister — 07700 000000" required>
-        </div>
-      </div>
-
-      <!-- ADDITIONAL -->
-      <div class="form-section-title">📝 Additional Information</div>
-      <div class="form-row full">
-        <div class="form-group">
-          <label class="form-label">Anything else we should know?</label>
-          <textarea name="additional_info" class="form-input form-textarea" placeholder="e.g. specific property requirements, accessibility needs, questions…" style="min-height:80px"></textarea>
-        </div>
-      </div>
-
-      <!-- DECLARATION -->
-      <div class="form-section-title">📎 Required Documents</div>
-      <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:16px;margin-bottom:14px">
-        <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:12px;line-height:1.6">Please upload your photo ID and proof of income for tenancy referencing. Accepted formats: JPG, PNG, PDF. Max 4MB per file.</p>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Photo ID * <span style="font-size:.72rem;color:rgba(255,255,255,.4)">(Passport, BRP or driving licence)</span></label>
-            <input type="file" name="id_document" id="idDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
-            <div id="idDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+            <label class="form-label">First Name *</label>
+            <input type="text" name="first_name" class="form-input" placeholder="John" required>
+            <div class="wiz-field-error"></div>
           </div>
           <div class="form-group">
-            <label class="form-label">Proof of Income * <span style="font-size:.72rem;color:rgba(255,255,255,.4)">(Recent payslip, employment contract, or 3 months bank statements)</span></label>
-            <input type="file" name="proof_of_income" id="privIncomeDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
-            <div id="privIncomeDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
+            <label class="form-label">Last Name *</label>
+            <input type="text" name="last_name" class="form-input" placeholder="Smith" required>
+            <div class="wiz-field-error"></div>
           </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date of Birth *</label>
+            <input type="date" name="dob" class="form-input" required>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nationality</label>
+            <input type="text" name="nationality" class="form-input" placeholder="e.g. British">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" name="email" class="form-input" placeholder="john@example.com" required>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input type="tel" name="phone" class="form-input" placeholder="07700 000000" required>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">National Insurance Number *</label>
+            <input type="text" name="ni_number" class="form-input" placeholder="AB123456C" pattern="[A-Za-z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-Za-z]" required maxlength="13" style="text-transform:uppercase">
+            <p>Required for tenancy referencing &amp; tracing. Stored securely under UK GDPR.</p>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Right to Rent — UK Status *</label>
+            <select name="right_to_rent" class="form-input form-select" required>
+              <option value="">Select…</option>
+              <option>British / Irish citizen</option>
+              <option>Settled / Pre-Settled Status (EU)</option>
+              <option>Indefinite Leave to Remain</option>
+              <option>Time-Limited Visa (BRP)</option>
+              <option>Other (we will discuss)</option>
+            </select>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label class="form-label">Current Address *</label>
+            <textarea name="current_address" class="form-input form-textarea" placeholder="Full address including postcode" required></textarea>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+
+        <div class="wiz-nav">
+          <span></span>
+          <button type="button" class="wiz-btn wiz-btn-next" data-wiz-action="next">Next: Employment →</button>
+        </div>
+        <p class="wiz-saved-note" style="display:none"></p>
+      </div>
+
+      <!-- ═════════════════════════════════════════ STEP 2: EMPLOYMENT ═════════════════════════════════════════ -->
+      <div class="wiz-step" data-step="2">
+        <h3 class="wiz-step-title">Employment &amp; income</h3>
+        <p class="wiz-step-desc">These details help us assess affordability.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Employment Status *</label>
+            <select name="employment_status" class="form-input form-select" required>
+              <option value="">Select…</option>
+              <option>Employed Full-Time</option>
+              <option>Employed Part-Time</option>
+              <option>Self-Employed</option>
+              <option>Student</option>
+              <option>Retired</option>
+              <option>Other</option>
+            </select>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Employer / Company Name</label>
+            <input type="text" name="employer" class="form-input" placeholder="e.g. ABC Ltd">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Annual Income (£) *</label>
+            <input type="text" name="annual_income" class="form-input" placeholder="e.g. 30,000" required>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Length of Employment</label>
+            <input type="text" name="employment_length" class="form-input" placeholder="e.g. 2 years">
+          </div>
+        </div>
+
+        <div class="wiz-nav">
+          <button type="button" class="wiz-btn wiz-btn-back" data-wiz-action="back">← Back</button>
+          <button type="button" class="wiz-btn wiz-btn-next" data-wiz-action="next">Next: Property →</button>
         </div>
       </div>
 
-      <div class="form-section-title">📋 Declaration</div>
-      <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.15);border-radius:10px;padding:16px;margin-bottom:16px;font-size:.82rem;color:rgba(255,255,255,.65);line-height:1.75">
-        By signing and submitting this application I confirm all information is accurate and complete. I understand this is an application only and does not guarantee a tenancy. I consent to Millennium Investments 2000 Ltd contacting me regarding this application.
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:20px">
-        <input type="checkbox" name="declaration" id="privDeclarationCheck" style="margin-top:3px;accent-color:var(--gold-500);width:16px;height:16px;flex-shrink:0" required>
-        <label for="privDeclarationCheck" style="font-size:.85rem;color:rgba(255,255,255,.7);cursor:pointer">
-          I confirm the above declaration *
-        </label>
+      <!-- ═════════════════════════════════════════ STEP 3: PROPERTY ═════════════════════════════════════════ -->
+      <div class="wiz-step" data-step="3">
+        <h3 class="wiz-step-title">What are you looking for?</h3>
+        <p class="wiz-step-desc">Tell us about your ideal property so we can match you well.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Preferred Location *</label>
+            <select name="preferred_location" class="form-input form-select" required>
+              <option value="">Select…</option>
+              <option>Colchester</option>
+              <option>Ipswich</option>
+              <option>Either / No preference</option>
+            </select>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Bedrooms *</label>
+            <select name="bedrooms" class="form-input form-select" required>
+              <option value="">Select…</option>
+              <option>1 Bedroom (Studio)</option>
+              <option>2 Bedrooms</option>
+              <option>3 Bedrooms</option>
+              <option>4+ Bedrooms</option>
+              <option>No preference</option>
+            </select>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Maximum Monthly Budget (£) *</label>
+            <input type="text" name="budget" class="form-input" placeholder="e.g. 1,200" required>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Desired Move-In Date *</label>
+            <input type="date" name="move_in_date" class="form-input" required>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Tenancy Length *</label>
+            <select name="tenancy_length" class="form-input form-select" required>
+              <option value="">Select…</option>
+              <option>11 Months</option>
+              <option>12 Months</option>
+              <option>Flexible</option>
+            </select>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Occupants *</label>
+            <input type="number" name="occupants" class="form-input" placeholder="e.g. 2" min="1" max="10" required>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Pets?</label>
+            <select name="pets" class="form-input form-select">
+              <option value="No">No pets</option>
+              <option value="Yes - Cat">Yes — Cat</option>
+              <option value="Yes - Dog">Yes — Dog</option>
+              <option value="Yes - Other">Yes — Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Smoker?</label>
+            <select name="smoker" class="form-input form-select">
+              <option value="No">No</option>
+              <option value="Yes">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="wiz-nav">
+          <button type="button" class="wiz-btn wiz-btn-back" data-wiz-action="back">← Back</button>
+          <button type="button" class="wiz-btn wiz-btn-next" data-wiz-action="next">Next: Documents →</button>
+        </div>
       </div>
 
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;background:rgba(54,162,235,0.06);border:1px solid rgba(54,162,235,0.25);border-radius:10px;padding:14px 16px">
-        <input type="checkbox" name="credit_consent" id="privCreditCheck" style="margin-top:3px;accent-color:var(--gold-500);width:16px;height:16px;flex-shrink:0" required>
-        <label for="privCreditCheck" style="font-size:.85rem;color:rgba(255,255,255,.8);cursor:pointer;line-height:1.55"><strong style="color:rgba(255,255,255,.95)">Credit &amp; Tracing Consent.</strong> I consent to Millennium Investments 2000 Ltd (or its authorised agent) carrying out credit reference and tracing searches on me before, during and after my tenancy, including sharing my personal data (name, date of birth, NI number, last known address, any CCJs or defaults) with credit reference agencies, tracing agents, solicitors and the County Court as necessary to recover any debt owed. I understand any CCJ obtained will remain on my credit record for 6 years. This consent is given freely as a condition of the tenancy and corresponds to Schedule C of the tenancy agreement. *</label>
+      <!-- ═════════════════════════════════════════ STEP 4: REFERENCES + DOCUMENTS ═════════════════════════════════════════ -->
+      <div class="wiz-step" data-step="4">
+        <h3 class="wiz-step-title">References &amp; documents</h3>
+        <p class="wiz-step-desc">Upload your ID and proof of income. We accept JPG, PNG or PDF (max 4MB each).</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Previous Landlord / Reference Name</label>
+            <input type="text" name="reference_name" class="form-input" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reference Phone / Email</label>
+            <input type="text" name="reference_contact" class="form-input" placeholder="Contact details">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Emergency Contact Name *</label>
+            <input type="text" name="emergency_name" class="form-input" placeholder="Full name" required>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Emergency Relationship &amp; Phone *</label>
+            <input type="text" name="emergency_contact" class="form-input" placeholder="e.g. Sister — 07700 000000" required>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label class="form-label">Anything else we should know?</label>
+            <textarea name="additional_info" class="form-input form-textarea" placeholder="Specific requirements, accessibility needs, questions…"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Photo ID *</label>
+            <input type="file" name="id_document" id="idDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required>
+            <p>Passport, BRP or driving licence</p>
+            <div id="idDocPreview" class="wiz-file-preview"></div>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Proof of Income *</label>
+            <input type="file" name="proof_of_income" id="privIncomeDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required>
+            <p>Payslip, employment contract, or 3 months bank statements</p>
+            <div id="privIncomeDocPreview" class="wiz-file-preview"></div>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+
+        <div class="wiz-nav">
+          <button type="button" class="wiz-btn wiz-btn-back" data-wiz-action="back">← Back</button>
+          <button type="button" class="wiz-btn wiz-btn-next" data-wiz-action="next">Next: Review →</button>
+        </div>
       </div>
 
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:14px 16px">
-        <input type="checkbox" name="terms_agree" id="privTermsCheck" style="margin-top:3px;accent-color:var(--gold-500);width:16px;height:16px;flex-shrink:0" required>
-        <label for="privTermsCheck" style="font-size:.85rem;color:rgba(255,255,255,.8);cursor:pointer;line-height:1.55">I have read and agree to the <a onclick="event.preventDefault();openTerms('private')" style="color:var(--gold-400);font-weight:700;text-decoration:underline;cursor:pointer">Terms and Conditions</a> of Millennium Investments 2000 Ltd applicable to private rentals. *</label>
-      </div>
+      <!-- ═════════════════════════════════════════ STEP 5: REVIEW & SIGN ═════════════════════════════════════════ -->
+      <div class="wiz-step" data-step="5">
+        <h3 class="wiz-step-title">Review &amp; sign</h3>
+        <p class="wiz-step-desc">Please review the summary below. If anything is wrong, go back to correct it.</p>
 
-      <!-- SIGNATURE -->
-      <div class="form-section-title">✍️ Signature</div>
-      <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:12px">Sign below using your mouse or finger:</p>
-      <div class="sig-box">
-        <canvas id="privSigCanvas" style="width:100%;height:160px;display:block"></canvas>
-      </div>
-      <div class="sig-controls">
-        <button type="button" class="sig-clear-btn" onclick="clearPrivSig()">✕ Clear</button>
-        <span id="privSigStatus" style="color:rgba(255,255,255,.35)">Draw your signature above</span>
-      </div>
-      <input type="hidden" name="signature" id="privSigData">
+        <div class="wiz-review">
+          <div class="wiz-review-title">Application Summary</div>
+          <dl class="wiz-review-grid" id="privReviewSummary">
+            <dt>&nbsp;</dt><dd>&nbsp;</dd>
+          </dl>
+        </div>
 
-      <!-- SUBMIT -->
-      <div style="text-align:center;margin-top:32px">
-        <button type="submit" class="btn btn-gold" style="width:100%;max-width:360px;justify-content:center;font-size:1rem;padding:16px 32px">
-          Submit Application →
-        </button>
+        <div class="wiz-consent">
+          <input type="checkbox" name="declaration" id="privDeclarationCheck" required>
+          <label for="privDeclarationCheck"><strong>Declaration.</strong> I confirm all information above is accurate and complete. I understand this is an application only and does not guarantee a tenancy. I consent to Millennium Investments 2000 Ltd contacting me regarding this application. *</label>
+        </div>
+
+        <div class="wiz-consent blue">
+          <input type="checkbox" name="credit_consent" id="privCreditCheck" required>
+          <label for="privCreditCheck"><strong>Credit &amp; Tracing Consent.</strong> I consent to credit reference and tracing searches on me before, during and after my tenancy. I understand data may be shared with credit reference agencies, tracing agents, solicitors and the County Court as necessary. Any CCJ obtained remains on my credit record for 6 years. Corresponds to Schedule C of the tenancy agreement. *</label>
+        </div>
+
+        <div class="wiz-consent">
+          <input type="checkbox" name="terms_agree" id="privTermsCheck" required>
+          <label for="privTermsCheck">I have read and agree to the <a onclick="event.preventDefault();openTerms('private')" style="color:#c88a0f;font-weight:700;text-decoration:underline;cursor:pointer">Terms and Conditions</a> applicable to private rentals. *</label>
+        </div>
+
+        <div style="margin-top:20px">
+          <label class="form-label" style="color:#3a3a3a">Draw your signature below *</label>
+          <div class="sig-wrap">
+            <canvas id="privSigCanvas" style="height:140px;display:block"></canvas>
+            <div class="sig-actions">
+              <button type="button" class="sig-clear" onclick="clearPrivSig()">✕ Clear</button>
+              <span class="sig-status" id="privSigStatus">Draw your signature above</span>
+            </div>
+          </div>
+          <input type="hidden" name="signature" id="privSigData">
+        </div>
+
+        <div class="wiz-nav">
+          <button type="button" class="wiz-btn wiz-btn-back" data-wiz-action="back">← Back</button>
+          <button type="submit" class="wiz-btn wiz-btn-submit">✓ Submit Application</button>
+        </div>
       </div>
     </form>
   </div>
@@ -7023,116 +7521,164 @@ document.addEventListener('DOMContentLoaded', () => {
     <form id="studAppModalForm" autocomplete="off"
           name="student-application"
           method="POST"
-          onsubmit="submitStudentApp(event)">
-      
+          onsubmit="submitStudentApp(event)"
+          class="wiz-card"
+          novalidate>
 
-      <div style="text-align:center;margin-bottom:28px">
-        <div style="font-size:1.8rem;margin-bottom:8px">🎓</div>
-        <h2 class="sec-title" style="font-size:1.4rem;margin-bottom:6px">Student <span class="gold-text">Application Form</span></h2>
-        <p style="font-size:.85rem;color:rgba(255,255,255,.5)">Complete below and we will be in touch within 24 hours.</p>
-      </div>
-      <p class="required-note">Fields marked * are required</p>
-
-      <div class="form-section-title">👤 Personal Details</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">First Name *</label><input type="text" name="first_name" class="form-input" placeholder="John" required></div>
-        <div class="form-group"><label class="form-label">Last Name *</label><input type="text" name="last_name" class="form-input" placeholder="Smith" required></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Date of Birth *</label><input type="date" name="dob" class="form-input" required></div>
-        <div class="form-group"><label class="form-label">Nationality</label><input type="text" name="nationality" class="form-input" placeholder="e.g. British"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Email Address *</label><input type="email" name="email" class="form-input" placeholder="john@example.com" required></div>
-        <div class="form-group"><label class="form-label">Phone Number *</label><input type="tel" name="phone" class="form-input" placeholder="07700 000000" required></div>
-      </div>
-      <div class="form-row full">
-        <div class="form-group"><label class="form-label">Current Home Address *</label><textarea name="current_address" class="form-input form-textarea" placeholder="Full address including postcode" style="min-height:70px" required></textarea></div>
+      <!-- HEADER -->
+      <div class="wiz-head">
+        <div class="wiz-head-icon">🎓</div>
+        <h2 class="wiz-head-title">Student <span class="gold-text">Application</span></h2>
+        <p class="wiz-head-sub">Takes about 4 minutes to complete</p>
       </div>
 
-      <div class="form-section-title">🎓 University Details</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">University / College *</label><input type="text" name="university" class="form-input" placeholder="e.g. University of Essex" required></div>
-        <div class="form-group"><label class="form-label">Course / Subject *</label><input type="text" name="course" class="form-input" placeholder="e.g. Business Management" required></div>
+      <!-- PROGRESS -->
+      <div class="wiz-prog">
+        <div class="wiz-prog-bar-wrap"><div class="wiz-prog-bar-fill" style="width:25%"></div></div>
+        <div class="wiz-prog-labels">
+          <span class="active">About You</span>
+          <span>Studies &amp; Room</span>
+          <span>Documents</span>
+          <span>Review &amp; Sign</span>
+        </div>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Year of Study *</label><select name="year_of_study" class="form-input form-select" required><option value="">Select…</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Postgraduate</option><option>Other</option></select></div>
-        <div class="form-group"><label class="form-label">Student ID</label><input type="text" name="student_id" class="form-input" placeholder="Optional"></div>
-      </div>
+      <div class="wiz-step-count">Step 1 of 4 — About You</div>
 
-      <div class="form-section-title">🏠 Room Preferences</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Preferred Complex *</label><select name="preferred_complex" class="form-input form-select" required><option value="">Select…</option><option>Forest Road House (from £96.92/pw)</option><option>Candan House (from £101.54/pw)</option><option>Greenstead House (from £106.15/pw)</option><option>No preference</option></select></div>
-        <div class="form-group"><label class="form-label">Room Type</label><select name="room_type" class="form-input form-select"><option>No preference</option><option>En-suite Room</option><option>Studio</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Desired Move-In Date *</label><input type="date" name="move_in_date" class="form-input" required></div>
-        <div class="form-group"><label class="form-label">Tenancy Length *</label><select name="tenancy_length" class="form-input form-select" required><option value="">Select…</option><option value="12 Months">12 Months</option><option value="11 Months">11 Months</option></select></div>
-      </div>
+      <!-- ═════════════════════════════════════════ STEP 1: ABOUT YOU ═════════════════════════════════════════ -->
+      <div class="wiz-step active" data-step="1">
+        <h3 class="wiz-step-title">Tell us about yourself</h3>
+        <p class="wiz-step-desc">Basic contact details and your home address.</p>
+        <p class="wiz-req-note">Fields marked * are required</p>
 
-      <div class="form-section-title">🆘 Emergency Contact</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Full Name *</label><input type="text" name="emergency_name" class="form-input" placeholder="Parent / Guardian name" required></div>
-        <div class="form-group"><label class="form-label">Relationship *</label><input type="text" name="emergency_relationship" class="form-input" placeholder="e.g. Mother" required></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Phone Number *</label><input type="tel" name="emergency_phone" class="form-input" placeholder="07700 000000" required></div>
-        <div class="form-group"><label class="form-label">Email</label><input type="email" name="emergency_email" class="form-input" placeholder="Optional"></div>
-      </div>
-
-      <div class="form-section-title">📝 Additional Information</div>
-      <div class="form-row full">
-        <div class="form-group"><label class="form-label">Any requirements or questions?</label><textarea name="additional_info" class="form-input form-textarea" placeholder="e.g. accessibility needs, parking, questions…" style="min-height:80px"></textarea></div>
-      </div>
-
-      <div class="form-section-title">📎 Required Documents</div>
-      <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:16px;margin-bottom:14px">
-        <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:12px;line-height:1.6">Please upload your ID document and either your CAS letter or Student Certificate. Accepted formats: JPG, PNG, PDF. Max 4MB per file.</p>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Photo ID * <span style="font-size:.72rem;color:rgba(255,255,255,.4)">(Passport, BRP or driving licence)</span></label>
-            <input type="file" name="id_document" id="studIdDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
-            <div id="studIdDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">CAS Letter or Student Certificate *</label>
-            <input type="file" name="cas_document" id="studCasDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required style="padding:8px">
-            <div id="studCasDocPreview" style="font-size:.75rem;color:#34d399;margin-top:4px;display:none">✅ File selected</div>
-          </div>
+          <div class="form-group"><label class="form-label">First Name *</label><input type="text" name="first_name" class="form-input" placeholder="John" required><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Last Name *</label><input type="text" name="last_name" class="form-input" placeholder="Smith" required><div class="wiz-field-error"></div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Date of Birth *</label><input type="date" name="dob" class="form-input" required><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Nationality</label><input type="text" name="nationality" class="form-input" placeholder="e.g. British"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Email Address *</label><input type="email" name="email" class="form-input" placeholder="john@example.com" required><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Phone Number *</label><input type="tel" name="phone" class="form-input" placeholder="07700 000000" required><div class="wiz-field-error"></div></div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group"><label class="form-label">Current Home Address *</label><textarea name="current_address" class="form-input form-textarea" placeholder="Full address including postcode" required></textarea><div class="wiz-field-error"></div></div>
+        </div>
+
+        <div class="wiz-nav">
+          <span></span>
+          <button type="button" class="wiz-btn wiz-btn-next" data-wiz-action="next">Next: Studies &amp; Room →</button>
+        </div>
+        <p class="wiz-saved-note" style="display:none"></p>
+      </div>
+
+      <!-- ═════════════════════════════════════════ STEP 2: STUDIES & ROOM ═════════════════════════════════════════ -->
+      <div class="wiz-step" data-step="2">
+        <h3 class="wiz-step-title">Studies &amp; room</h3>
+        <p class="wiz-step-desc">Your university details and room preferences.</p>
+
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">University / College *</label><input type="text" name="university" class="form-input" placeholder="e.g. University of Essex" required><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Course / Subject *</label><input type="text" name="course" class="form-input" placeholder="e.g. Business Management" required><div class="wiz-field-error"></div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Year of Study *</label><select name="year_of_study" class="form-input form-select" required><option value="">Select…</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Postgraduate</option><option>Other</option></select><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Student ID</label><input type="text" name="student_id" class="form-input" placeholder="Optional"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Preferred Complex *</label><select name="preferred_complex" class="form-input form-select" required><option value="">Select…</option><option>Forest Road House (from £96.92/pw)</option><option>Candan House (from £101.54/pw)</option><option>Greenstead House (from £106.15/pw)</option><option>No preference</option></select><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Room Type</label><select name="room_type" class="form-input form-select"><option>No preference</option><option>En-suite Room</option><option>Studio</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Desired Move-In Date *</label><input type="date" name="move_in_date" class="form-input" required><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Tenancy Length *</label><select name="tenancy_length" class="form-input form-select" required><option value="">Select…</option><option value="12 Months">12 Months</option><option value="11 Months">11 Months</option></select><div class="wiz-field-error"></div></div>
+        </div>
+
+        <div class="wiz-nav">
+          <button type="button" class="wiz-btn wiz-btn-back" data-wiz-action="back">← Back</button>
+          <button type="button" class="wiz-btn wiz-btn-next" data-wiz-action="next">Next: Documents →</button>
         </div>
       </div>
 
-      <div class="form-section-title">📋 Declaration</div>
-      <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.15);border-radius:10px;padding:16px 18px;margin-bottom:16px;font-size:.82rem;color:rgba(255,255,255,.72);line-height:1.7">
-        <p style="margin:0 0 10px;color:rgba(255,255,255,.85);font-weight:600">By signing and submitting this application I confirm that:</p>
-        <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">
-          <li>I have attached a clear photograph or scan of my photo ID (passport, BRP or driving licence).</li>
-          <li>I have provided either my CAS letter or my Student Certificate. <strong style="color:rgba(245,197,24,.95)">If only the CAS letter is provided at the time of this application, I undertake to supply my Student Certificate within 14 days of the date of this application.</strong></li>
-          <li>All information given in this form is <strong style="color:rgba(245,197,24,.95)">correct, accurate and true</strong> to the best of my knowledge.</li>
-          <li>I understand this is an application only and does <strong>not</strong> guarantee a tenancy. Millennium Investments 2000 Ltd will contact me to discuss the next steps.</li>
-        </ol>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:20px">
-        <input type="checkbox" name="declaration" id="studDeclarationCheck" style="margin-top:3px;accent-color:var(--gold-500);width:16px;height:16px;flex-shrink:0" required>
-        <label for="studDeclarationCheck" style="font-size:.85rem;color:rgba(255,255,255,.75);cursor:pointer">I confirm that I have read and agree to all four points of the above declaration *</label>
+      <!-- ═════════════════════════════════════════ STEP 3: DOCUMENTS + EMERGENCY ═════════════════════════════════════════ -->
+      <div class="wiz-step" data-step="3">
+        <h3 class="wiz-step-title">Emergency contact &amp; documents</h3>
+        <p class="wiz-step-desc">Upload your ID and CAS letter. We accept JPG, PNG or PDF (max 4MB each).</p>
+
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Emergency Contact Name *</label><input type="text" name="emergency_name" class="form-input" placeholder="Parent or guardian name" required><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Relationship *</label><input type="text" name="emergency_relationship" class="form-input" placeholder="e.g. Mother" required><div class="wiz-field-error"></div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Emergency Phone *</label><input type="tel" name="emergency_phone" class="form-input" placeholder="07700 000000" required><div class="wiz-field-error"></div></div>
+          <div class="form-group"><label class="form-label">Emergency Email</label><input type="email" name="emergency_email" class="form-input" placeholder="Optional"></div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group"><label class="form-label">Any requirements or questions?</label><textarea name="additional_info" class="form-input form-textarea" placeholder="Accessibility needs, parking, questions…"></textarea></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Photo ID *</label>
+            <input type="file" name="id_document" id="studIdDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required>
+            <p>Passport, BRP or driving licence</p>
+            <div id="studIdDocPreview" class="wiz-file-preview"></div>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CAS Letter or Student Certificate *</label>
+            <input type="file" name="cas_document" id="studCasDocument" class="form-input" accept=".jpg,.jpeg,.png,.pdf" required>
+            <p>Required for immigration compliance</p>
+            <div id="studCasDocPreview" class="wiz-file-preview"></div>
+            <div class="wiz-field-error"></div>
+          </div>
+        </div>
+
+        <div class="wiz-nav">
+          <button type="button" class="wiz-btn wiz-btn-back" data-wiz-action="back">← Back</button>
+          <button type="button" class="wiz-btn wiz-btn-next" data-wiz-action="next">Next: Review →</button>
+        </div>
       </div>
 
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:14px 16px">
-        <input type="checkbox" name="terms_agree" id="studTermsCheck" style="margin-top:3px;accent-color:var(--gold-500);width:16px;height:16px;flex-shrink:0" required>
-        <label for="studTermsCheck" style="font-size:.85rem;color:rgba(255,255,255,.8);cursor:pointer;line-height:1.55">I have read and agree to the <a onclick="event.preventDefault();openTerms('student')" style="color:var(--gold-400);font-weight:700;text-decoration:underline;cursor:pointer">Terms and Conditions</a> of Millennium Investments 2000 Ltd applicable to student accommodation. *</label>
-      </div>
+      <!-- ═════════════════════════════════════════ STEP 4: REVIEW & SIGN ═════════════════════════════════════════ -->
+      <div class="wiz-step" data-step="4">
+        <h3 class="wiz-step-title">Review &amp; sign</h3>
+        <p class="wiz-step-desc">Please review the summary below. Go back if anything needs correcting.</p>
 
-      <div class="form-section-title">✍️ Signature</div>
-      <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:12px">Sign below using your mouse or finger:</p>
-      <div class="sig-box"><canvas id="studSigCanvas" style="width:100%;height:160px;display:block"></canvas></div>
-      <div class="sig-controls">
-        <button type="button" class="sig-clear-btn" onclick="clearStudSig()">✕ Clear</button>
-        <span id="studSigStatus" style="color:rgba(255,255,255,.35)">Draw your signature above</span>
-      </div>
-      <input type="hidden" name="signature" id="studSigData">
+        <div class="wiz-review">
+          <div class="wiz-review-title">Application Summary</div>
+          <dl class="wiz-review-grid" id="studReviewSummary">
+            <dt>&nbsp;</dt><dd>&nbsp;</dd>
+          </dl>
+        </div>
 
-      <div style="text-align:center;margin-top:32px">
-        <button type="submit" class="btn btn-gold" style="width:100%;max-width:360px;justify-content:center;font-size:1rem;padding:16px 32px">Submit Application →</button>
+        <div class="wiz-consent">
+          <input type="checkbox" name="declaration" id="studDeclarationCheck" required>
+          <label for="studDeclarationCheck"><strong>Declaration.</strong> I confirm that: (1) I have attached a clear photo ID; (2) I have provided either my CAS letter or Student Certificate — if only the CAS letter is provided, I undertake to supply the Student Certificate within 14 days; (3) all information above is correct, accurate and true; (4) I understand this is an application only and does not guarantee a tenancy. *</label>
+        </div>
+
+        <div class="wiz-consent">
+          <input type="checkbox" name="terms_agree" id="studTermsCheck" required>
+          <label for="studTermsCheck">I have read and agree to the <a onclick="event.preventDefault();openTerms('student')" style="color:#c88a0f;font-weight:700;text-decoration:underline;cursor:pointer">Terms and Conditions</a> applicable to student accommodation. *</label>
+        </div>
+
+        <div style="margin-top:20px">
+          <label class="form-label" style="color:#3a3a3a">Draw your signature below *</label>
+          <div class="sig-wrap">
+            <canvas id="studSigCanvas" style="height:140px;display:block"></canvas>
+            <div class="sig-actions">
+              <button type="button" class="sig-clear" onclick="clearStudSig()">✕ Clear</button>
+              <span class="sig-status" id="studSigStatus">Draw your signature above</span>
+            </div>
+          </div>
+          <input type="hidden" name="signature" id="studSigData">
+        </div>
+
+        <div class="wiz-nav">
+          <button type="button" class="wiz-btn wiz-btn-back" data-wiz-action="back">← Back</button>
+          <button type="submit" class="wiz-btn wiz-btn-submit">✓ Submit Application</button>
+        </div>
       </div>
     </form>
   </div>
