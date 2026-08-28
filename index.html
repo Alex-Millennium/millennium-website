@@ -48,7 +48,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   --shadow-lg:0 12px 48px rgba(0,0,0,.3);
   --shadow-gold:0 8px 28px rgba(240,180,41,.35);
   --trans:all .28s cubic-bezier(.4,0,.2,1);
-  --notif-h:38px;
+  --notif-h: 0px;   /* Top notification bar removed; nav sits at 0 */
 }
 
 /* ============================================================
@@ -1181,14 +1181,7 @@ function initFirebase(){
 <canvas id="galaxyCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block"></canvas>
 <canvas id="edgeCloudCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block"></canvas>
 
-<!-- NOTIFICATION BAR -->
-<div class="notif-bar">
-  🎓 Rates frozen for the 2025/26 academic year
-  <span>|</span>
-  <a href="tel:01206500202">📞 01206 500202</a>
-  <span>|</span>
-  Mon–Fri 9am–6pm
-</div>
+
 
 <!-- NAVIGATION -->
 <nav class="nav" id="navbar">
@@ -1491,31 +1484,6 @@ function initFirebase(){
         </div>
       </div>
       <!-- Right: Stat Cards -->
-      <div class="hcards">
-        <div class="hcard">
-          <div class="hcard-icon">🏠</div>
-          <div class="hcard-val" id="cnt-complexes">0</div>
-          <div class="hcard-lbl">Student Complexes</div>
-        </div>
-        <div class="hcard">
-          <div class="hcard-icon">📍</div>
-          <div class="hcard-val" id="cnt-cities">0</div>
-          <div class="hcard-lbl">Cities Covered</div>
-        </div>
-        <div class="hcard">
-          <div class="hcard-icon">⭐</div>
-          <div class="hcard-val" id="cnt-years">0</div>
-          <div class="hcard-lbl">Years Established</div>
-        </div>
-        <div class="hcard span2">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-            <span style="font-size:.9rem">📍</span>
-            <span style="font-size:.78rem;color:rgba(255,255,255,.55)">Colchester &amp; Ipswich</span>
-          </div>
-          <div style="font-size:.92rem;font-weight:600">From <span style="color:var(--gold-500);font-size:1.25rem;font-weight:800">£96.92</span><span style="color:rgba(255,255,255,.45);font-size:.82rem">/pw</span></div>
-          <div style="font-size:.72rem;color:rgba(255,255,255,.42);margin-top:4px">Student rooms available for 2025/26</div>
-        </div>
-      </div>
     </div>
     <!-- Scroll indicator -->
     <div class="scroll-ind">
@@ -2109,15 +2077,26 @@ function initFirebase(){
         </div>
       </div>
 
-      <div style="margin-top:20px;padding:14px 20px;background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.18);border-radius:10px;font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.7">
-        💡 All prices include gas, electric, water, 100Mbps WiFi, contents insurance and maintenance. No tenancy deposit required.
-        A <strong style="color:var(--gold-400)">5% discount</strong> applies when paying annually.
-        <strong style="color:var(--gold-400)">Loyalty bonus</strong> — 12th month free when returning for next academic year (termly payers).
+      <div style="margin-top:20px;padding:18px 22px;background:linear-gradient(135deg,#1a0f2e 0%,#0a0618 100%);border:1.5px solid rgba(240,180,41,0.55);border-radius:12px;font-size:.88rem;color:rgba(255,255,255,.92);line-height:1.75;box-shadow:0 6px 24px rgba(0,0,0,0.35),inset 0 1px 0 rgba(240,180,41,0.1)">
+        <div style="font-size:.72rem;color:#F0B429;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">✨ What's included</div>
+        All prices include <strong style="color:#fff">gas, electric, water, 100Mbps WiFi, contents insurance and maintenance</strong>. <strong style="color:#fff">No tenancy deposit required.</strong>
+        <div style="height:8px"></div>
+        <strong style="color:var(--gold-400);font-weight:700">🏆 Loyalty bonus</strong> — 12th month <strong style="color:#fff">free</strong> when returning next year.
+        <strong style="color:var(--gold-400);font-weight:700">Additional 5% off</strong> for annual payments.
       </div>
     </div>
   </section>
 
-</div><!-- end page-student -->
+
+      <!-- STUDENT ACADEMIC YEAR BANNER (bottom of page) -->
+      <div style="margin:40px auto 24px;max-width:900px;padding:18px 28px;background:linear-gradient(135deg,#F0B429,#C88A0F);border-radius:14px;box-shadow:0 8px 28px rgba(240,180,41,0.35);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px;font-size:.95rem;color:#0a0618;font-weight:700">
+        <span>🎓 Rates frozen for the <strong>2026/27</strong> academic year</span>
+        <span style="opacity:.35">|</span>
+        <a href="tel:01206500202" style="color:#0a0618;text-decoration:none;display:inline-flex;align-items:center;gap:6px"><strong>📞 01206 500202</strong></a>
+        <span style="opacity:.35">|</span>
+        <span>Mon–Fri 9am–6pm</span>
+      </div>
+    </div><!-- end page-student -->
 
 
 <!-- ============================================================
@@ -3302,8 +3281,8 @@ function initFirebase(){
   <!-- WhatsApp -->
   <a class="fab-btn wa-fab" href="https://wa.me/447872428232" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <div class="fab-tooltip">WhatsApp Us</div>
-    <svg viewBox="0 0 24 24" fill="white" width="26" height="26">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.004 2a10 10 0 1 0 0 20.001A10 10 0 0 0 12.004 2"/>
+    <svg viewBox="0 0 448 512" fill="white" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+      <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
     </svg>
   </a>
   <!-- Email -->
