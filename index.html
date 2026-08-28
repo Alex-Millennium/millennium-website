@@ -5487,6 +5487,33 @@ function wizValidateStep(stepEl){
       if(!firstInvalid) firstInvalid = el;
     }
   });
+
+  /* Custom rule: Share Code OR Alternative must be provided */
+  const shareEl = stepEl.querySelector('[name="share_code"]');
+  const altEl = stepEl.querySelector('[name="share_code_alt"]');
+  if(shareEl && altEl){
+    const codeVal = shareEl.value.trim();
+    const altVal = altEl.value.trim();
+    if(!codeVal && !altVal){
+      shareEl.classList.add('wiz-error');
+      altEl.classList.add('wiz-error');
+      const errEl = shareEl.parentElement.querySelector('.wiz-field-error');
+      if(errEl){
+        errEl.textContent = 'Please provide a share code, or select an option on the right.';
+        errEl.classList.add('show');
+      }
+      if(!firstInvalid) firstInvalid = shareEl;
+    } else if(codeVal && codeVal.length < 9){
+      shareEl.classList.add('wiz-error');
+      const errEl = shareEl.parentElement.querySelector('.wiz-field-error');
+      if(errEl){
+        errEl.textContent = 'Share codes are 9 characters. Please check.';
+        errEl.classList.add('show');
+      }
+      if(!firstInvalid) firstInvalid = shareEl;
+    }
+  }
+
   if(firstInvalid){
     firstInvalid.focus({preventScroll:false});
     firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
@@ -5631,7 +5658,9 @@ async function submitPrivateApp(e){
     {label:'Phone',                value:gF('phone')},
     {label:'NI Number',            value:gF('ni_number')},
     {label:'Right to Rent Status', value:gF('right_to_rent')},
+    {label:'Share Code',           value: (gF('share_code') || gF('share_code_alt') || '—')},
     {label:'Current Address',      value:gF('current_address')},
+    {label:'Share Code',           value: (gF('share_code') || gF('share_code_alt') || '—')},
     /* Employment (9-12) */
     {label:'Employment Status',    value:gF('employment_status')},
     {label:'Employer',             value:gF('employer')},
@@ -5758,7 +5787,7 @@ async function submitPrivateApp(e){
       fieldPair('Date of Birth', F['Date of Birth'], 'Nationality', F['Nationality']);
       fieldPair('Email', F['Email'], 'Phone', F['Phone']);
       fieldPair('NI Number', F['NI Number'], 'Right to Rent Status', F['Right to Rent Status']);
-      fieldFullWidth('Current Address', F['Current Address']);
+      fieldPair('Share Code', F['Share Code'], 'Current Address', F['Current Address']);
 
       /* ═══════ EMPLOYMENT ═══════ */
       sectionTitle('Employment Details');
@@ -6018,6 +6047,7 @@ async function submitStudentApp(e){
     {label:'Email',                value:gF('email')},
     {label:'Phone',                value:gF('phone')},
     {label:'Current Address',      value:gF('current_address')},
+    {label:'Share Code',           value: (gF('share_code') || gF('share_code_alt') || '—')},
     {label:'University',           value:gF('university')},
     {label:'Course',               value:gF('course')},
     {label:'Year of Study',        value:gF('year_of_study')},
@@ -6122,7 +6152,7 @@ async function submitStudentApp(e){
       fieldPair('First Name', F['First Name'], 'Last Name', F['Last Name']);
       fieldPair('Date of Birth', F['Date of Birth'], 'Nationality', F['Nationality']);
       fieldPair('Email', F['Email'], 'Phone', F['Phone']);
-      fieldFullWidth('Current Address', F['Current Address']);
+      fieldPair('Share Code', F['Share Code'], 'Current Address', F['Current Address']);
 
       /* ═══════ UNIVERSITY DETAILS ═══════ */
       sectionTitle('University Details');
@@ -7424,6 +7454,24 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="wiz-field-error"></div>
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Home Office Share Code *</label>
+            <input type="text" name="share_code" id="privShareCode" class="form-input" placeholder="9-character code, e.g. ABC12DE34" maxlength="11" style="text-transform:uppercase">
+            <p>Get yours at <a href="https://www.gov.uk/prove-right-to-rent" target="_blank" rel="noopener" style="color:#c88a0f;text-decoration:underline">gov.uk/prove-right-to-rent</a>. Not needed for British/Irish citizens — use the option on the right instead.</p>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Don't have one?</label>
+            <select name="share_code_alt" id="privShareCodeAlt" class="form-input form-select">
+              <option value="">Select if applicable…</option>
+              <option value="N/A - British/Irish citizen">N/A — British / Irish citizen</option>
+              <option value="Will provide separately">Will provide separately</option>
+              <option value="Will discuss">Will discuss at viewing</option>
+            </select>
+            <p>Leave this blank if you have a share code above.</p>
+          </div>
+        </div>
         <div class="form-row full">
           <div class="form-group">
             <label class="form-label">Current Address *</label>
@@ -7731,6 +7779,24 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="form-row full">
           <div class="form-group"><label class="form-label">Current Home Address *</label><textarea name="current_address" class="form-input form-textarea" placeholder="Full address including postcode" required></textarea><div class="wiz-field-error"></div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Home Office Share Code *</label>
+            <input type="text" name="share_code" id="studShareCode" class="form-input" placeholder="9-character code, e.g. ABC12DE34" maxlength="11" style="text-transform:uppercase">
+            <p>Get yours at <a href="https://www.gov.uk/prove-right-to-rent" target="_blank" rel="noopener" style="color:#c88a0f;text-decoration:underline">gov.uk/prove-right-to-rent</a>. Required for international students under UK Right to Rent law.</p>
+            <div class="wiz-field-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Don't have one?</label>
+            <select name="share_code_alt" id="studShareCodeAlt" class="form-input form-select">
+              <option value="">Select if applicable…</option>
+              <option value="N/A - British/Irish citizen">N/A — British / Irish citizen</option>
+              <option value="Will provide separately">Will provide separately</option>
+              <option value="Will discuss">Will discuss at viewing</option>
+            </select>
+            <p>Leave this blank if you have a share code above.</p>
+          </div>
         </div>
 
         <div class="wiz-nav">
