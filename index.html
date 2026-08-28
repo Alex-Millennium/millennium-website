@@ -350,6 +350,231 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 .fab-btn:hover .fab-tooltip{opacity:1}
 
+
+/* ============================================================
+   FEATURED REVIEW CARD (hero testimonial)
+============================================================ */
+.test-featured{
+  max-width:920px;
+  margin:0 auto 44px;
+}
+.tcard-featured{
+  position:relative;
+  background:linear-gradient(135deg,rgba(240,180,41,0.10) 0%,rgba(26,15,46,0.85) 35%,rgba(10,6,24,0.92) 100%);
+  border:1.5px solid rgba(240,180,41,0.42);
+  border-radius:20px;
+  padding:36px 40px;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  box-shadow:0 14px 44px rgba(0,0,0,0.42), 0 0 60px rgba(240,180,41,0.08);
+  overflow:hidden;
+}
+.tcard-featured::before{
+  content:'\201C';
+  position:absolute;
+  top:-32px;left:20px;
+  font-size:11rem;
+  font-family:Georgia,serif;
+  color:rgba(240,180,41,0.10);
+  line-height:1;
+  pointer-events:none;
+  z-index:0;
+}
+.tcf-header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:22px;
+  position:relative;
+  z-index:1;
+}
+.tcf-avatar{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#F0B429,#C88A0F);
+  color:#0a0618;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:1.5rem;
+  flex-shrink:0;
+  box-shadow:0 4px 18px rgba(240,180,41,0.4);
+  letter-spacing:-.02em;
+}
+.tcf-meta{flex:1;min-width:0}
+.tcf-name{
+  font-size:1.15rem;font-weight:800;
+  color:#fff;margin-bottom:3px;
+}
+.tcf-role{
+  font-size:.8rem;color:rgba(255,255,255,0.62);
+  margin-bottom:9px;
+}
+.tcf-badges{display:flex;gap:8px;flex-wrap:wrap}
+.tcf-badge-google, .tcf-badge-featured{
+  font-size:.66rem;font-weight:700;
+  padding:3px 11px;border-radius:100px;
+  letter-spacing:.03em;
+  display:inline-flex;align-items:center;gap:4px;
+  white-space:nowrap;
+}
+.tcf-badge-google{
+  background:rgba(66,133,244,0.15);
+  color:#7baaf7;
+  border:1px solid rgba(66,133,244,0.32);
+}
+.tcf-badge-featured{
+  background:rgba(240,180,41,0.15);
+  color:#F0B429;
+  border:1px solid rgba(240,180,41,0.4);
+}
+.tcf-stars{
+  font-size:1.3rem;
+  color:#F0B429;
+  letter-spacing:2px;
+  flex-shrink:0;
+  text-shadow:0 0 12px rgba(240,180,41,0.4);
+}
+.tcf-quote{
+  font-size:1.02rem;
+  color:rgba(255,255,255,0.92);
+  line-height:1.8;
+  white-space:pre-line;
+  font-style:italic;
+  position:relative;
+  z-index:1;
+  margin:0;
+  padding-left:2px;
+}
+@media(max-width:640px){
+  .tcard-featured{padding:26px 22px;border-radius:16px}
+  .tcard-featured::before{font-size:8rem;top:-20px;left:12px}
+  .tcf-header{flex-wrap:wrap;gap:12px}
+  .tcf-avatar{width:54px;height:54px;font-size:1.25rem}
+  .tcf-stars{width:100%;text-align:left;font-size:1.1rem}
+  .tcf-quote{font-size:.95rem;line-height:1.7}
+}
+
+/* ============================================================
+   RENT CALCULATOR (restored)
+============================================================ */
+.calc-card{
+  background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);
+  border:1px solid rgba(240,180,41,0.28);
+  border-radius:16px;
+  padding:32px 28px;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.35);
+}
+.calc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px 20px;
+  margin-bottom:24px;
+}
+.calc-result{
+  margin:22px 0;
+  padding:20px;
+  background:rgba(6,3,22,0.55);
+  border:1px solid rgba(240,180,41,0.2);
+  border-radius:12px;
+  min-height:60px;
+  display:none;
+}
+.calc-result.show{display:block;animation:fadeIn .3s ease}
+.cr-title{
+  font-size:1rem;font-weight:800;
+  color:#F0B429;margin-bottom:12px;
+  letter-spacing:.02em;
+}
+.aff-bar{
+  height:10px;
+  background:rgba(255,255,255,0.08);
+  border-radius:100px;
+  overflow:hidden;
+  margin-bottom:14px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+.aff-fill{
+  height:100%;
+  background:linear-gradient(90deg,#10b981 0%,#F0B429 60%,#c41e3a 100%);
+  border-radius:100px;
+  transition:width .5s ease;
+  width:0%;
+}
+.cr-detail{
+  font-size:.88rem;
+  color:rgba(255,255,255,.82);
+  line-height:1.65;
+}
+.cr-detail strong{color:#F0B429}
+.calc-hints{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top:10px;
+}
+.chint{
+  background:rgba(240,180,41,0.06);
+  border:1px solid rgba(240,180,41,0.22);
+  border-radius:10px;
+  padding:14px 16px;
+}
+.chint h4{
+  font-size:.82rem;
+  font-weight:800;
+  color:#F0B429;
+  margin:0 0 6px;
+  letter-spacing:.03em;
+}
+.chint p{
+  font-size:.78rem;
+  color:rgba(255,255,255,.72);
+  line-height:1.55;
+  margin:0;
+}
+
+/* ============================================================
+   FILTER BAR (restored — used on Private Rentals)
+============================================================ */
+.filter-bar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:28px;
+  padding:18px 20px;
+  background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);
+  border:1px solid rgba(240,180,41,0.28);
+  border-radius:12px;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  box-shadow:0 4px 18px rgba(0,0,0,0.25);
+}
+.filter-bar select,.filter-bar input{
+  flex:1;min-width:160px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14);
+  color:#fff;
+  padding:10px 14px;border-radius:8px;
+  font-size:.88rem;font-weight:500;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:all .2s;
+}
+.filter-bar select:hover,.filter-bar input:hover{border-color:rgba(240,180,41,.4)}
+.filter-bar select:focus,.filter-bar input:focus{
+  outline:none;
+  border-color:#F0B429;
+  box-shadow:0 0 0 3px rgba(240,180,41,0.18);
+}
+
+/* ============================================================
+   RESPONSIVE — CALCULATOR + FILTER
+============================================================ */
+@media(max-width:768px){
+  .calc-grid{grid-template-columns:1fr}
+  .calc-hints{grid-template-columns:1fr}
+  .filter-bar{flex-direction:column}
+}
+
 /* ============================================================
    FOOTER
 ============================================================ */
@@ -1527,6 +1752,24 @@ function initFirebase(){
           <div class="gym-icon-big">🥊</div>
           <div class="gym-icon-sm">🏋️</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section bg-base" id="reviewsSection">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">What Our Tenants Say</div>
+        <h2 class="sec-title">Real <span class="gold-text">Reviews</span></h2>
+        <p class="sec-sub" style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);border-radius:12px;padding:16px 22px;color:rgba(255,255,255,0.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.25);max-width:680px;margin:0 auto">Genuine feedback from students and tenants — verified via Google Reviews.</p>
+      </div>
+      <div class="test-featured"></div>
+      <div class="test-grid"></div>
+      <div style="text-align:center;margin-top:32px">
+        <a href="https://www.google.com/search?q=Forest+Road+House+Colchester+reviews" target="_blank" rel="noopener" class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:8px">
+          <span style="font-size:1rem">🟢</span> See more Google Reviews
+        </a>
       </div>
     </div>
   </section>
@@ -2812,7 +3055,7 @@ function initFirebase(){
       <div class="sec-hd">
         <div class="sec-tag">Our Locations</div>
         <h2 class="sec-title">Three <span class="gold-text">Prime Complexes</span></h2>
-        <p class="sec-sub">All our student complexes are in Colchester — within easy reach of the University of Essex campus and the town centre. Click each complex to view on the map.</p>
+        <p class="sec-sub" style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);border-radius:12px;padding:16px 22px;color:rgba(255,255,255,0.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.25);max-width:720px;margin:0 auto">All our student complexes are in Colchester — within easy reach of the University of Essex campus and the town centre. Click each complex to view on the map.</p>
       </div>
 
       <!-- Location Tab Buttons -->
@@ -3052,9 +3295,6 @@ function initFirebase(){
     <div class="sec-in">
       <div class="sec-hd">
         <h2 class="sec-title">Transparent <span class="gold-text">Pricing</span></h2>
-        <p class="sec-sub">All prices include bills, contents insurance and maintenance. No deposit. No hidden fees.<br>
-          <span style="font-size:.82rem;color:rgba(255,255,255,.45)">Save 5% when paying annually &nbsp;·&nbsp; Loyalty bonus: 12th month free for returning termly payers</span>
-        </p>
       </div>
 
       <!-- Tab buttons -->
@@ -3499,14 +3739,7 @@ function initFirebase(){
   </section>
 
   <!-- STATS -->
-  <div class="stats-bar">
-    <div class="stats-grid">
-      <div class="fade-in"><div class="stat-num">28</div><div class="stat-lbl">Years in Business</div></div>
-      <div class="fade-in stagger-1"><div class="stat-num">3</div><div class="stat-lbl">Student Complexes</div></div>
-      <div class="fade-in stagger-2"><div class="stat-num">2</div><div class="stat-lbl">Cities Covered</div></div>
-      <div class="fade-in stagger-3"><div class="stat-num">24/7</div><div class="stat-lbl">CCTV Security</div></div>
-    </div>
-  </div>
+  
 
   <!-- OUR VALUES -->
   <section class="section bg-base">
@@ -3845,6 +4078,22 @@ function initFirebase(){
         <div style="background:rgba(8,4,24,.6);border:1px solid rgba(160,80,255,.2);border-radius:14px;padding:22px;margin-bottom:24px">
           <div style="font-weight:700;margin-bottom:16px;font-size:.95rem" id="revFormTitle">➕ Add New Review</div>
 
+          <!-- Quick Import (paste helper) -->
+          <details style="margin-bottom:18px;background:rgba(66,133,244,.06);border:1px solid rgba(66,133,244,.22);border-radius:10px;overflow:hidden">
+            <summary style="cursor:pointer;padding:12px 16px;font-size:.85rem;font-weight:700;color:#7baaf7;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
+              <span>📋 Quick Import — paste a Google review here</span>
+              <span style="font-size:.72rem;color:rgba(255,255,255,.4);font-weight:500">click to expand</span>
+            </summary>
+            <div style="padding:0 16px 14px">
+              <p style="font-size:.75rem;color:rgba(255,255,255,.55);margin-bottom:8px;line-height:1.55">Copy a Google review (name, stars, date, text) and paste it below. Hit <strong style="color:#7baaf7">Auto-Fill</strong> to populate the form fields — you can then edit before saving.</p>
+              <textarea id="revQuickImport" placeholder="Paste review here... e.g:&#10;&#10;Madhu Pinninti&#10;Local Guide · 11 reviews · 51 photos&#10;★★★★★ 7 Sept 2024&#10;My home. That's it... it speaks a lot." style="width:100%;min-height:110px;background:rgba(4,2,16,.65);border:1px solid rgba(66,133,244,.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:.82rem;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.55;resize:vertical"></textarea>
+              <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                <button type="button" onclick="parseQuickImport()" style="background:linear-gradient(135deg,#4285f4,#3367d6);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✨ Auto-Fill Form</button>
+                <button type="button" onclick="document.getElementById('revQuickImport').value=''" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.14);padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Clear</button>
+              </div>
+            </div>
+          </details>
+
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
             <div class="form-group">
               <label class="form-label">Reviewer Name *</label>
@@ -3885,6 +4134,13 @@ function initFirebase(){
                 <option value="true">👁️ Visible on site</option>
                 <option value="false">🙈 Hidden</option>
               </select>
+            </div>
+            <div style="display:flex;flex-direction:column;justify-content:flex-end">
+              <label class="form-label" style="margin-bottom:8px;display:block">Featured</label>
+              <label style="display:flex;align-items:center;gap:8px;padding:9px 14px;background:rgba(240,180,41,0.08);border:1.5px solid rgba(240,180,41,0.3);border-radius:8px;cursor:pointer;font-size:.85rem;color:#F0B429;font-weight:700;user-select:none;transition:all .2s" onmouseover="this.style.background='rgba(240,180,41,0.14)'" onmouseout="this.style.background='rgba(240,180,41,0.08)'">
+                <input type="checkbox" id="revFeatured" style="width:16px;height:16px;accent-color:#F0B429;cursor:pointer">
+                <span>⭐ Show as Featured (big hero card)</span>
+              </label>
             </div>
           </div>
 
@@ -4951,25 +5207,25 @@ function buildPrivateEmptyState(){
 
       <!-- 4 feature cards: why choose us -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:32px">
-        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+        <div style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
           <div style="font-size:2rem;margin-bottom:10px">💰</div>
           <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">No Tenancy Deposit</div>
-          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">Alternative protections instead — keep your cash</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.55">Alternative protections instead — keep your cash</div>
         </div>
-        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+        <div style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
           <div style="font-size:2rem;margin-bottom:10px">🤝</div>
           <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">Direct Landlord</div>
-          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">No agency fees, no middlemen — deal with us directly</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.55">No agency fees, no middlemen — deal with us directly</div>
         </div>
-        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+        <div style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
           <div style="font-size:2rem;margin-bottom:10px">🏆</div>
           <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">28 Years Experience</div>
-          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">Family-run since 1998, trusted by hundreds of tenants</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.55">Family-run since 1998, trusted by hundreds of tenants</div>
         </div>
-        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
+        <div style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
           <div style="font-size:2rem;margin-bottom:10px">🛠️</div>
-          <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">24/7 Support</div>
-          <div style="font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.55">Fast maintenance response, always someone to call</div>
+          <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">Maintenance</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.55">Repairs carried out promptly by our team — often at no cost to the tenant</div>
         </div>
       </div>
 
@@ -4977,25 +5233,25 @@ function buildPrivateEmptyState(){
       <div style="background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.22);border-radius:14px;padding:24px 28px;text-align:center">
         <div style="font-size:.72rem;font-weight:800;color:#F0B429;letter-spacing:.15em;text-transform:uppercase;margin-bottom:18px">📍 Locations We Cover</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;max-width:900px;margin:0 auto">
-          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:10px">
+          <div style="padding:14px;background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:10px">
             <div style="font-size:1.35rem;font-weight:800;color:#fff">Essex</div>
             <div style="font-size:.75rem;color:#F0B429;font-weight:700;margin-top:2px">Colchester &amp; area</div>
-            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:6px">Student accommodation + private rentals</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.75);margin-top:6px">Student accommodation + private rentals</div>
           </div>
-          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:10px">
+          <div style="padding:14px;background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:10px">
             <div style="font-size:1.35rem;font-weight:800;color:#fff">Suffolk</div>
             <div style="font-size:.75rem;color:#F0B429;font-weight:700;margin-top:2px">Ipswich &amp; area</div>
-            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:6px">Private rentals including a 57-room HMO</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.75);margin-top:6px">Private rentals including a 57-room HMO</div>
           </div>
-          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:10px">
+          <div style="padding:14px;background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:10px">
             <div style="font-size:1.35rem;font-weight:800;color:#fff">London</div>
             <div style="font-size:.75rem;color:#F0B429;font-weight:700;margin-top:2px">Residential lets</div>
-            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:6px">Private rental portfolio in the capital</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.75);margin-top:6px">Private rental portfolio in the capital</div>
           </div>
-          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(240,180,41,0.18);border-radius:10px">
+          <div style="padding:14px;background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:10px">
             <div style="font-size:1.35rem;font-weight:800;color:#fff">South Wales</div>
             <div style="font-size:.75rem;color:#F0B429;font-weight:700;margin-top:2px">Port Talbot</div>
-            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:6px">Residential lets across Port Talbot area</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.75);margin-top:6px">Residential lets across Port Talbot area</div>
           </div>
         </div>
       </div>
@@ -7605,7 +7861,8 @@ function scrollToPrices(complex){
   if(!pricingSection) return;
   const btn = [...pricingSection.querySelectorAll('.ptab')].find(b => b.textContent.includes(targetLabel));
   if(btn){
-    switchPriceTab('ptab-' + complex, btn);
+    /* switchPriceTab prepends 'ptab-' itself, so pass the short id */
+    switchPriceTab(complex, btn);
   }
   /* Smooth scroll to the pricing section */
   setTimeout(() => {
@@ -7845,14 +8102,31 @@ let editingRevId = null;
 let currentRevStars = 5;
 
 const DEFAULT_REVIEWS = [
-  {id:1, name:'James Mitchell', role:'University of Essex, 3rd Year', text:'Moving to Forest Road House was one of the best decisions I made at university. Bills-inclusive, no deposit, and the management team were incredibly responsive whenever we needed anything.', stars:5, source:'manual', visible:true},
-  {id:2, name:'Sarah & Tom Peters', role:'Private Tenant, Ipswich', text:'As a family, finding a private rental that felt like a real home was difficult — until we found Millennium Investments. The Ipswich property was immaculate, and the team professional throughout.', stars:5, source:'manual', visible:true},
-  {id:3, name:'Aisha Okafor', role:'Candan House, Colchester', text:'No deposit, no agency fees, free insurance — I couldn\'t believe how straightforward everything was. The on-site support is genuinely 24/7. I\'ve recommended Millennium to all my friends.', stars:5, source:'manual', visible:true},
+  {id:5, name:'Madhu P.', role:'Local Guide · 3-year tenant', text:'My home 🏠. That\'s it… it speaks a lot.\n\nLong story short — Our mental health in abroad mostly depends on the environment we live. And, moving places being an international student can be traumatic. I must say I am lucky in this situation, because I got more than I ever thought and it wouldn\'t be possible without the support I got from the management. Trust me when I say I am grateful for them, it is from the bottom of my heart ❤️ ❤️ ❤️.\n\nI wouldn\'t trade this 3 yrs of life here 🏠 for anything else.', stars:5, source:'google', visible:true, featured:true},
+  {id:1, name:'Laurentiu', role:'Local Guide · Google Review', text:'Forest Road House is a great student accommodation in Colchester. It\'s about 15-20 minutes from the University of Essex and located in a quiet, safe area. The rooms are modern, the kitchens are well equipped, and the building is clean and well maintained. The management team is friendly and responsive. Overall, very good value for money and a comfortable place to live.', stars:5, source:'google', visible:true},
+  {id:2, name:'Emmanuel C Sajan', role:'Long-term Tenant · Google Review', text:'Good and friendly place to stay. Clean surroundings, friendly staffs. Been staying here for a year and a half, never had any trouble. Close to the University and can get any other necessity in walking distance. Good condition rooms. Happy to be staying here.', stars:5, source:'google', visible:true},
+  {id:3, name:'Nelson mwalongo', role:'Verified Reviewer · Google Review', text:'This is perfect accommodation for students. Affordable rent inclusive of all utility bills with high speed internet, makes life much easier. I highly recommend this place.', stars:5, source:'google', visible:true},
+  {id:4, name:'Tayyab Hussain', role:'Verified Reviewer · Google Review', text:'I had a fantastic stay! The facilities were clean, modern, and well-maintained, providing a safe and comfortable place to stay.', stars:5, source:'google', visible:true},
+  {id:6, name:'Taiwo Onilenla', role:'Verified Reviewer · Google Review', text:'Very good accommodation for student. Very patient with student and understanding.', stars:5, source:'google', visible:true},
+  {id:7, name:'Meggy Mihova', role:'Local Guide · Google Review', text:'A place with people from all parts of the world. Administration very friendly and very attentive. Rooms and facilities very good. A delight. (Translated from Spanish)', stars:5, source:'google', visible:true},
 ];
 
 function loadReviews(){
+  /* Version tag — bump this to force refresh of default reviews for existing visitors */
+  const REVIEWS_VERSION = 'v4-six-reviews';
+  const savedVersion = localStorage.getItem('mi_reviews_version');
   const saved = localStorage.getItem('mi_reviews');
-  reviews = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_REVIEWS));
+  if(savedVersion !== REVIEWS_VERSION){
+    /* Force refresh to new defaults */
+    reviews = JSON.parse(JSON.stringify(DEFAULT_REVIEWS));
+    try {
+      localStorage.setItem('mi_reviews', JSON.stringify(reviews));
+      localStorage.setItem('mi_reviews_version', REVIEWS_VERSION);
+    } catch(e){}
+    console.log('[Migration] Reviews updated to', REVIEWS_VERSION);
+  } else {
+    reviews = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_REVIEWS));
+  }
 }
 
 function saveReviews(){
@@ -7867,31 +8141,110 @@ function setRevStar(n){
   });
 }
 
+function parseQuickImport(){
+  const raw = document.getElementById('revQuickImport').value.trim();
+  if(!raw){ showToast('Paste a Google review first','error'); return; }
+  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  if(lines.length < 2){ showToast('Not enough content to parse — need at least a name and text','error'); return; }
+
+  /* Parsing strategy — Google Business reviews typically follow this pattern:
+     Line 1: Name (e.g. "Madhu Pinninti")
+     Line 2: Role info (e.g. "Local Guide · 11 reviews · 51 photos") — optional
+     Line 3: Star rating + date (e.g. "★★★★★ 7 Sept 2024" or "5 stars 7 Sept 2024")
+     Rest: Review text (may span multiple paragraphs)
+  */
+
+  let name = '', role = '', stars = 5, textStart = 1;
+
+  /* Name = first line */
+  name = lines[0];
+
+  /* Look for role hint in line 2 */
+  const roleRegex = /(Local Guide|reviews?|photos?|contributor)/i;
+  if(lines.length >= 2 && roleRegex.test(lines[1])){
+    role = lines[1];
+    textStart = 2;
+  }
+
+  /* Look for star pattern in next few lines */
+  for(let i = textStart; i < Math.min(textStart + 3, lines.length); i++){
+    const line = lines[i];
+    /* Count stars: ★ characters */
+    const starCount = (line.match(/★/g) || []).length;
+    if(starCount >= 1 && starCount <= 5){
+      stars = starCount;
+      textStart = i + 1;
+      break;
+    }
+    /* Or "N star(s)" pattern */
+    const starWord = line.match(/^(\d)\s*stars?/i);
+    if(starWord){
+      stars = parseInt(starWord[1]);
+      textStart = i + 1;
+      break;
+    }
+  }
+
+  /* Remaining lines = review text (rejoin with double newline for paragraphs) */
+  const textLines = lines.slice(textStart).filter(l => {
+    /* Skip lines that look like standalone dates */
+    if(/^(\d{1,2}\s+\w+\s+\d{4}|\d+\s+(days?|weeks?|months?|years?)\s+ago)$/i.test(l)) return false;
+    /* Skip "Reply" button text */
+    if(/^reply$/i.test(l)) return false;
+    return true;
+  });
+  const text = textLines.join('\n\n');
+
+  /* Populate the form */
+  if(name) document.getElementById('revName').value = name;
+  if(role){
+    /* Add "· Google Review" suffix if not already there */
+    if(!/google/i.test(role)) role += ' · Google Review';
+    document.getElementById('revRole').value = role;
+  } else {
+    document.getElementById('revRole').value = 'Verified Reviewer · Google Review';
+  }
+  if(text) document.getElementById('revText').value = text;
+  setRevStar(stars);
+  document.getElementById('revSource').value = 'google';
+
+  showToast('✨ Form auto-filled — review before saving!', 'success');
+  /* Scroll to the name field so user can see the result */
+  document.getElementById('revName').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
 function saveReview(){
   const name = document.getElementById('revName').value.trim();
   const role = document.getElementById('revRole').value.trim();
   const text = document.getElementById('revText').value.trim();
   const source = document.getElementById('revSource').value;
   const visible = document.getElementById('revVisible').value === 'true';
+  const featured = document.getElementById('revFeatured').checked;
   if(!name||!role||!text){ showToast('Please fill in name, role and review text','error'); return; }
+  /* If marking as featured, unmark all other featured reviews (only one at a time) */
+  if(featured){
+    reviews.forEach(r => { if(r.id !== editingRevId) r.featured = false; });
+  }
   if(editingRevId !== null){
     const r = reviews.find(x=>x.id===editingRevId);
-    if(r){ r.name=name; r.role=role; r.text=text; r.stars=currentRevStars; r.source=source; r.visible=visible; }
+    if(r){ r.name=name; r.role=role; r.text=text; r.stars=currentRevStars; r.source=source; r.visible=visible; r.featured=featured; }
     editingRevId = null;
   } else {
     const newId = reviews.length ? Math.max(...reviews.map(r=>r.id))+1 : 1;
-    reviews.push({id:newId, name, role, text, stars:currentRevStars, source, visible});
+    reviews.push({id:newId, name, role, text, stars:currentRevStars, source, visible, featured});
   }
   saveReviews();
   clearRevForm();
   renderRevList();
-  showToast('Review saved!','success');
+  showToast(featured ? '⭐ Review saved as Featured!' : 'Review saved!', 'success');
 }
 
 function clearRevForm(){
   ['revName','revRole','revText'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   document.getElementById('revSource').value='manual';
   document.getElementById('revVisible').value='true';
+  const featEl = document.getElementById('revFeatured');
+  if(featEl) featEl.checked = false;
   document.getElementById('revFormTitle').textContent='➕ Add New Review';
   document.getElementById('revCancelBtn').style.display='none';
   setRevStar(5);
@@ -7909,6 +8262,7 @@ function editReview(id){
   document.getElementById('revText').value = r.text;
   document.getElementById('revSource').value = r.source||'manual';
   document.getElementById('revVisible').value = String(r.visible);
+  document.getElementById('revFeatured').checked = !!r.featured;
   document.getElementById('revFormTitle').textContent = '✏️ Edit Review';
   document.getElementById('revCancelBtn').style.display = 'inline-flex';
   setRevStar(r.stars||5);
@@ -7972,24 +8326,58 @@ function renderRevList(){
 
 function renderTestimonialsOnSite(){
   const grid = document.querySelector('.test-grid');
-  if(!grid) return;
+  const featuredContainer = document.querySelector('.test-featured');
   const visible = reviews.filter(r=>r.visible);
   if(!visible.length) return;
-  grid.innerHTML = visible.map((r,i)=>{
-    const stars = '★'.repeat(r.stars||5);
-    const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const googleBadge = r.source==='google'
-      ? '<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span style="font-size:.7rem;color:#7baaf7;font-weight:700">🟢 Google Review</span></div>' : '';
-    return `<div class="tcard fade-in stagger-${i%4}">
-      ${googleBadge}
-      <div class="stars">${stars}</div>
-      <p class="ttext">"${r.text}"</p>
-      <div class="tauthor">
-        <div class="tavatar">${initials}</div>
-        <div><div class="taname">${r.name}</div><div class="tadet">${r.role}</div></div>
-      </div>
-    </div>`;
-  }).join('');
+
+  const featured = visible.filter(r => r.featured);
+  const regular  = visible.filter(r => !r.featured);
+
+  /* Render featured review(s) as large hero card(s) */
+  if(featuredContainer){
+    if(featured.length){
+      featuredContainer.innerHTML = featured.map(r => {
+        const stars = '★'.repeat(r.stars||5);
+        const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+        return `<div class="tcard-featured fade-in">
+          <div class="tcf-header">
+            <div class="tcf-avatar">${initials}</div>
+            <div class="tcf-meta">
+              <div class="tcf-name">${r.name}</div>
+              <div class="tcf-role">${r.role}</div>
+              <div class="tcf-badges">
+                <span class="tcf-badge-google">🟢 Google Review</span>
+                <span class="tcf-badge-featured">⭐ Featured</span>
+              </div>
+            </div>
+            <div class="tcf-stars">${stars}</div>
+          </div>
+          <p class="tcf-quote">${r.text}</p>
+        </div>`;
+      }).join('');
+    } else {
+      featuredContainer.innerHTML = '';
+    }
+  }
+
+  /* Render regular reviews in the grid */
+  if(grid){
+    grid.innerHTML = regular.map((r,i)=>{
+      const stars = '★'.repeat(r.stars||5);
+      const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const googleBadge = r.source==='google'
+        ? '<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span style="font-size:.7rem;color:#7baaf7;font-weight:700">🟢 Google Review</span></div>' : '';
+      return `<div class="tcard fade-in stagger-${i%4}">
+        ${googleBadge}
+        <div class="stars">${stars}</div>
+        <p class="ttext">"${r.text}"</p>
+        <div class="tauthor">
+          <div class="tavatar">${initials}</div>
+          <div><div class="taname">${r.name}</div><div class="tadet">${r.role}</div></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
 
 
