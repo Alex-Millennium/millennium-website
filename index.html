@@ -8878,13 +8878,15 @@ function changeAdminPwd(){
 ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   loadProps();
+  loadReviews();
   showPage('home');
-  /* Ensure home features render even if showPage fires before arrays ready */
+  /* Ensure home features + reviews render even if showPage fires before arrays ready */
   setTimeout(()=>{
     if(typeof renderFeats==='function' && typeof STUD_FEATURES!=='undefined'){
       renderFeats('homeStudFeatGrid', STUD_FEATURES.slice(0,8));
       renderFeats('homePrivFeatGrid', PRIVATE_FEATURES);
     }
+    if(typeof renderTestimonialsOnSite==='function') renderTestimonialsOnSite();
   }, 300);
   /* setupAuthObserver called by initFirebase */
   /* Show setup guide banner if Firebase not configured */
