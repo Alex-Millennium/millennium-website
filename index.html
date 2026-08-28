@@ -5365,7 +5365,7 @@ async function submitPrivateApp(e){
 
   try {
     const fd = new FormData();
-    fd.append('app_type',        'Private Rental Application');
+    fd.append('app_type',        '['+new Date().toISOString().slice(0,10)+'] Private Rental Application');
     fd.append('applicant_name',  applicantName);
     fd.append('applicant_email', gF('email'));
     fd.append('summary',         summary);
@@ -5375,7 +5375,7 @@ async function submitPrivateApp(e){
       if(pdfBase64){
         const bytes = Uint8Array.from(atob(pdfBase64), c=>c.charCodeAt(0));
         fd.append('pdf_file', new Blob([bytes],{type:'application/pdf'}),
-          applicantName.replace(/\s+/g,'_')+'_Private_Application.pdf');
+          applicantName.replace(/\s+/g,'_')+'_Private_Application_'+new Date().toISOString().slice(0,10)+'.pdf');
         console.log('PDF added to FormData, size:', bytes.length);
       }
     }catch(pdfErr){ console.warn('PDF attach error:', pdfErr); }
@@ -5412,7 +5412,7 @@ async function submitPrivateApp(e){
   try {
     const w3data = new FormData();
     w3data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
-    w3data.append('subject', 'Private Rental Application: '+applicantName);
+    w3data.append('subject', '['+new Date().toISOString().slice(0,10)+'] Private Rental Application: '+applicantName);
     w3data.append('from_name', 'Millennium Investments Website');
     w3data.append('message', summary);
     fields.filter(f=>f.value).forEach(f=>w3data.append(f.label, f.value));
@@ -5632,7 +5632,7 @@ async function submitStudentApp(e){
 
   try {
     const fd = new FormData();
-    fd.append('app_type',        'Student Accommodation Application');
+    fd.append('app_type',        '['+new Date().toISOString().slice(0,10)+'] Student Accommodation Application');
     fd.append('applicant_name',  applicantName);
     fd.append('applicant_email', gF('email'));
     fd.append('summary',         summary);
@@ -5642,7 +5642,7 @@ async function submitStudentApp(e){
       if(pdfBase64){
         const bytes = Uint8Array.from(atob(pdfBase64), c=>c.charCodeAt(0));
         fd.append('pdf_file', new Blob([bytes],{type:'application/pdf'}),
-          applicantName.replace(/\s+/g,'_')+'_Application.pdf');
+          applicantName.replace(/\s+/g,'_')+'_Student_Application_'+new Date().toISOString().slice(0,10)+'.pdf');
         console.log('PDF added to FormData, size:', bytes.length);
       }
     }catch(pdfErr){ console.warn('PDF attach error:', pdfErr); }
@@ -5680,7 +5680,7 @@ async function submitStudentApp(e){
   try {
     const w3data = new FormData();
     w3data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
-    w3data.append('subject', 'Student Application: '+applicantName);
+    w3data.append('subject', '['+new Date().toISOString().slice(0,10)+'] Student Application: '+applicantName);
     w3data.append('from_name', 'Millennium Investments Website');
     w3data.append('message', summary);
     fields.filter(f=>f.value).forEach(f=>w3data.append(f.label, f.value));
