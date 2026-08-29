@@ -1551,18 +1551,13 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 
 @media(prefers-reduced-motion:reduce){
   /* Travel across the screen is the part that causes trouble for
-     motion-sensitive people, so the spin goes. But an instant 30deg
-     snap of five cards is worse than either extreme, so the neighbours
-     are hidden entirely and only the front card is shown, fading from
-     one review to the next. Nothing appears to move. */
+     motion-sensitive people, so the spin is dropped — but all five
+     cards stay on screen. The ring changes angle without animating. */
   .rev-track{transition:none}
   .rev-slide>.tcard{
     transition:opacity .8s ease, filter .8s ease,
                border-color .8s ease, box-shadow .8s ease;
   }
-  .rev-slide.is-side>.tcard,
-  .rev-slide.is-far>.tcard{opacity:0;filter:none}
-  .rev-slide.is-active>.tcard{filter:none}
 }
 
 /* Note: with reduced motion switched on in the operating system the
