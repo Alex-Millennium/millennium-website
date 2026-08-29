@@ -1425,18 +1425,26 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   perspective:1500px;
   perspective-origin:50% 50%;
 }
-.rev-track{position:absolute;inset:0;display:block;transform-style:preserve-3d}
+/* the turntable itself — this is the thing that rotates */
+.rev-track{
+  position:absolute;inset:0;display:block;
+  transform-style:preserve-3d;
+  /* eases in gently, then coasts a long way out — the weight of a
+     loaded tray rather than a flick */
+  transition:transform 1.8s cubic-bezier(.36,.06,.18,1);
+}
 
+/* cards are pinned to the rim and never move relative to it —
+   all travel comes from the track turning underneath them */
 .rev-slide{
   position:absolute;
   top:50%;
   left:50%;
   width:min(340px,78vw);
   margin:0;
-  transform:translate(-50%,-50%);
-  /* a long, decelerating curve so the ring coasts to a stop
-     rather than snapping into place */
-  transition:transform .95s cubic-bezier(.22,.68,.26,1);
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
   pointer-events:none;
 }
 .rev-slide.is-active{pointer-events:auto}
@@ -1455,8 +1463,14 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   box-shadow:0 14px 38px rgba(0,0,0,.6);
   opacity:1;
   filter:none;
-  transition:opacity .95s ease, filter .95s ease,
-             border-color .95s ease, box-shadow .95s ease;
+  /* sits fractionally back until it reaches the front, so the arriving
+     card settles forward as the tray comes to rest */
+  transform:scale(.955);
+  /* blur and dimming resolve slightly ahead of the turn so the card
+     is already clear by the time it settles at the front */
+  transition:opacity 1.5s ease, filter 1.5s ease,
+             transform 1.8s cubic-bezier(.36,.06,.18,1),
+             border-color 1.5s ease, box-shadow 1.5s ease;
 }
 
 /* the two behind */
@@ -1472,6 +1486,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 /* the one in front */
 .rev-slide.is-active>.tcard{
+  transform:scale(1);
   border:2px solid rgba(255,255,255,.88);
   box-shadow:0 24px 60px rgba(0,0,0,.72),
              0 0 30px rgba(240,180,41,.18);
@@ -1522,8 +1537,16 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   font-variant-numeric:tabular-nums;letter-spacing:.03em}
 
 @media(prefers-reduced-motion:reduce){
-  .rev-slide{transition:none}
-  .rev-slide>.tcard{transition:none}
+  /* No spin — travel across the screen is what causes trouble for
+     motion-sensitive people. A cross-fade is the accepted substitute,
+     so the change still reads as intentional rather than a jump. */
+  .rev-track{transition:none}
+  .rev-slide>.tcard{
+    transform:none;
+    transition:opacity .7s ease, filter .7s ease,
+               border-color .7s ease, box-shadow .7s ease;
+  }
+  .rev-slide.is-active>.tcard{transform:none}
 }
 
 /* Note: with reduced motion switched on in the operating system the
@@ -7428,7 +7451,7 @@ function renderTestimonialsOnSite(){
       featuredContainer.innerHTML = featured.map(r => {
         const stars = '★'.repeat(r.stars||5);
         const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-        return `<div class="tcard-featured fade-in">
+        return `<div class="tcard-featured">
           <div class="tcf-header">
             <div class="tcf-avatar">${initials}</div>
             <div class="tcf-meta">
@@ -7469,6 +7492,10 @@ function renderTestimonialsOnSite(){
     }).join('');
     if(typeof initReviewCarousel === 'function') initReviewCarousel();
   }
+  /* re-arm the reveal observer for anything freshly inserted */
+  if(typeof triggerFadeIns === 'function'){
+    try { triggerFadeIns(); } catch(e){}
+  }
 }
 
 
@@ -7508,8 +7535,9 @@ function fallbackCopy(text, done){
    REVIEWS CAROUSEL ENGINE — three cards
    centre in front, one either side behind it, rotating every 5s
    ============================================================ */
-var REV_INTERVAL = 5000;
-var revCar = { index:0, total:0, timer:null, paused:false, bound:false };
+var REV_INTERVAL = 7000;   /* 1.8s turning, then a ~5s rest to read */
+var revCar = { index:0, total:0, timer:null, paused:false, bound:false,
+               turn:0, step:60, radius:258 };
 
 function revReducedMotion(){
   return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -7529,61 +7557,47 @@ function revLayout(){
   var track = document.getElementById('revTrack');
   if(!track) return;
   var slides = track.querySelectorAll('.rev-slide');
-  if(!slides.length) return;
+  var n = slides.length;
+  if(!n) return;
 
-  /* Measure the card, then tuck the side cards behind the centre one.
-     offset = centre half-width + side half-width - overlap, so a side
-     card always sits partly behind the middle card and partly clear
-     of it. */
+  /* Cards sit at fixed points around a cylinder, one step apart.
+     Radius is derived from the card width so neighbours overlap the
+     front card by roughly 40px whatever size the cards end up. */
   var cardW = slides[0].offsetWidth || 340;
-  var sideScale = 0.86;
-  var overlap = cardW * 0.49;
-  var offset = (cardW / 2) + (cardW * sideScale / 2) - overlap;
+  var step  = 360 / n;
+  var radius = Math.round(cardW * 0.76);
+  revCar.step = step;
+  revCar.radius = radius;
 
-  /* turntable: cards sit on a shallow arc, so one arriving at the
-     front turns to face you and lifts toward the viewer while the one
-     leaving turns away and drops back */
-  var SIDE_TURN = 22;   /* degrees a side card is turned */
-  var SIDE_DEPTH = 90;  /* px it sits behind the front card */
-  var OFF_TURN = 30;
-  var OFF_DEPTH = 190;
-
-  for(var i = 0; i < slides.length; i++){
+  for(var i = 0; i < n; i++){
     var s = slides[i];
     var d = revOffset(i);
     var a = Math.abs(d);
 
-    s.classList.remove('is-active','is-side','is-off');
+    /* pinned to the rim — this never changes as the ring turns */
+    s.style.transform = 'translate(-50%,-50%) rotateY(' + (i * step) + 'deg)'
+                      + ' translateZ(' + radius + 'px)';
 
+    s.classList.remove('is-active','is-side','is-off');
     if(a === 0){
       s.classList.add('is-active');
-      s.style.transform = 'translate(-50%,-50%) translateX(0px) '
-                        + 'translateZ(0px) rotateY(0deg) scale(1)';
       s.style.zIndex = '3';
       s.setAttribute('aria-hidden','false');
     } else if(a === 1){
       s.classList.add('is-side');
-      /* turned inward, so the card faces the middle of the tray */
-      s.style.transform = 'translate(-50%,-50%) '
-                        + 'translateX(' + (d * offset) + 'px) '
-                        + 'translateZ(' + (-SIDE_DEPTH) + 'px) '
-                        + 'rotateY(' + (-d * SIDE_TURN) + 'deg) '
-                        + 'scale(' + sideScale + ')';
       s.style.zIndex = '2';
       s.setAttribute('aria-hidden','true');
     } else {
-      /* waiting off-stage on the side it will next come round from */
       s.classList.add('is-off');
-      var side = d > 0 ? 1 : -1;
-      s.style.transform = 'translate(-50%,-50%) '
-                        + 'translateX(' + (side * offset * 1.7) + 'px) '
-                        + 'translateZ(' + (-OFF_DEPTH) + 'px) '
-                        + 'rotateY(' + (-side * OFF_TURN) + 'deg) '
-                        + 'scale(0.72)';
       s.style.zIndex = '1';
       s.setAttribute('aria-hidden','true');
     }
   }
+
+  /* spin the tray. revCar.turn only ever counts up or down, so the ring
+     keeps turning the same way and never snaps back to the start. */
+  track.style.transform = 'translateZ(' + (-radius) + 'px)'
+                        + ' rotateY(' + (-revCar.turn * step) + 'deg)';
 
   var dots = document.querySelectorAll('#revDots .rev-dot');
   for(var k = 0; k < dots.length; k++){
@@ -7613,7 +7627,16 @@ function revBuildDots(){
 
 function revGoTo(i, userAction){
   if(revCar.total < 1) return;
-  revCar.index = ((i % revCar.total) + revCar.total) % revCar.total;
+  var target = ((i % revCar.total) + revCar.total) % revCar.total;
+
+  /* work out the shortest way round, then add that to the running
+     total so the tray keeps turning instead of unwinding */
+  var delta = target - revCar.index;
+  if(delta >  revCar.total / 2) delta -= revCar.total;
+  if(delta < -revCar.total / 2) delta += revCar.total;
+
+  revCar.index = target;
+  revCar.turn += delta;
   revLayout();
   if(userAction) revRestartTimer();
 }
@@ -7623,7 +7646,9 @@ function revPrevPage(user){ revGoTo(revCar.index - 1, user); }
 
 function revRestartTimer(){
   revStopTimer();
-  if(revCar.paused || revCar.total < 2 || revReducedMotion()) return;
+  if(revCar.paused || revCar.total < 2) return;
+  /* Under reduced motion the reviews still advance, but the CSS drops
+     the spin so nothing sweeps across the screen. */
   revCar.timer = setInterval(function(){ revGoTo(revCar.index + 1, false); }, REV_INTERVAL);
 }
 
