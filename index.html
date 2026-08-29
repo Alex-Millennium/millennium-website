@@ -102,28 +102,34 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
    NAVIGATION — DESKTOP
 ============================================================ */
 .nav{
-  background:linear-gradient(180deg,rgba(4,2,18,0.68) 0%,rgba(4,2,18,0.0) 100%);
-  border-bottom:1px solid rgba(240,180,41,0);
+  background:transparent;
+  border-bottom:none;
   position:fixed;
   top:var(--notif-h);left:0;right:0;
   z-index:89;
-  transition:background .5s ease, border-color .5s ease, box-shadow .3s;
 }
-.nav.scrolled{background:rgba(4,2,18,0.72);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid rgba(240,180,41,0);box-shadow:none}
-/* The old 40px black shadow painted a band across the galaxy that read
-   as a hard line under the bar. This fades the bar into the page
-   instead of ending it abruptly. */
-.nav::after{
-  content:'';position:absolute;left:0;right:0;top:100%;
-  height:44px;pointer-events:none;
-  /* starts at the bar's OWN alpha (.72) — starting lower than that was
-     itself a step, which is what still read as a line across the page */
-  background:linear-gradient(180deg,
-    rgba(4,2,18,.72) 0%, rgba(4,2,18,.34) 45%, rgba(4,2,18,0) 100%);
-  opacity:0;transition:opacity .5s ease;
+/* The bar's background and blur live here, on a layer that extends 44px
+   below the bar and is masked to fade out. Masking fades the
+   backdrop-filter as well as the colour, so there is no hard edge where
+   blurred background meets sharp background — that edge was the black
+   line. The nav's own children sit above this layer, unmasked. */
+.nav::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;bottom:-44px;
+  z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,2,18,.68) 0%,rgba(4,2,18,0) 100%);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%);
+          mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%);
+  transition:background .5s ease;
 }
-.nav.scrolled::after{opacity:1}
+.nav.scrolled{background:transparent;border-bottom:none;box-shadow:none}
+.nav.scrolled::before{
+  background:linear-gradient(180deg,rgba(4,2,18,.8) 0%,rgba(4,2,18,.74) 52%,rgba(4,2,18,0) 100%);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+}
+
 .nav-inner{
+  position:relative;z-index:1;
   max-width:1280px;
   margin:0 auto;
   padding:0 24px;
@@ -627,7 +633,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
 }
-@media(max-width:1050px){
+@media(max-width:1140px){
   .nav-links{display:none}
   .hamburger{display:flex}
   .section{padding:56px 20px}
@@ -1943,6 +1949,7 @@ function initFirebase(){
       <li><a id="nav-private" onclick="showPage('private')">Private Rentals</a></li>
       <li><a id="nav-payments" onclick="showPage('payments')">Payments</a></li>
       <li><a id="nav-about" onclick="showPage('about')">About Us</a></li>
+      <li><a id="nav-faq" onclick="showPage('faq')">Help</a></li>
       <li><a id="nav-contact" class="nav-cta" onclick="showPage('contact')">Contact Us</a></li>
     </ul>
     <button class="hamburger" id="hamburgerBtn" onclick="toggleMobMenu()" aria-label="Menu">
@@ -1959,8 +1966,8 @@ function initFirebase(){
   <a id="mob-private" onclick="showPage('private');closeMobMenu()">Private Rentals</a>
   <a id="mob-payments" onclick="showPage('payments');closeMobMenu()">Payments</a>
   <a id="mob-about" onclick="showPage('about');closeMobMenu()">About Us</a>
+  <a id="mob-faq" onclick="showPage('faq');closeMobMenu()">Help</a>
   <a id="mob-contact" onclick="showPage('contact');closeMobMenu()">Contact Us</a>
-  <a id="mob-faq" onclick="showPage('faq');closeMobMenu()">FAQs</a>
 </div>
 
 <!-- TOAST CONTAINER -->
@@ -4123,7 +4130,7 @@ function initFirebase(){
         <ul class="foot-links">
           <li><a onclick="showPage('about')">About Us</a></li>
           <li><a onclick="showPage('contact')">Contact Us</a></li>
-          <li><a href="#" onclick="event.preventDefault();showPage('faq')">FAQs</a></li>
+          <li><a href="#" onclick="event.preventDefault();showPage('faq')">Help &amp; FAQs</a></li>
           <li><a href="#" onclick="event.preventDefault();openPrivacy()">Privacy Policy</a></li>
           <li><a href="#" onclick="event.preventDefault();openTerms()">Terms &amp; Conditions</a></li>
         </ul>
