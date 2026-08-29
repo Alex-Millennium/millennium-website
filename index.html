@@ -2913,63 +2913,6 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 @keyframes wiz-spin{to{transform:rotate(360deg)}}
 
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init("_H7GZnsRghxYPsd7G");</script>
-</head>
-<body>
-<!-- GALAXY BACKGROUND -->
-
-<!-- ═══════════════════════════════════════════════════════════
-     FIREBASE CONFIGURATION
-     Follow the setup guide (Admin → Setup Guide) to get these values.
-     Paste your Firebase project config here:
-═══════════════════════════════════════════════════════════ -->
-<script>
-const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyBPzZuiCRJTTRZaIAoXsmUwP78pIEeh4BQ",
-  authDomain:        "millennium-investments.firebaseapp.com",
-  projectId:         "millennium-investments",
-  storageBucket:     "millennium-investments.firebasestorage.app",
-  messagingSenderId: "929372243665",
-  appId:             "1:929372243665:web:d3d61e4ba7087cc70f67f0"
-};
-
-const FB_CONFIGURED = true;
-let db = null, auth = null, storage = null;
-
-function initFirebase(){
-  if(typeof firebase === 'undefined'){
-    console.warn('Firebase SDK not loaded yet, retrying...');
-    setTimeout(initFirebase, 500);
-    return;
-  }
-  try {
-    if(!firebase.apps.length){
-      firebase.initializeApp(FIREBASE_CONFIG);
-    }
-    db   = firebase.firestore();
-    auth = firebase.auth();
-    console.log('✅ Firebase connected:', FIREBASE_CONFIG.projectId);
-    /* Trigger auth observer now that Firebase is ready */
-    if(typeof setupAuthObserver === 'function') setupAuthObserver();
-    if(typeof loadFromLocal === 'function') loadFromLocal();
-    if(typeof refreshCurrentPage === 'function') refreshCurrentPage();
-  } catch(e){
-    console.warn('Firebase init error:', e.message);
-  }
-}
-</script>
-<canvas id="galaxyCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block"></canvas>
-<canvas id="edgeCloudCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block"></canvas>
-
-
-
 <!-- NAVIGATION -->
 <nav class="nav" id="navbar">
   <div class="nav-inner">
