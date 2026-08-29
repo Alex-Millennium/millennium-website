@@ -878,7 +878,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 /* ── LOCATION PANELS ─────────────────────────────────────── */
 .loc-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:28px;align-items:start;
+  gap:28px;align-items:stretch;
 }
 .loc-img-wrap{
   border-radius:14px;overflow:hidden;height:220px;
@@ -889,7 +889,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 .loc-img-wrap:hover img{transform:scale(1.04)}
 .loc-map-wrap{
-  border-radius:14px;overflow:hidden;height:420px;
+  border-radius:14px;overflow:hidden;
+  height:100%;min-height:420px;
   border:1px solid rgba(160,80,255,0.2);
 }
 .loc-map-wrap iframe{width:100%;height:100%;border:none}
@@ -907,7 +908,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .loc-panel{animation:fadeIn .3s ease}
 @media(max-width:900px){
   .loc-grid{grid-template-columns:1fr}
-  .loc-map-wrap{height:280px}
+  .loc-map-wrap{height:280px;min-height:0}
 }
 
 /* ============================================================
@@ -1361,6 +1362,79 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 @keyframes wiz-spin{to{transform:rotate(360deg)}}
 
+
+/* ══════════════════════════════════════════════════════════
+   REVIEWS CAROUSEL
+   Auto-rotating, pausable (WCAG 2.2.2), keyboard + swipe.
+   1 card mobile / 2 tablet / 3 desktop.
+   ══════════════════════════════════════════════════════════ */
+.rev-carousel{position:relative;margin-top:10px}
+.rev-viewport{overflow:hidden;padding:6px 0}
+.rev-track{display:flex;align-items:stretch;
+  transition:transform .72s cubic-bezier(.22,.61,.36,1);will-change:transform}
+.rev-slide{flex:0 0 100%;max-width:100%;padding:0 9px;display:flex}
+.rev-slide>.tcard{width:100%;display:flex;flex-direction:column;
+  transition:opacity .5s ease,transform .5s ease}
+.rev-slide>.tcard .ttext{flex:1 1 auto}
+.rev-slide[aria-hidden="true"]>.tcard{opacity:.32;transform:scale(.965)}
+@media(min-width:700px){.rev-slide{flex-basis:50%;max-width:50%}}
+@media(min-width:1080px){.rev-slide{flex-basis:33.3333%;max-width:33.3333%}}
+
+/* arrows */
+.rev-arrow{position:absolute;top:calc(50% - 26px);transform:translateY(-50%);z-index:4;
+  width:46px;height:46px;border-radius:50%;cursor:pointer;
+  border:1px solid rgba(240,180,41,.38);background:rgba(10,6,24,.88);
+  color:var(--gold-500);font-size:1.2rem;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  box-shadow:0 4px 18px rgba(0,0,0,.4);
+  transition:background .25s,border-color .25s,color .25s,opacity .25s}
+.rev-arrow:hover:not(:disabled){background:rgba(240,180,41,.2);
+  border-color:rgba(240,180,41,.8);color:var(--gold-400)}
+.rev-arrow:focus-visible{outline:3px solid var(--gold-500);outline-offset:3px}
+.rev-arrow:disabled{opacity:.28;cursor:default}
+.rev-prev{left:-10px}
+.rev-next{right:-10px}
+@media(max-width:820px){
+  .rev-arrow{width:38px;height:38px;font-size:1rem}
+  .rev-prev{left:-6px}.rev-next{right:-6px}
+}
+
+/* controls row */
+.rev-controls{display:flex;align-items:center;justify-content:center;
+  gap:18px;margin-top:24px;flex-wrap:wrap}
+.rev-dots{display:flex;align-items:center;gap:8px}
+.rev-dot{width:9px;height:9px;padding:0;border-radius:50%;cursor:pointer;
+  border:1px solid rgba(240,180,41,.45);background:transparent;
+  transition:width .35s ease,background .35s ease,border-radius .35s ease}
+.rev-dot[aria-current="true"]{background:var(--gold-500);
+  border-color:var(--gold-500);width:28px;border-radius:5px}
+.rev-dot:hover{border-color:var(--gold-400)}
+.rev-dot:focus-visible{outline:2px solid var(--gold-500);outline-offset:3px}
+.rev-play{display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);background:transparent;
+  border:1px solid rgba(255,255,255,.17);border-radius:999px;padding:7px 14px;
+  transition:color .25s,border-color .25s,background .25s}
+.rev-play:hover{color:#fff;border-color:rgba(240,180,41,.65);
+  background:rgba(240,180,41,.07)}
+.rev-play:focus-visible{outline:2px solid var(--gold-500);outline-offset:2px}
+.rev-counter{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.42);
+  font-variant-numeric:tabular-nums;letter-spacing:.03em}
+.rev-progress{position:absolute;left:0;bottom:0;height:2px;width:100%;
+  background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.rev-progress span{display:block;height:100%;width:0;
+  background:linear-gradient(90deg,var(--gold-500),var(--gold-400))}
+.rev-progress.is-running span{animation:revFill linear forwards}
+@keyframes revFill{from{width:0}to{width:100%}}
+
+@media(prefers-reduced-motion:reduce){
+  .rev-track{transition:none}
+  .rev-slide>.tcard{transition:none;opacity:1!important;transform:none!important}
+  .rev-progress.is-running span{animation:none}
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -1427,7 +1501,7 @@ function initFirebase(){
     </div>
     <ul class="nav-links" id="desktopNav">
       <li><a id="nav-home" onclick="showPage('home')">Home</a></li>
-      <li><a id="nav-student" onclick="showPage('student')">Student Accommodation</a></li>
+      <li><a id="nav-student" onclick="showPage('student')">Colchester &mdash; Students</a></li>
       <li><a id="nav-private" onclick="showPage('private')">Private Rentals</a></li>
       <li><a id="nav-about" onclick="showPage('about')">About Us</a></li>
       <li><a id="nav-contact" class="nav-cta" onclick="showPage('contact')">Contact Us</a></li>
@@ -1441,7 +1515,7 @@ function initFirebase(){
 <!-- MOBILE MENU -->
 <div class="mob-menu" id="mobMenu">
   <a id="mob-home" onclick="showPage('home');closeMobMenu()">Home</a>
-  <a id="mob-student" onclick="showPage('student');closeMobMenu()">Student Accommodation</a>
+  <a id="mob-student" onclick="showPage('student');closeMobMenu()">Colchester &mdash; Student Accommodation</a>
   <a id="mob-private" onclick="showPage('private');closeMobMenu()">Private Rentals</a>
   <a id="mob-about" onclick="showPage('about');closeMobMenu()">About Us</a>
   <a id="mob-contact" onclick="showPage('contact');closeMobMenu()">Contact Us</a>
@@ -1765,7 +1839,24 @@ function initFirebase(){
         <p class="sec-sub" style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);border-radius:12px;padding:16px 22px;color:rgba(255,255,255,0.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.25);max-width:680px;margin:0 auto">Genuine feedback from students and tenants — verified via Google Reviews.</p>
       </div>
       <div class="test-featured"></div>
-      <div class="test-grid"></div>
+      <div class="rev-carousel" id="revCarousel" role="group"
+           aria-roledescription="carousel" aria-label="Tenant reviews">
+        <button type="button" class="rev-arrow rev-prev" id="revPrev"
+                aria-controls="revTrack" aria-label="Previous reviews">&#10094;</button>
+        <div class="rev-viewport" id="revViewport">
+          <div class="rev-track test-grid" id="revTrack"></div>
+        </div>
+        <button type="button" class="rev-arrow rev-next" id="revNext"
+                aria-controls="revTrack" aria-label="Next reviews">&#10095;</button>
+        <div class="rev-controls" id="revControls">
+          <button type="button" class="rev-play" id="revPlayBtn"
+                  aria-label="Pause the review carousel">
+            <span id="revPlayIcon">&#10073;&#10073;</span><span id="revPlayText">Pause</span>
+          </button>
+          <div class="rev-dots" id="revDots" role="group" aria-label="Choose review slide"></div>
+          <span class="rev-counter" id="revCounter" aria-live="polite"></span>
+        </div>
+      </div>
       <div style="text-align:center;margin-top:32px">
         <a href="https://www.google.com/search?q=Forest+Road+House+Colchester+reviews" target="_blank" rel="noopener" class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:8px">
           <span style="font-size:1rem">🟢</span> See more Google Reviews
@@ -2429,7 +2520,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 /* ── LOCATION PANELS ─────────────────────────────────────── */
 .loc-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:28px;align-items:start;
+  gap:28px;align-items:stretch;
 }
 .loc-img-wrap{
   border-radius:14px;overflow:hidden;height:220px;
@@ -2440,7 +2531,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 .loc-img-wrap:hover img{transform:scale(1.04)}
 .loc-map-wrap{
-  border-radius:14px;overflow:hidden;height:420px;
+  border-radius:14px;overflow:hidden;
+  height:100%;min-height:420px;
   border:1px solid rgba(160,80,255,0.2);
 }
 .loc-map-wrap iframe{width:100%;height:100%;border:none}
@@ -2458,7 +2550,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .loc-panel{animation:fadeIn .3s ease}
 @media(max-width:900px){
   .loc-grid{grid-template-columns:1fr}
-  .loc-map-wrap{height:280px}
+  .loc-map-wrap{height:280px;min-height:0}
 }
 
 /* ============================================================
@@ -2921,7 +3013,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
     </div>
     <ul class="nav-links" id="desktopNav">
       <li><a id="nav-home" onclick="showPage('home')">Home</a></li>
-      <li><a id="nav-student" onclick="showPage('student')">Student Accommodation</a></li>
+      <li><a id="nav-student" onclick="showPage('student')">Colchester &mdash; Students</a></li>
       <li><a id="nav-private" onclick="showPage('private')">Private Rentals</a></li>
       <li><a id="nav-about" onclick="showPage('about')">About Us</a></li>
       <li><a id="nav-contact" class="nav-cta" onclick="showPage('contact')">Contact Us</a></li>
@@ -2935,7 +3027,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 <!-- MOBILE MENU -->
 <div class="mob-menu" id="mobMenu">
   <a id="mob-home" onclick="showPage('home');closeMobMenu()">Home</a>
-  <a id="mob-student" onclick="showPage('student');closeMobMenu()">Student Accommodation</a>
+  <a id="mob-student" onclick="showPage('student');closeMobMenu()">Colchester &mdash; Student Accommodation</a>
   <a id="mob-private" onclick="showPage('private');closeMobMenu()">Private Rentals</a>
   <a id="mob-about" onclick="showPage('about');closeMobMenu()">About Us</a>
   <a id="mob-contact" onclick="showPage('contact');closeMobMenu()">Contact Us</a>
@@ -2959,9 +3051,9 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
       <div class="breadcrumb">
         <a onclick="showPage('home')">Home</a>
         <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <span class="cur">Student Accommodation</span>
+        <span class="cur">Colchester &mdash; Student Accommodation</span>
       </div>
-      <h1 class="ph-title">Student <span class="gold-text">Accommodation</span></h1>
+      <h1 class="ph-title">Colchester <span class="gold-text">Student Accommodation</span></h1>
       <p class="ph-sub">Purpose-built student rooms and HMO houses in Colchester — minutes from the University of Essex. All-inclusive, zero hidden fees.</p>
       <div class="badge-row">
         <span class="badge-pill gold">🎓 Near University of Essex</span>
@@ -3160,9 +3252,9 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
         <h2 class="sec-title">Collect Your Free <span class="gold-text">Contents Insurance</span></h2>
         <p class="sec-sub">In association with Gallagher — your belongings are already covered. Simply sign up to activate your free policy.</p>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;max-width:900px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch;max-width:900px;margin:0 auto">
         <!-- Info -->
-        <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px">
+        <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px;display:flex;flex-direction:column">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
             <div style="background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);border-radius:10px;padding:10px">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -3179,7 +3271,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
             <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.8)"><span style="color:#34d399;font-weight:700">✓</span> Manage your cover online</li>
             <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.8)"><span style="color:#34d399;font-weight:700">✓</span> Claim perks included</li>
           </ul>
-          <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.08)">
+          <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,0.08)">
             <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:14px">Tap below or scan the QR code with your phone to sign up:</p>
             <a href="https://gallagherassist.ajg.com/forest-road-houses" target="_blank" rel="noopener" id="gallagherLink"
                style="display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1d4ed8,#1e40af);color:#fff;font-weight:700;font-size:.88rem;padding:13px 24px;border-radius:10px;text-decoration:none;box-shadow:0 4px 16px rgba(29,78,216,0.4);transition:var(--trans)"
@@ -3190,8 +3282,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
           </div>
         </div>
         <!-- QR Code -->
-        <div style="text-align:center">
-          <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px;display:inline-block">
+        <div style="display:flex">
+          <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
             <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:16px">📱 Scan with your phone camera:</p>
             <div style="background:#fff;border-radius:12px;padding:12px;display:inline-flex;align-items:center;justify-content:center;width:180px;height:180px">
               <div id="gallagherQRContainer" style="width:160px;height:160px;border-radius:8px;overflow:hidden;background:#fff"></div>
@@ -5168,7 +5260,7 @@ function buildPrivateEmptyState(){
         <div style="background:linear-gradient(135deg,rgba(26,15,46,0.75) 0%,rgba(10,6,24,0.85) 100%);border:1px solid rgba(240,180,41,0.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,0.28);border-radius:14px;padding:22px 20px;text-align:center;transition:all .3s">
           <div style="font-size:2rem;margin-bottom:10px">🛠️</div>
           <div style="font-size:.95rem;font-weight:800;color:#F0B429;margin-bottom:6px">Maintenance</div>
-          <div style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.55">Repairs carried out promptly by our team — often at no cost to the tenant</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.55">Repairs carried out promptly by our team</div>
         </div>
       </div>
 
@@ -8268,7 +8360,7 @@ function renderRevList(){
 }
 
 function renderTestimonialsOnSite(){
-  const grid = document.querySelector('.test-grid');
+  const grid = document.getElementById('revTrack') || document.querySelector('.test-grid');
   const featuredContainer = document.querySelector('.test-featured');
   const visible = reviews.filter(r=>r.visible);
   if(!visible.length) return;
@@ -8310,7 +8402,8 @@ function renderTestimonialsOnSite(){
       const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
       const googleBadge = r.source==='google'
         ? '<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span style="font-size:.7rem;color:#7baaf7;font-weight:700">🟢 Google Review</span></div>' : '';
-      return `<div class="tcard fade-in stagger-${i%4}">
+      return `<div class="rev-slide" role="group" aria-roledescription="slide" aria-label="Review ${i+1} of ${regular.length}">
+      <div class="tcard">
         ${googleBadge}
         <div class="stars">${stars}</div>
         <p class="ttext">"${r.text}"</p>
@@ -8318,8 +8411,204 @@ function renderTestimonialsOnSite(){
           <div class="tavatar">${initials}</div>
           <div><div class="taname">${r.name}</div><div class="tadet">${r.role}</div></div>
         </div>
-      </div>`;
+      </div></div>`;
     }).join('');
+    if(typeof initReviewCarousel === 'function') initReviewCarousel();
+  }
+}
+
+
+/* ============================================================
+   REVIEWS CAROUSEL ENGINE
+   - auto-advances every 6s, pauses on hover/focus/hidden tab
+   - explicit Pause/Play control (WCAG 2.2.2 Pause, Stop, Hide)
+   - arrows, dots, keyboard arrows, touch swipe
+   - honours prefers-reduced-motion (no autoplay)
+   ============================================================ */
+var REV_INTERVAL = 6000;
+var revCar = { page:0, pages:1, perView:1, timer:null, playing:true,
+               paused:false, bound:false, total:0 };
+
+function revReducedMotion(){
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function revPerView(){
+  var vp = document.getElementById('revViewport');
+  var slide = document.querySelector('#revTrack .rev-slide');
+  if(!vp || !slide) return 1;
+  var sw = slide.getBoundingClientRect().width;
+  if(!sw) return 1;
+  return Math.max(1, Math.round(vp.clientWidth / sw));
+}
+
+function revBuildDots(){
+  var wrap = document.getElementById('revDots');
+  if(!wrap) return;
+  var html = '';
+  for(var i=0; i<revCar.pages; i++){
+    html += '<button type="button" class="rev-dot" data-page="'+i+'" '+
+            'aria-current="'+(i===revCar.page)+'" '+
+            'aria-label="Go to review slide '+(i+1)+' of '+revCar.pages+'"></button>';
+  }
+  wrap.innerHTML = html;
+  var dots = wrap.querySelectorAll('.rev-dot');
+  for(var d=0; d<dots.length; d++){
+    dots[d].addEventListener('click', function(){
+      revGoTo(parseInt(this.getAttribute('data-page'),10), true);
+    });
+  }
+}
+
+function revSyncUI(){
+  var track = document.getElementById('revTrack');
+  if(!track) return;
+
+  track.style.transform = 'translateX(-' + (revCar.page * 100) + '%)';
+
+  /* mark off-screen slides as hidden for AT + dimming */
+  var slides = track.querySelectorAll('.rev-slide');
+  var first = revCar.page * revCar.perView;
+  var last  = first + revCar.perView - 1;
+  for(var i=0; i<slides.length; i++){
+    slides[i].setAttribute('aria-hidden', (i < first || i > last) ? 'true' : 'false');
+  }
+
+  var dots = document.querySelectorAll('#revDots .rev-dot');
+  for(var d=0; d<dots.length; d++){
+    dots[d].setAttribute('aria-current', String(d === revCar.page));
+  }
+
+  var counter = document.getElementById('revCounter');
+  if(counter) counter.textContent = (revCar.page + 1) + ' / ' + revCar.pages;
+
+}
+
+function revGoTo(page, userAction){
+  if(revCar.pages < 1) return;
+  revCar.page = ((page % revCar.pages) + revCar.pages) % revCar.pages;  /* wrap both ways */
+  revSyncUI();
+  if(userAction) revRestartTimer();
+}
+
+function revNextPage(user){ revGoTo(revCar.page + 1, user); }
+function revPrevPage(user){ revGoTo(revCar.page - 1, user); }
+
+function revRestartTimer(){
+  revStopTimer();
+  if(!revCar.playing || revCar.paused || revCar.pages < 2 || revReducedMotion()) return;
+  revCar.timer = setInterval(function(){ revGoTo(revCar.page + 1, false); }, REV_INTERVAL);
+}
+
+function revStopTimer(){
+  if(revCar.timer){ clearInterval(revCar.timer); revCar.timer = null; }
+}
+
+function revSetPlaying(on){
+  revCar.playing = on;
+  var icon = document.getElementById('revPlayIcon');
+  var text = document.getElementById('revPlayText');
+  var btn  = document.getElementById('revPlayBtn');
+  if(icon) icon.innerHTML = on ? '&#10073;&#10073;' : '&#9654;';
+  if(text) text.textContent = on ? 'Pause' : 'Play';
+  if(btn)  btn.setAttribute('aria-label', on ? 'Pause the review carousel'
+                                             : 'Play the review carousel');
+  var track = document.getElementById('revTrack');
+  /* when stopped, let screen readers read the whole set as static content */
+  if(track) track.setAttribute('aria-live', on ? 'off' : 'polite');
+  on ? revRestartTimer() : revStopTimer();
+}
+
+function revBindOnce(){
+  if(revCar.bound) return;
+  revCar.bound = true;
+
+  var prev = document.getElementById('revPrev');
+  var next = document.getElementById('revNext');
+  var play = document.getElementById('revPlayBtn');
+  var car  = document.getElementById('revCarousel');
+
+  if(prev) prev.addEventListener('click', function(){ revPrevPage(true); });
+  if(next) next.addEventListener('click', function(){ revNextPage(true); });
+  if(play) play.addEventListener('click', function(){ revSetPlaying(!revCar.playing); });
+
+  if(car){
+    /* pause while the reader is engaging with it */
+    car.addEventListener('mouseenter', function(){ revCar.paused = true;  revStopTimer(); });
+    car.addEventListener('mouseleave', function(){ revCar.paused = false; revRestartTimer(); });
+    car.addEventListener('focusin',    function(){ revCar.paused = true;  revStopTimer(); });
+    car.addEventListener('focusout',   function(e){
+      if(!car.contains(e.relatedTarget)){ revCar.paused = false; revRestartTimer(); }
+    });
+
+    /* keyboard */
+    car.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowLeft'){  e.preventDefault(); revPrevPage(true); }
+      if(e.key === 'ArrowRight'){ e.preventDefault(); revNextPage(true); }
+    });
+
+    /* touch / pointer swipe */
+    var startX = 0, startY = 0, dragging = false;
+    car.addEventListener('touchstart', function(e){
+      if(!e.touches.length) return;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+      dragging = true; revCar.paused = true; revStopTimer();
+    }, {passive:true});
+    car.addEventListener('touchend', function(e){
+      if(!dragging) return;
+      dragging = false;
+      var t = e.changedTouches[0];
+      var dx = t.clientX - startX, dy = t.clientY - startY;
+      if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)){
+        dx < 0 ? revNextPage(true) : revPrevPage(true);
+      }
+      revCar.paused = false; revRestartTimer();
+    }, {passive:true});
+  }
+
+  /* stop burning cycles on a background tab */
+  document.addEventListener('visibilitychange', function(){
+    document.hidden ? revStopTimer() : revRestartTimer();
+  });
+
+  /* recompute cards-per-view on resize */
+  var rt = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(rt);
+    rt = setTimeout(function(){ initReviewCarousel(true); }, 180);
+  });
+}
+
+function initReviewCarousel(isResize){
+  var track = document.getElementById('revTrack');
+  var car   = document.getElementById('revCarousel');
+  if(!track || !car) return;
+
+  var slides = track.querySelectorAll('.rev-slide');
+  revCar.total   = slides.length;
+  revCar.perView = revPerView();
+  revCar.pages   = Math.max(1, Math.ceil(revCar.total / revCar.perView));
+  if(revCar.page > revCar.pages - 1) revCar.page = revCar.pages - 1;
+  if(revCar.page < 0) revCar.page = 0;
+
+  /* nothing to rotate through — hide the furniture entirely */
+  var single = revCar.pages < 2;
+  var prev = document.getElementById('revPrev');
+  var next = document.getElementById('revNext');
+  var ctrl = document.getElementById('revControls');
+  if(prev) prev.style.display = single ? 'none' : 'flex';
+  if(next) next.style.display = single ? 'none' : 'flex';
+  if(ctrl) ctrl.style.display = single ? 'none' : 'flex';
+
+  revBuildDots();
+  revSyncUI();
+  revBindOnce();
+
+  if(!isResize){
+    /* reduced-motion users get a paused carousel they drive themselves */
+    revSetPlaying(!revReducedMotion());
+  } else {
+    revRestartTimer();
   }
 }
 
