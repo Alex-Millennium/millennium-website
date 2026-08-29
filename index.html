@@ -1412,10 +1412,14 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
    line, each smaller, dimmer and more blurred. Rotates on its
    own every few seconds and wraps around.
    ══════════════════════════════════════════════════════════ */
-.rev-carousel{position:relative;margin-top:14px}
+/* the featured hero card is optional — collapse the gap when absent */
+.test-featured:empty{display:none;margin:0}
+#reviewsSection .sec-hd{margin-bottom:30px}
+
+.rev-carousel{position:relative;margin-top:0}
 .rev-viewport{
   position:relative;
-  height:430px;
+  height:392px;
   overflow:hidden;
 }
 .rev-track{position:absolute;inset:0}
@@ -1437,8 +1441,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 
 .rev-slide>.tcard{
   display:flex;flex-direction:column;
-  height:370px;
-  padding:26px 24px;
+  height:352px;
+  padding:24px 24px;
   background:linear-gradient(160deg,rgba(18,10,42,.95) 0%,rgba(8,5,22,.97) 100%);
   border:1px solid rgba(160,80,255,.16);
   border-radius:16px;
@@ -1459,8 +1463,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .rev-slide>.tcard .tauthor{margin-top:auto;padding-top:14px}
 
 @media(max-width:820px){
-  .rev-viewport{height:392px}
-  .rev-slide>.tcard{height:344px;padding:22px 20px}
+  .rev-viewport{height:362px}
+  .rev-slide>.tcard{height:326px;padding:22px 20px}
   .rev-slide>.tcard .ttext{-webkit-line-clamp:6}
 }
 
@@ -1476,8 +1480,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .rev-arrow:hover{background:rgba(240,180,41,.2);
   border-color:rgba(240,180,41,.8);color:var(--gold-400)}
 .rev-arrow:focus-visible{outline:3px solid var(--gold-500);outline-offset:3px}
-.rev-prev{left:2px}
-.rev-next{right:2px}
+.rev-prev{left:-4px}
+.rev-next{right:-4px}
 @media(max-width:820px){
   .rev-arrow{width:38px;height:38px;font-size:1rem}
   .rev-prev{left:0}.rev-next{right:0}
@@ -7511,14 +7515,15 @@ function revOffset(i){
 
 /* Cards recede in a flat line. Each step out moves less than the
    one before, which is what gives the stacked, receding look. */
+/* x is a percentage of the CARD's own width, so it has to clear the
+   centre card's half-width (50%) before a neighbour is visible at all. */
 var REV_STEPS = {
-  wide:   [ {x:0, s:1,    o:1,   b:0},
-            {x:40, s:.80, o:.55, b:1.5},
-            {x:66, s:.63, o:.30, b:3},
-            {x:84, s:.50, o:.15, b:5} ],
-  narrow: [ {x:0, s:1,    o:1,   b:0},
-            {x:36, s:.78, o:.5,  b:1.5},
-            {x:58, s:.60, o:.26, b:3} ]
+  wide:   [ {x:0,   s:1,   o:1,   b:0},
+            {x:64,  s:.84, o:.72, b:1},
+            {x:112, s:.70, o:.44, b:2.2},
+            {x:148, s:.58, o:.22, b:3.6} ],
+  narrow: [ {x:0,   s:1,   o:1,   b:0},
+            {x:60,  s:.80, o:.6,  b:1.2} ]
 };
 
 function revLayout(){
