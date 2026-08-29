@@ -955,6 +955,99 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .pay-ref p{font-size:.86rem;color:rgba(255,255,255,.8);line-height:1.75;margin:0}
 
 /* ══════════════════════════════════════════════════════════
+   FORM CONTROLS — base (dark theme)
+   Every existing rule for these classes is scoped to
+   `.wiz-card`, so outside the application wizard they had no
+   styling at all and fell back to browser defaults. The
+   wizard's selectors are more specific and still win there.
+   ══════════════════════════════════════════════════════════ */
+.form-group{margin-bottom:16px}
+
+.form-label{
+  display:block;
+  font-size:.76rem;font-weight:700;
+  letter-spacing:.04em;
+  color:rgba(255,255,255,.6);
+  margin-bottom:7px;
+}
+.form-label .req,
+.form-label span[style*="color:#F0"]{color:var(--gold-500)}
+
+.form-input:not([type="checkbox"]):not([type="radio"]),
+.form-select,
+.form-textarea,
+textarea.form-input{
+  width:100%;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:10px;
+  padding:11px 14px;
+  color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.88rem;
+  line-height:1.5;
+  outline:none;
+  transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.form-input:hover:not([type="checkbox"]):not([type="radio"]),
+.form-select:hover,
+.form-textarea:hover{
+  border-color:rgba(255,255,255,.24);
+  background:rgba(255,255,255,.06);
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus{
+  border-color:var(--gold-500);
+  background:rgba(255,255,255,.07);
+  box-shadow:0 0 0 3px rgba(240,180,41,.14);
+}
+.form-input::placeholder,
+.form-textarea::placeholder{color:rgba(255,255,255,.32)}
+
+/* dropdowns: replace the native widget with a matching arrow */
+.form-select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  padding-right:38px;cursor:pointer;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23F0B429' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+}
+/* the dropdown list itself is drawn by the OS — force dark */
+.form-select option{background:#140b2c;color:#fff}
+
+.form-textarea,
+textarea.form-input{
+  min-height:110px;
+  resize:vertical;
+}
+
+.form-input[type="file"]{
+  padding:9px 12px;
+  font-size:.8rem;
+  color:rgba(255,255,255,.62);
+  cursor:pointer;
+}
+.form-input[type="file"]::file-selector-button{
+  margin-right:12px;padding:7px 14px;cursor:pointer;
+  background:rgba(240,180,41,.14);
+  border:1px solid rgba(240,180,41,.3);
+  border-radius:7px;
+  color:var(--gold-400);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.76rem;font-weight:700;
+}
+.form-input[type="checkbox"],
+.form-input[type="radio"]{
+  width:17px;height:17px;
+  accent-color:var(--gold-500);
+  cursor:pointer;vertical-align:middle;
+}
+
+/* the search box sits on its own, not in a .form-group */
+#adminSearch{min-width:220px}
+
+/* ══════════════════════════════════════════════════════════
    ADMIN PANEL — MOBILE
    The panel was built desktop-only (1200px container, 290px
    minimum grid columns), so on a phone it overflowed sideways
@@ -995,6 +1088,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   .admin-pcard-actions{
     display:grid;grid-template-columns:1fr 1fr;gap:8px;
   }
+  .admin-pcard-actions .acard-del{width:100%}
   .admin-pcard-actions button{
     width:100%;height:auto;min-height:40px;padding:8px 6px;
     font-size:.75rem;line-height:1.2;white-space:normal;
@@ -1189,16 +1283,22 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   font-size:1rem;font-weight:800;
   color:var(--gold-400);margin-bottom:10px;
 }
+/* three even action buttons plus a narrow bin, so the row never
+   wraps and cards stay the same height as each other */
 .admin-pcard-actions{
-  display:flex;gap:6px;flex-wrap:wrap;
+  display:grid;grid-template-columns:repeat(3,1fr) auto;
+  gap:6px;align-items:stretch;
 }
 .admin-pcard-actions button{
-  flex:1;min-width:60px;
-  padding:7px 10px;font-size:.75rem;font-weight:700;
+  min-width:0;width:100%;min-height:38px;
+  display:flex;align-items:center;justify-content:center;
+  padding:7px 8px;font-size:.75rem;font-weight:700;
+  line-height:1.15;white-space:nowrap;
   border-radius:7px;border:none;cursor:pointer;
   font-family:"Plus Jakarta Sans",sans-serif;
   transition:var(--trans);
 }
+.admin-pcard-actions .acard-del{width:42px;padding:7px}
 .acard-edit{background:rgba(240,180,41,.15);color:var(--gold-400);border:1px solid rgba(240,180,41,.25)!important}
 .acard-edit:hover{background:rgba(240,180,41,.28)}
 .acard-toggle{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.25)!important}
