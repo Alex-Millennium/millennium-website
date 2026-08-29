@@ -954,6 +954,61 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   border-radius:12px;padding:16px 20px;margin-top:20px}
 .pay-ref p{font-size:.86rem;color:rgba(255,255,255,.8);line-height:1.75;margin:0}
 
+/* ══════════════════════════════════════════════════════════
+   ADMIN PANEL — MOBILE
+   The panel was built desktop-only (1200px container, 290px
+   minimum grid columns), so on a phone it overflowed sideways
+   and squashed the action buttons. These are the only rules
+   that touch the admin panel below 820px.
+   ══════════════════════════════════════════════════════════ */
+@media(max-width:820px){
+  .admin-in{max-width:100%;padding-left:14px;padding-right:14px}
+
+  /* header: title and buttons stack instead of colliding */
+  .admin-head{flex-direction:column;align-items:flex-start;gap:14px}
+  .admin-head-actions{width:100%;display:flex;gap:10px}
+  .admin-head-actions button,
+  .admin-head-actions a{flex:1;text-align:center;white-space:nowrap}
+
+  /* stat tiles: two up rather than one huge column */
+  .admin-stats{grid-template-columns:1fr 1fr;gap:10px}
+  .admin-stat{padding:16px 14px}
+  .admin-stat-num{font-size:1.6rem}
+
+  /* tabs scroll horizontally instead of wrapping mid-word */
+  .admin-tabs{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;gap:4px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .admin-tabs::-webkit-scrollbar{display:none}
+  .admin-tab{flex:0 0 auto;white-space:nowrap;font-size:.8rem;padding:10px 12px}
+
+  /* toolbar: search full width, controls beneath */
+  .admin-toolbar{flex-direction:column;align-items:stretch;gap:10px}
+  .admin-toolbar > *{width:100%}
+  .admin-search{width:100%}
+  .admin-toolbar-right{display:flex;gap:8px}
+  .admin-toolbar-right > *{flex:1}
+
+  /* property cards: one per row, buttons on an even grid */
+  .admin-pgrid{grid-template-columns:1fr!important;gap:14px}
+  .admin-pcard-actions{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  }
+  .admin-pcard-actions button{
+    width:100%;height:auto;min-height:40px;padding:8px 6px;
+    font-size:.75rem;line-height:1.2;white-space:normal;
+  }
+  .admin-pcard-meta{font-size:.78rem;line-height:1.6}
+
+  /* tables scroll rather than forcing the page wide */
+  .admin-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .admin-table{min-width:640px}
+
+  /* modals fill the screen instead of overflowing it */
+  .admin-modal{width:calc(100% - 24px);max-width:none;max-height:88vh;overflow-y:auto}
+}
+
 /* ============================================================
    FAQ PAGE
 ============================================================ */
@@ -1550,19 +1605,20 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   font-variant-numeric:tabular-nums;letter-spacing:.03em}
 
 @media(prefers-reduced-motion:reduce){
-  /* Travel across the screen is the part that causes trouble for
-     motion-sensitive people, so the spin is dropped — but all five
-     cards stay on screen. The ring changes angle without animating. */
-  .rev-track{transition:none}
+  /* Reduce the motion rather than remove it. An instant snap of five
+     cards is jarring for everyone; a short, gentle turn is far less
+     motion than the full 2.8s spin while still reading as a movement
+     rather than a glitch. All five cards stay on screen. */
+  .rev-track{transition:transform .9s ease}
   .rev-slide>.tcard{
-    transition:opacity .8s ease, filter .8s ease,
-               border-color .8s ease, box-shadow .8s ease;
+    transition:opacity .9s ease, filter .9s ease,
+               transform .9s ease,
+               border-color .9s ease, box-shadow .9s ease;
   }
 }
 
-/* Note: with reduced motion switched on in the operating system the
-   carousel holds still and does not rotate on its own — that is
-   deliberate, and is the usual reason auto-rotation appears dead. */
+/* Note: with reduced motion switched on, the carousel still turns but
+   over 0.9s instead of 2.8s. */
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -8205,6 +8261,11 @@ function renderAdminCards(list){
     const avail = p.available
       ? '<span style="color:#34d399;font-size:.75rem;font-weight:700">● Available</span>'
       : '<span style="color:#F07080;font-size:.75rem;font-weight:700">● Let</span>';
+    /* the property model stores these as bedrooms / priceUnit — the card
+       was reading p.beds and p.unit, which is why every card said
+       "undefined bed" and "/undefined". Falls back either way. */
+    const beds = p.bedrooms ?? p.beds;
+    const unit = p.priceUnit ?? p.unit;
     return `<div class="admin-pcard">
       <div class="admin-pcard-img">${img}</div>
       <div class="admin-pcard-body">
@@ -8212,8 +8273,8 @@ function renderAdminCards(list){
           ${badge} ${avail}
         </div>
         <div class="admin-pcard-title">${p.title}</div>
-        <div class="admin-pcard-meta">📍 ${p.address||p.location} &nbsp;·&nbsp; 🛏 ${p.beds} bed${p.beds>1?'s':''}</div>
-        <div class="admin-pcard-price">£${p.price}/${p.unit}</div>
+        <div class="admin-pcard-meta">📍 ${p.address||p.location||'\u2014'}${beds ? ' &nbsp;·&nbsp; \uD83D\uDECF ' + beds + ' bed' + (beds>1?'s':'') : ''}</div>
+        <div class="admin-pcard-price">£${p.price ?? '\u2014'}${unit ? '<span style="font-size:.72rem;font-weight:600;color:rgba(255,255,255,.45)">/' + unit + '</span>' : ''}</div>
         <div class="admin-pcard-actions">
           <button class="acard-edit" onclick="openEditModal(${p.id})">✏️ Edit</button>
           <button class="acard-photos" onclick="openPhotoTab(${p.id})">📸 Photos</button>
