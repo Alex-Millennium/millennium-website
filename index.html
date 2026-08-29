@@ -1432,7 +1432,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   transition:transform .8s cubic-bezier(.3,.9,.3,1),
              opacity .8s ease,
              filter .8s ease;
-  will-change:transform,opacity,filter;
+  will-change:transform,opacity;
   pointer-events:none;
 }
 .rev-slide.is-active{pointer-events:auto}
@@ -1443,8 +1443,14 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   display:flex;flex-direction:column;
   height:352px;
   padding:24px 22px;
-  background:linear-gradient(160deg,rgba(20,11,46,.97) 0%,rgba(9,5,24,.99) 100%);
-  border:1px solid rgba(190,150,255,.30);
+  /* Fully opaque, and backdrop-filter explicitly OFF. A backdrop-filter
+     child inside an ancestor with opacity<1 / filter / will-change gets
+     an isolated backdrop and can fail to paint — which is what hid every
+     neighbour card while the centre one (opacity 1, no filter) showed. */
+  background:linear-gradient(160deg,#150b2e 0%,#0a0518 100%);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  border:1px solid rgba(190,150,255,.32);
   border-radius:16px;
   box-shadow:0 16px 40px rgba(0,0,0,.65);
   transition:border-color .6s ease,box-shadow .6s ease;
@@ -7570,7 +7576,9 @@ function revLayout(){
                         + (side * px[depth] * squeeze * 1.15) + 'px)'
                         + ' scale(' + (steps[depth].s * 0.9) + ')';
       s.style.opacity = '0';
-      s.style.filter = 'blur(6px)';
+      s.style.filter = 'none';
+      var farCard = s.firstElementChild;
+      if(farCard) farCard.style.filter = 'blur(6px)';
       s.style.zIndex = '0';
       continue;
     }
@@ -7582,7 +7590,10 @@ function revLayout(){
                       + ' translateX(' + (dir * px[a] * squeeze) + 'px)'
                       + ' scale(' + st.s + ')';
     s.style.opacity = reduced ? (active ? '1' : '0') : String(st.o);
-    s.style.filter = (st.b && !reduced) ? 'blur(' + st.b + 'px)' : 'none';
+    /* blur the card, not the positioned wrapper */
+    var card = s.firstElementChild;
+    if(card) card.style.filter = (st.b && !reduced) ? 'blur(' + st.b + 'px)' : 'none';
+    s.style.filter = 'none';
     s.style.zIndex = String(20 - a);
   }
 
@@ -8232,14 +8243,25 @@ function changeAdminPwd(){
 document.addEventListener('DOMContentLoaded', () => {
   loadProps();
   loadReviews();
-  showPage('home');
-  /* Ensure home features + reviews render even if showPage fires before arrays ready */
-  setTimeout(()=>{
-    if(typeof renderFeats==='function' && typeof STUD_FEATURES!=='undefined'){
-      renderFeats('homeStudFeatGrid', STUD_FEATURES.slice(0,8));
-      renderFeats('homePrivFeatGrid', PRIVATE_FEATURES);
-    }
+  /* Paint the reviews immediately — the featured card used to wait on a
+     300ms timer it shared with other renderers, so it always appeared
+     late and vanished entirely if anything ahead of it threw. */
+  try {
     if(typeof renderTestimonialsOnSite==='function') renderTestimonialsOnSite();
+  } catch(e){ console.error('reviews render failed', e); }
+  showPage('home');
+  /* Safety net: re-run the home renderers once layout has settled.
+     Each is isolated so one failure cannot take the others down. */
+  setTimeout(()=>{
+    try {
+      if(typeof renderFeats==='function' && typeof STUD_FEATURES!=='undefined'){
+        renderFeats('homeStudFeatGrid', STUD_FEATURES.slice(0,8));
+        renderFeats('homePrivFeatGrid', PRIVATE_FEATURES);
+      }
+    } catch(e){ console.error('features render failed', e); }
+    try {
+      if(typeof renderTestimonialsOnSite==='function') renderTestimonialsOnSite();
+    } catch(e){ console.error('reviews re-render failed', e); }
   }, 300);
   /* setupAuthObserver called by initFirebase */
   /* Show setup guide banner if Firebase not configured */
