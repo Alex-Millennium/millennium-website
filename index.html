@@ -1550,14 +1550,19 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   font-variant-numeric:tabular-nums;letter-spacing:.03em}
 
 @media(prefers-reduced-motion:reduce){
-  /* No spin — travel across the screen is what causes trouble for
-     motion-sensitive people. A cross-fade is the accepted substitute,
-     so the change still reads as intentional rather than a jump. */
+  /* Travel across the screen is the part that causes trouble for
+     motion-sensitive people, so the spin goes. But an instant 30deg
+     snap of five cards is worse than either extreme, so the neighbours
+     are hidden entirely and only the front card is shown, fading from
+     one review to the next. Nothing appears to move. */
   .rev-track{transition:none}
   .rev-slide>.tcard{
-    transition:opacity .7s ease, filter .7s ease,
-               border-color .7s ease, box-shadow .7s ease;
+    transition:opacity .8s ease, filter .8s ease,
+               border-color .8s ease, box-shadow .8s ease;
   }
+  .rev-slide.is-side>.tcard,
+  .rev-slide.is-far>.tcard{opacity:0;filter:none}
+  .rev-slide.is-active>.tcard{filter:none}
 }
 
 /* Note: with reduced motion switched on in the operating system the
@@ -7560,7 +7565,7 @@ function fallbackCopy(text, done){
    ============================================================ */
 var REV_INTERVAL = 10000;  /* 2.8s turning, then a ~7s rest to read */
 var revCar = { index:0, total:0, timer:null, paused:false, bound:false,
-               turn:0, step:60, radius:258 };
+               turn:0, step:60, radius:258, watchdog:null };
 
 function revReducedMotion(){
   return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -7739,8 +7744,19 @@ function revBindOnce(){
   }
 
   if(car){
-    car.addEventListener('mouseenter', function(){ revCar.paused = true;  revStopTimer(); });
-    car.addEventListener('mouseleave', function(){ revCar.paused = false; revRestartTimer(); });
+    /* Pause only over a card, not the whole band. The carousel element
+       spans close to 1000px including empty space either side, so a
+       cursor parked anywhere in that strip used to stop the loop for
+       good. */
+    car.addEventListener('mouseover', function(e){
+      var onCard = e.target.closest && e.target.closest('.rev-slide');
+      if(onCard && !revCar.paused){ revCar.paused = true; revStopTimer(); }
+    });
+    car.addEventListener('mouseout', function(e){
+      var stillOnCard = e.relatedTarget && e.relatedTarget.closest
+                        && e.relatedTarget.closest('.rev-slide');
+      if(!stillOnCard && revCar.paused){ revCar.paused = false; revRestartTimer(); }
+    });
     car.addEventListener('focusin',    function(){ revCar.paused = true;  revStopTimer(); });
     car.addEventListener('focusout',   function(e){
       if(!car.contains(e.relatedTarget)){ revCar.paused = false; revRestartTimer(); }
@@ -7800,6 +7816,16 @@ function initReviewCarousel(){
   revLayout();
   revBindOnce();
   revRestartTimer();
+
+  /* Watchdog: if the loop ever stops while nobody is interacting with
+     it — a dropped timer, a tab restored oddly — start it again. */
+  if(!revCar.watchdog){
+    revCar.watchdog = setInterval(function(){
+      if(!revCar.timer && !revCar.paused && !document.hidden && revCar.unique > 1){
+        revRestartTimer();
+      }
+    }, 4000);
+  }
 
   /* re-measure once webfonts and layout have settled */
   if(window.requestAnimationFrame) requestAnimationFrame(revLayout);
