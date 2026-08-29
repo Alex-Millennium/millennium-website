@@ -109,7 +109,17 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   z-index:89;
   transition:background .5s ease, border-color .5s ease, box-shadow .3s;
 }
-.nav.scrolled{background:rgba(4,2,18,0.75);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid rgba(240,180,41,0.18);box-shadow:0 4px 40px rgba(0,0,0,.65)}
+.nav.scrolled{background:rgba(4,2,18,0.72);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid rgba(240,180,41,0.14);box-shadow:0 2px 14px rgba(0,0,0,.32)}
+/* The old 40px black shadow painted a band across the galaxy that read
+   as a hard line under the bar. This fades the bar into the page
+   instead of ending it abruptly. */
+.nav::after{
+  content:'';position:absolute;left:0;right:0;top:100%;
+  height:26px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,2,18,.5) 0%,rgba(4,2,18,0) 100%);
+  opacity:0;transition:opacity .5s ease;
+}
+.nav.scrolled::after{opacity:1}
 .nav-inner{
   max-width:1280px;
   margin:0 auto;
@@ -612,7 +622,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
 }
-@media(max-width:768px){
+@media(max-width:1050px){
   .nav-links{display:none}
   .hamburger{display:flex}
   .section{padding:56px 20px}
@@ -953,6 +963,121 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .pay-ref{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);
   border-radius:12px;padding:16px 20px;margin-top:20px}
 .pay-ref p{font-size:.86rem;color:rgba(255,255,255,.8);line-height:1.75;margin:0}
+
+/* ══════════════════════════════════════════════════════════
+   HERO LOGO
+   Fills the hero's right column, which had been empty since
+   the page was built. The image is copied from the nav logo
+   at runtime so it costs no extra download.
+   ══════════════════════════════════════════════════════════ */
+.hero-logo{
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-logo img{
+  width:100%;max-width:460px;height:auto;
+  filter:drop-shadow(0 10px 40px rgba(0,0,0,.55))
+         drop-shadow(0 0 60px rgba(240,180,41,.15));
+  animation:heroLogoIn 1.1s cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes heroLogoIn{
+  from{opacity:0;transform:translateY(18px) scale(.96)}
+  to{opacity:1;transform:none}
+}
+@media(max-width:900px){
+  /* above the text on a phone, and smaller so it doesn't
+     push the heading off the first screen */
+  .hero-logo{order:-1}
+  .hero-logo img{max-width:260px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-logo img{animation:none}
+}
+
+/* ══════════════════════════════════════════════════════════
+   IPSWICH ROOMS
+   ══════════════════════════════════════════════════════════ */
+.ips-facts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:16px;margin-bottom:8px;
+}
+.ips-fact{
+  background:rgba(8,6,28,.5);
+  border:1px solid rgba(160,80,255,.18);
+  border-radius:14px;padding:20px 18px;text-align:center;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.ips-fact-num{
+  font-size:1.9rem;font-weight:800;color:var(--gold-500);
+  line-height:1.1;margin-bottom:5px;
+}
+.ips-fact-lab{font-size:.78rem;color:rgba(255,255,255,.55);letter-spacing:.02em}
+
+/* pay-cycle toggle */
+.ips-toggle{
+  display:inline-flex;gap:4px;padding:4px;margin:0 auto 26px;
+  background:rgba(8,6,28,.6);border:1px solid rgba(255,255,255,.12);
+  border-radius:100px;
+}
+.ips-toggle button{
+  border:none;cursor:pointer;border-radius:100px;
+  padding:9px 22px;font-size:.83rem;font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:transparent;color:rgba(255,255,255,.6);
+  transition:var(--trans);
+}
+.ips-toggle button.on{background:var(--gold-500);color:#1a1200}
+
+.ips-rooms{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.ips-room{
+  background:rgba(8,6,28,.5);
+  border:1px solid rgba(160,80,255,.18);
+  border-radius:14px;padding:24px 20px;text-align:center;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:var(--trans);
+}
+.ips-room:hover{border-color:rgba(240,180,41,.4);transform:translateY(-3px)}
+.ips-room-name{font-size:.95rem;font-weight:700;margin-bottom:12px}
+.ips-room-price{
+  font-size:2rem;font-weight:800;color:var(--gold-500);line-height:1.1;
+}
+.ips-room-per{font-size:.8rem;color:rgba(255,255,255,.45);margin-top:4px}
+.ips-room-alt{
+  margin-top:14px;padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:.78rem;color:rgba(255,255,255,.5);
+}
+
+.ips-note{
+  max-width:720px;margin:26px auto 0;
+  background:rgba(240,180,41,.07);
+  border:1px solid rgba(240,180,41,.22);
+  border-radius:14px;padding:18px 22px;
+  font-size:.86rem;line-height:1.7;color:rgba(255,255,255,.72);
+}
+.ips-note strong{color:var(--gold-400)}
+
+.ips-inc{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+.ips-inc-item{
+  display:flex;align-items:flex-start;gap:11px;
+  background:rgba(8,6,28,.42);
+  border:1px solid rgba(160,80,255,.14);
+  border-radius:12px;padding:16px 18px;
+  font-size:.87rem;line-height:1.55;
+}
+.ips-inc-item span:first-child{font-size:1.05rem;line-height:1.3}
+
+@media(max-width:600px){
+  .ips-fact{padding:16px 14px}
+  .ips-fact-num{font-size:1.6rem}
+  .ips-room{padding:20px 16px}
+  .ips-room-price{font-size:1.7rem}
+}
 
 /* ══════════════════════════════════════════════════════════
    FREE INSURANCE SECTION
@@ -1816,7 +1941,8 @@ function initFirebase(){
     </div>
     <ul class="nav-links" id="desktopNav">
       <li><a id="nav-home" onclick="showPage('home')">Home</a></li>
-      <li><a id="nav-student" onclick="showPage('student')">Colchester &mdash; Students</a></li>
+      <li><a id="nav-student" onclick="showPage('student')">Student Accommodation</a></li>
+      <li><a id="nav-ipswich" onclick="showPage('ipswich')">Ipswich Rooms</a></li>
       <li><a id="nav-private" onclick="showPage('private')">Private Rentals</a></li>
       <li><a id="nav-payments" onclick="showPage('payments')">Payments</a></li>
       <li><a id="nav-about" onclick="showPage('about')">About Us</a></li>
@@ -1831,7 +1957,8 @@ function initFirebase(){
 <!-- MOBILE MENU -->
 <div class="mob-menu" id="mobMenu">
   <a id="mob-home" onclick="showPage('home');closeMobMenu()">Home</a>
-  <a id="mob-student" onclick="showPage('student');closeMobMenu()">Colchester &mdash; Student Accommodation</a>
+  <a id="mob-student" onclick="showPage('student');closeMobMenu()">Student Accommodation</a>
+  <a id="mob-ipswich" onclick="showPage('ipswich');closeMobMenu()">Ipswich Rooms</a>
   <a id="mob-private" onclick="showPage('private');closeMobMenu()">Private Rentals</a>
   <a id="mob-payments" onclick="showPage('payments');closeMobMenu()">Payments</a>
   <a id="mob-about" onclick="showPage('about');closeMobMenu()">About Us</a>
@@ -1996,7 +2123,12 @@ function initFirebase(){
 /* ============================================================
    FEATURE CARDS
 ============================================================ */
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:18px}
+/* Flex wrap rather than grid: a grid leaves a lone last card stranded
+   on the left, flex centres whatever is left over on the final row. */
+.feat-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:18px}
+.feat-grid > *{flex:1 1 248px;max-width:calc(25% - 13.5px);min-width:248px}
+@media(max-width:1180px){.feat-grid > *{max-width:calc(33.333% - 12px)}}
+@media(max-width:900px){.feat-grid > *{max-width:calc(50% - 9px)}}
 .fcard{
   background:rgba(8,6,28,0.38);border:1px solid rgba(160,80,255,0.16);
   border-radius:14px;padding:22px;transition:var(--trans);
@@ -2077,7 +2209,7 @@ function initFirebase(){
   .hero h1{font-size:2.1rem}
   .hero p{font-size:.95rem}
   .prop-grid{grid-template-columns:1fr}
-  .feat-grid{grid-template-columns:1fr}
+  .feat-grid > *{max-width:100%;min-width:0}
   .test-grid{grid-template-columns:1fr}
   .cta-ban{padding:40px 24px}
 }
@@ -2110,7 +2242,10 @@ function initFirebase(){
           </button>
         </div>
       </div>
-      <!-- Right: Stat Cards -->
+      <!-- Right: Logo -->
+      <div class="hero-logo">
+        <img id="heroLogo" alt="Millennium Investments 2000 Ltd">
+      </div>
     </div>
     <!-- Scroll indicator -->
     <div class="scroll-ind">
@@ -2212,21 +2347,6 @@ function initFirebase(){
     </div>
   </div>
 
-  <!-- WHAT'S INCLUDED -->
-  <section class="section bg-dark">
-    <div class="sec-in">
-      <div class="sec-hd">
-        <div class="sec-tag">Included As Standard</div>
-        <h2 class="sec-title">Everything <span class="gold-text">Included</span></h2>
-        <p class="sec-sub">No nasty surprises — your rent covers everything below so you can focus on your studies.</p>
-      </div>
-      <div class="feat-grid" id="studFeatGrid"><!-- JS rendered --></div>
-    </div>
-  </section>
-
-  <!-- STUDENT PROPERTIES -->
-
-  
   <!-- LOCATIONS SECTION -->
   <section class="section bg-base" id="locationsSection">
     <div class="sec-in">
@@ -2385,6 +2505,22 @@ function initFirebase(){
 
     </div>
   </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="section bg-dark">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Included As Standard</div>
+        <h2 class="sec-title">Everything <span class="gold-text">Included</span></h2>
+        <p class="sec-sub">No nasty surprises — your rent covers everything below so you can focus on your studies.</p>
+      </div>
+      <div class="feat-grid" id="studFeatGrid"><!-- JS rendered --></div>
+    </div>
+  </section>
+
+  <!-- STUDENT PROPERTIES -->
+
+  
 
 
   <!-- GALLAGHER INSURANCE SECTION -->
@@ -2570,6 +2706,149 @@ function initFirebase(){
 <!-- ============================================================
      PRIVATE RENTALS PAGE
 ============================================================ -->
+<!-- ============================================================
+     IPSWICH ROOMS PAGE
+============================================================ -->
+<div class="page" id="page-ipswich">
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="ph-inner">
+      <div class="breadcrumb">
+        <a onclick="showPage('home')">Home</a>
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="cur">Ipswich Rooms</span>
+      </div>
+      <h1 class="ph-title">Ipswich <span class="gold-text">Rooms to Let</span></h1>
+      <p class="ph-sub">A large professional house share on Norwich Road, Ipswich. All bills included, no deposit, and a simple weekly licence &mdash; open to all working tenants.</p>
+      <div class="badge-row">
+        <span class="badge-pill gold">📍 154 Norwich Road, IP1 2PT</span>
+        <span class="badge-pill green">✓ 1 Room Available</span>
+        <span class="badge-pill red">💡 All Bills Included</span>
+        <button class="btn-apply-inline" onclick="openPrivateAppModal()" style="margin-left:8px">
+          ✍️ Apply Now
+        </button>
+        <button class="btn-apply-inline" onclick="scrollToIpsPrices()" style="margin-left:8px;background:transparent;color:#F5C518;border:1.5px solid rgba(245,197,24,.55)">
+          💷 See Prices
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AT A GLANCE -->
+  <section class="section bg-base" style="padding-bottom:24px">
+    <div class="sec-in">
+      <div class="ips-facts fade-in">
+        <div class="ips-fact"><div class="ips-fact-num">57</div><div class="ips-fact-lab">Rooms in total</div></div>
+        <div class="ips-fact"><div class="ips-fact-num">1</div><div class="ips-fact-lab">Available now</div></div>
+        <div class="ips-fact"><div class="ips-fact-num">£0</div><div class="ips-fact-lab">Deposit</div></div>
+        <div class="ips-fact"><div class="ips-fact-num">Weekly</div><div class="ips-fact-lab">Licence agreement</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROOMS & PRICING -->
+  <section class="section bg-dark" id="ipswichPricing">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Rooms &amp; Rates</div>
+        <h2 class="sec-title">Four <span class="gold-text">Room Types</span></h2>
+        <p class="sec-sub">Every rate below includes all bills. There is no deposit and no agency fee.</p>
+      </div>
+
+      <div style="text-align:center">
+        <div class="ips-toggle" role="group" aria-label="Payment frequency">
+          <button id="ipsWeeklyBtn" class="on" onclick="setIpsCycle('weekly')">Weekly</button>
+          <button id="ipsMonthlyBtn" onclick="setIpsCycle('monthly')">Monthly</button>
+        </div>
+      </div>
+
+      <div class="ips-rooms fade-in">
+        <div class="ips-room">
+          <div class="ips-room-name">Single</div>
+          <div class="ips-room-price"><span class="ips-amt" data-weekly="£115" data-monthly="£460">£115</span></div>
+          <div class="ips-room-per"><span class="ips-per">per week</span></div>
+          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £460 per month" data-monthly="or £115 per week">or £460 per month</span></div>
+        </div>
+        <div class="ips-room">
+          <div class="ips-room-name">Large Single</div>
+          <div class="ips-room-price"><span class="ips-amt" data-weekly="£130" data-monthly="£520">£130</span></div>
+          <div class="ips-room-per"><span class="ips-per">per week</span></div>
+          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £520 per month" data-monthly="or £130 per week">or £520 per month</span></div>
+        </div>
+        <div class="ips-room">
+          <div class="ips-room-name">Double</div>
+          <div class="ips-room-price"><span class="ips-amt" data-weekly="£165" data-monthly="£660">£165</span></div>
+          <div class="ips-room-per"><span class="ips-per">per week</span></div>
+          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £660 per month" data-monthly="or £165 per week">or £660 per month</span></div>
+        </div>
+        <div class="ips-room">
+          <div class="ips-room-name">Large Double</div>
+          <div class="ips-room-price"><span class="ips-amt" data-weekly="£185" data-monthly="£740">£185</span></div>
+          <div class="ips-room-per"><span class="ips-per">per week</span></div>
+          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £740 per month" data-monthly="or £185 per week">or £740 per month</span></div>
+        </div>
+      </div>
+
+      <div class="ips-note fade-in">
+        <strong>Paying monthly saves you money.</strong> The monthly rate is four weeks&rsquo; rent, so over a
+        52-week year you pay for 48 weeks &mdash; a saving of four weeks&rsquo; rent, between £460 and £740 a
+        year depending on your room. The agreement remains a weekly licence either way; monthly payment is
+        simply offered as a way to save.
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="section bg-base">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Included As Standard</div>
+        <h2 class="sec-title">What&rsquo;s <span class="gold-text">Included</span></h2>
+      </div>
+      <div class="ips-inc fade-in">
+        <div class="ips-inc-item"><span>💡</span><span><strong>All bills included</strong><br>Gas, electric and water are covered in your rent.</span></div>
+        <div class="ips-inc-item"><span>🍳</span><span><strong>Shared kitchens</strong><br>Fully fitted kitchens shared between residents.</span></div>
+        <div class="ips-inc-item"><span>🚿</span><span><strong>Shared bathrooms</strong><br>Shared bathroom facilities throughout the building.</span></div>
+        <div class="ips-inc-item"><span>💷</span><span><strong>No deposit</strong><br>Move in without finding a deposit up front.</span></div>
+        <div class="ips-inc-item"><span>📄</span><span><strong>Weekly licence</strong><br>A straightforward agreement in plain English.</span></div>
+        <div class="ips-inc-item"><span>🛠️</span><span><strong>In-house maintenance</strong><br>Repairs handled promptly by our own team.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION -->
+  <section class="section bg-dark">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Location</div>
+        <h2 class="sec-title">154 <span class="gold-text">Norwich Road</span></h2>
+        <p class="sec-sub">154 Norwich Road, Ipswich, IP1 2PT</p>
+      </div>
+      <div class="loc-map-wrap fade-in" style="max-width:900px;margin:0 auto">
+        <iframe src="https://maps.google.com/maps?q=154+Norwich+Road,+Ipswich,+IP1+2PT,+UK&output=embed&hl=en"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="154 Norwich Road, Ipswich Location"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLY -->
+  <section class="section bg-base">
+    <div class="sec-in" style="text-align:center">
+      <div class="sec-tag" style="display:inline-block;margin-bottom:16px">Interested?</div>
+      <h2 class="sec-title" style="margin-bottom:14px">Apply for a <span class="gold-text">Room</span></h2>
+      <p class="sec-sub" style="margin-bottom:32px">One room is available now. Applications use the same short form as our private rentals &mdash; it takes a few minutes.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="openPrivateAppModal()">✍️ Apply Now</button>
+        <a class="btn btn-ghost" href="tel:01206500202">📞 Call Us</a>
+        <button class="btn btn-ghost" onclick="showPage('contact')">Send an Enquiry</button>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page-ipswich -->
+
 <div class="page" id="page-private">
 
   <!-- PAGE HERO -->
@@ -7196,6 +7475,8 @@ function openApplyModal(){
   const currentPage = active ? active.id.replace('page-','') : 'home';
   if(currentPage === 'student'){ openStudentAppModal(); return; }
   if(currentPage === 'private'){ openPrivateAppModal(); return; }
+  /* Ipswich rooms use the same application as private rentals */
+  if(currentPage === 'ipswich'){ openPrivateAppModal(); return; }
   /* Home page or anywhere else — show the chooser */
   document.getElementById('applyChoiceModal').classList.add('open');
   document.body.style.overflow='hidden';
@@ -7707,6 +7988,46 @@ function renderTestimonialsOnSite(){
   }
 }
 
+
+/* ============================================================
+   IPSWICH ROOMS — weekly / monthly toggle
+   Both figures are held on the element as data attributes, so
+   switching never recalculates a price at runtime.
+   ============================================================ */
+function setIpsCycle(cycle){
+  var monthly = (cycle === 'monthly');
+  document.querySelectorAll('.ips-amt').forEach(function(el){
+    el.textContent = monthly ? el.dataset.monthly : el.dataset.weekly;
+  });
+  document.querySelectorAll('.ips-per').forEach(function(el){
+    el.textContent = monthly ? 'per month' : 'per week';
+  });
+  document.querySelectorAll('.ips-alt').forEach(function(el){
+    el.textContent = monthly ? el.dataset.monthly : el.dataset.weekly;
+  });
+  var w = document.getElementById('ipsWeeklyBtn');
+  var m = document.getElementById('ipsMonthlyBtn');
+  if(w) w.classList.toggle('on', !monthly);
+  if(m) m.classList.toggle('on', monthly);
+}
+
+function scrollToIpsPrices(){
+  var el = document.getElementById('ipswichPricing');
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ============================================================
+   HERO LOGO — reuse the nav logo's image
+   The logo is already embedded three times in this file at
+   ~38KB each; pointing at the same source costs nothing extra.
+   ============================================================ */
+function initHeroLogo(){
+  var hero = document.getElementById('heroLogo');
+  var nav  = document.querySelector('.nav-logo img');
+  if(hero && nav && nav.src) hero.src = nav.src;
+}
+document.addEventListener('DOMContentLoaded', initHeroLogo);
+if(document.readyState !== 'loading') initHeroLogo();
 
 /* ============================================================
    PAYMENTS — copy a bank detail to the clipboard
