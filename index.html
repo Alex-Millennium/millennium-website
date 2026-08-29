@@ -955,6 +955,36 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .pay-ref p{font-size:.86rem;color:rgba(255,255,255,.8);line-height:1.75;margin:0}
 
 /* ══════════════════════════════════════════════════════════
+   FREE INSURANCE SECTION
+   The two-column layout used to be an inline style, so no
+   media query could reach it and phones kept both columns —
+   squeezing each to about 180px and breaking the heading
+   onto three lines. It stacks below 820px now.
+   ══════════════════════════════════════════════════════════ */
+.ins-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:32px;align-items:stretch;
+  max-width:900px;margin:0 auto;
+}
+.ins-card{
+  background:rgba(8,4,24,.72);
+  border:1px solid rgba(160,80,255,.2);
+  border-radius:16px;
+  padding:28px;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+@media(max-width:820px){
+  .ins-grid{grid-template-columns:1fr;gap:18px;max-width:460px}
+  .ins-card{
+    padding:22px 20px;
+    /* nearly solid: at 55% the galaxy showed straight through and
+       the panels read as washed-out squares on a phone */
+    background:rgba(8,4,24,.9);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
    FORM CONTROLS — base (dark theme)
    Every existing rule for these classes is scoped to
    `.wiz-card`, so outside the application wizard they had no
@@ -2365,9 +2395,9 @@ function initFirebase(){
         <h2 class="sec-title">Collect Your Free <span class="gold-text">Contents Insurance</span></h2>
         <p class="sec-sub">In association with Gallagher — your belongings are already covered. Simply sign up to activate your free policy.</p>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch;max-width:900px;margin:0 auto">
+      <div class="ins-grid">
         <!-- Info -->
-        <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px;display:flex;flex-direction:column">
+        <div class="ins-card" style="display:flex;flex-direction:column">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
             <div style="background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);border-radius:10px;padding:10px">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -2396,7 +2426,7 @@ function initFirebase(){
         </div>
         <!-- QR Code -->
         <div style="display:flex">
-          <div style="background:rgba(8,4,24,0.55);border:1px solid rgba(160,80,255,0.2);border-radius:16px;padding:28px;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+          <div class="ins-card" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
             <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:16px">📱 Scan with your phone camera:</p>
             <div style="background:#fff;border-radius:12px;padding:12px;display:inline-flex;align-items:center;justify-content:center;width:180px;height:180px">
               <div id="gallagherQRContainer" style="width:160px;height:160px;border-radius:8px;overflow:hidden;background:#fff"></div>
