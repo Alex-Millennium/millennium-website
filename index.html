@@ -1407,71 +1407,86 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 
 
 /* ══════════════════════════════════════════════════════════
-   REVIEWS COVERFLOW
-   Centre card upright and sharp; neighbours recede in a flat
-   line, each smaller, dimmer and more blurred. Rotates on its
-   own every few seconds and wraps around.
-   ══════════════════════════════════════════════════════════ */
-/* the featured hero card is optional — collapse the gap when absent */
-.test-featured:empty{display:none;margin:0}
-#reviewsSection .sec-hd{margin-bottom:30px}
+   REVIEWS CAROUSEL — three cards
+   Centre card in front and readable; one either side sitting
+   behind it, smaller and blurred. Rotates every 5s.
 
+   The wrapper (.rev-slide) is given ONLY transform + z-index.
+   opacity / filter / will-change on the wrapper create a stacking
+   context that stopped the side cards painting at all, so every
+   visual effect is applied to .tcard inside it instead.
+   ══════════════════════════════════════════════════════════ */
 .rev-carousel{position:relative;margin-top:0}
 .rev-viewport{
   position:relative;
-  height:392px;
+  height:400px;
   overflow:hidden;
+  /* depth for the turntable swing */
+  perspective:1500px;
+  perspective-origin:50% 50%;
 }
-.rev-track{position:absolute;inset:0}
+.rev-track{position:absolute;inset:0;display:block;transform-style:preserve-3d}
+
 .rev-slide{
   position:absolute;
-  top:50%;left:50%;
-  width:min(330px,74vw);
+  top:50%;
+  left:50%;
+  width:min(340px,78vw);
   margin:0;
-  transform-origin:50% 50%;
-  transition:transform .8s cubic-bezier(.3,.9,.3,1),
-             opacity .8s ease,
-             filter .8s ease;
-  will-change:transform,opacity;
+  transform:translate(-50%,-50%);
+  /* a long, decelerating curve so the ring coasts to a stop
+     rather than snapping into place */
+  transition:transform .95s cubic-bezier(.22,.68,.26,1);
   pointer-events:none;
 }
 .rev-slide.is-active{pointer-events:auto}
-.rev-slide.is-near{pointer-events:auto;cursor:pointer}
-.rev-slide.is-hidden{opacity:0;pointer-events:none}
+.rev-slide.is-side{pointer-events:auto;cursor:pointer}
 
 .rev-slide>.tcard{
-  display:flex;flex-direction:column;
-  height:352px;
+  display:flex;
+  flex-direction:column;
+  height:360px;
   padding:24px 22px;
-  /* Fully opaque, and backdrop-filter explicitly OFF. A backdrop-filter
-     child inside an ancestor with opacity<1 / filter / will-change gets
-     an isolated backdrop and can fail to paint — which is what hid every
-     neighbour card while the centre one (opacity 1, no filter) showed. */
-  background:linear-gradient(160deg,#150b2e 0%,#0a0518 100%);
+  background:linear-gradient(160deg,#170c31 0%,#0b0619 100%);
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
-  border:1px solid rgba(190,150,255,.32);
+  border:1px solid rgba(190,150,255,.28);
   border-radius:16px;
-  box-shadow:0 16px 40px rgba(0,0,0,.65);
-  transition:border-color .6s ease,box-shadow .6s ease;
+  box-shadow:0 14px 38px rgba(0,0,0,.6);
+  opacity:1;
+  filter:none;
+  transition:opacity .95s ease, filter .95s ease,
+             border-color .95s ease, box-shadow .95s ease;
 }
-/* the card in focus gets a bright rim, like the reference */
+
+/* the two behind */
+.rev-slide.is-side>.tcard{
+  opacity:.62;
+  filter:blur(2.5px);
+  box-shadow:0 10px 26px rgba(0,0,0,.5);
+}
+/* off-stage, waiting to come round */
+.rev-slide.is-off>.tcard{
+  opacity:0;
+  filter:blur(6px);
+}
+/* the one in front */
 .rev-slide.is-active>.tcard{
-  border:2px solid rgba(255,255,255,.85);
-  box-shadow:0 26px 70px rgba(0,0,0,.7),
-             0 0 0 1px rgba(240,180,41,.25),
-             0 0 34px rgba(240,180,41,.16);
+  border:2px solid rgba(255,255,255,.88);
+  box-shadow:0 24px 60px rgba(0,0,0,.72),
+             0 0 30px rgba(240,180,41,.18);
 }
+
 .rev-slide>.tcard .ttext{
   flex:1 1 auto;overflow:hidden;
-  display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;
+  display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;
 }
 .rev-slide>.tcard .tauthor{margin-top:auto;padding-top:14px}
 
 @media(max-width:820px){
-  .rev-viewport{height:362px}
-  .rev-slide>.tcard{height:326px;padding:22px 20px}
-  .rev-slide>.tcard .ttext{-webkit-line-clamp:6}
+  .rev-viewport{height:372px}
+  .rev-slide>.tcard{height:332px;padding:22px 20px}
+  .rev-slide>.tcard .ttext{-webkit-line-clamp:7}
 }
 
 /* arrows */
@@ -1480,7 +1495,6 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   border:1px solid rgba(240,180,41,.38);background:rgba(10,6,24,.9);
   color:var(--gold-500);font-size:1.2rem;line-height:1;
   display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   box-shadow:0 4px 18px rgba(0,0,0,.5);
   transition:background .25s,border-color .25s,color .25s}
 .rev-arrow:hover{background:rgba(240,180,41,.2);
@@ -1510,9 +1524,11 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 @media(prefers-reduced-motion:reduce){
   .rev-slide{transition:none}
   .rev-slide>.tcard{transition:none}
-  .rev-slide:not(.is-active){opacity:0!important}
-  .rev-slide.is-active{filter:none!important}
 }
+
+/* Note: with reduced motion switched on in the operating system the
+   carousel holds still and does not rotate on its own — that is
+   deliberate, and is the usual reason auto-rotation appears dead. */
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -7489,14 +7505,8 @@ function fallbackCopy(text, done){
 
 
 /* ============================================================
-   REVIEWS COVERFLOW ENGINE
-   - rotates on its own every 5s and wraps around
-   - centre card upright and sharp; neighbours recede, shrink,
-     dim and blur with distance
-   - pauses while hovered or keyboard-focused, and while the
-     browser tab is hidden
-   - arrows, dots, click-a-neighbour, keyboard, touch swipe
-   - honours prefers-reduced-motion (holds still)
+   REVIEWS CAROUSEL ENGINE — three cards
+   centre in front, one either side behind it, rotating every 5s
    ============================================================ */
 var REV_INTERVAL = 5000;
 var revCar = { index:0, total:0, timer:null, paused:false, bound:false };
@@ -7505,11 +7515,7 @@ function revReducedMotion(){
   return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function revIsNarrow(){
-  return window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
-}
-
-/* shortest signed distance from the active card, so the ring wraps */
+/* shortest signed distance from the centre card, so the ring wraps */
 function revOffset(i){
   var n = revCar.total;
   if(n < 2) return 0;
@@ -7519,89 +7525,70 @@ function revOffset(i){
   return d;
 }
 
-/* Cards recede in a flat line. Each step out moves less than the
-   one before, which is what gives the stacked, receding look. */
-/* Ring steps. `g` is the visible GAP we want between the edge of one
-   card and the edge of the next, as a fraction of card width. The
-   actual pixel offset is worked out from the measured card size in
-   revLayout(), so a card can never end up hidden behind its neighbour. */
-var REV_STEPS = {
-  wide:   [ {g:0,    s:1,   o:1,   b:0},
-            {g:-.26, s:.84, o:.80, b:.8},
-            {g:-.32, s:.68, o:.46, b:2} ],
-  narrow: [ {g:0,    s:1,   o:1,   b:0},
-            {g:-.30, s:.80, o:.68, b:1} ]
-};
-
 function revLayout(){
   var track = document.getElementById('revTrack');
-  var vp = document.getElementById('revViewport');
-  if(!track || !vp) return;
+  if(!track) return;
   var slides = track.querySelectorAll('.rev-slide');
-  var steps = revIsNarrow() ? REV_STEPS.narrow : REV_STEPS.wide;
-  var depth = steps.length - 1;
-  var reduced = revReducedMotion();
+  if(!slides.length) return;
 
-  /* Measure for real, then convert each step's gap into a pixel offset.
-     offset = half of this card + half of the previous card + the gap,
-     so every card is guaranteed to clear the one in front of it. */
-  var cardW = (slides[0] && slides[0].offsetWidth) || 330;
-  var vpHalf = (vp.clientWidth || 900) / 2;
-  var px = [0];
-  for(var n=1; n<=depth; n++){
-    px[n] = px[n-1]
-          + (cardW * steps[n-1].s / 2)
-          + (cardW * steps[n].s / 2)
-          + (cardW * steps[n].g);
-  }
-  /* if the row would spill out of the viewport, pull the whole ring in */
-  var widest = px[depth] + cardW * steps[depth].s / 2;
-  var squeeze = widest > vpHalf ? (vpHalf / widest) : 1;
+  /* Measure the card, then tuck the side cards behind the centre one.
+     offset = centre half-width + side half-width - overlap, so a side
+     card always sits partly behind the middle card and partly clear
+     of it. */
+  var cardW = slides[0].offsetWidth || 340;
+  var sideScale = 0.86;
+  var overlap = cardW * 0.49;
+  var offset = (cardW / 2) + (cardW * sideScale / 2) - overlap;
 
-  for(var i=0; i<slides.length; i++){
+  /* turntable: cards sit on a shallow arc, so one arriving at the
+     front turns to face you and lifts toward the viewer while the one
+     leaving turns away and drops back */
+  var SIDE_TURN = 22;   /* degrees a side card is turned */
+  var SIDE_DEPTH = 90;  /* px it sits behind the front card */
+  var OFF_TURN = 30;
+  var OFF_DEPTH = 190;
+
+  for(var i = 0; i < slides.length; i++){
     var s = slides[i];
     var d = revOffset(i);
     var a = Math.abs(d);
-    var active = (a === 0);
 
-    s.classList.toggle('is-active', active);
-    s.classList.toggle('is-near', !active && a <= depth);
-    s.classList.toggle('is-hidden', a > depth);
-    s.setAttribute('aria-hidden', active ? 'false' : 'true');
+    s.classList.remove('is-active','is-side','is-off');
 
-    if(a > depth){
-      /* park it out of sight on the side it will next appear from */
+    if(a === 0){
+      s.classList.add('is-active');
+      s.style.transform = 'translate(-50%,-50%) translateX(0px) '
+                        + 'translateZ(0px) rotateY(0deg) scale(1)';
+      s.style.zIndex = '3';
+      s.setAttribute('aria-hidden','false');
+    } else if(a === 1){
+      s.classList.add('is-side');
+      /* turned inward, so the card faces the middle of the tray */
+      s.style.transform = 'translate(-50%,-50%) '
+                        + 'translateX(' + (d * offset) + 'px) '
+                        + 'translateZ(' + (-SIDE_DEPTH) + 'px) '
+                        + 'rotateY(' + (-d * SIDE_TURN) + 'deg) '
+                        + 'scale(' + sideScale + ')';
+      s.style.zIndex = '2';
+      s.setAttribute('aria-hidden','true');
+    } else {
+      /* waiting off-stage on the side it will next come round from */
+      s.classList.add('is-off');
       var side = d > 0 ? 1 : -1;
-      s.style.transform = 'translate(-50%,-50%) translateX('
-                        + (side * px[depth] * squeeze * 1.15) + 'px)'
-                        + ' scale(' + (steps[depth].s * 0.9) + ')';
-      s.style.opacity = '0';
-      s.style.filter = 'none';
-      var farCard = s.firstElementChild;
-      if(farCard) farCard.style.filter = 'blur(6px)';
-      s.style.zIndex = '0';
-      continue;
+      s.style.transform = 'translate(-50%,-50%) '
+                        + 'translateX(' + (side * offset * 1.7) + 'px) '
+                        + 'translateZ(' + (-OFF_DEPTH) + 'px) '
+                        + 'rotateY(' + (-side * OFF_TURN) + 'deg) '
+                        + 'scale(0.72)';
+      s.style.zIndex = '1';
+      s.setAttribute('aria-hidden','true');
     }
-
-    var st = steps[a];
-    var dir = d === 0 ? 0 : (d > 0 ? 1 : -1);
-
-    s.style.transform = 'translate(-50%,-50%)'
-                      + ' translateX(' + (dir * px[a] * squeeze) + 'px)'
-                      + ' scale(' + st.s + ')';
-    s.style.opacity = reduced ? (active ? '1' : '0') : String(st.o);
-    /* blur the card, not the positioned wrapper */
-    var card = s.firstElementChild;
-    if(card) card.style.filter = (st.b && !reduced) ? 'blur(' + st.b + 'px)' : 'none';
-    s.style.filter = 'none';
-    s.style.zIndex = String(20 - a);
   }
 
   var dots = document.querySelectorAll('#revDots .rev-dot');
-  for(var k=0; k<dots.length; k++){
+  for(var k = 0; k < dots.length; k++){
     dots[k].setAttribute('aria-current', String(k === revCar.index));
   }
-
   var counter = document.getElementById('revCounter');
   if(counter) counter.textContent = (revCar.index + 1) + ' / ' + revCar.total;
 }
@@ -7610,23 +7597,23 @@ function revBuildDots(){
   var wrap = document.getElementById('revDots');
   if(!wrap) return;
   var html = '';
-  for(var i=0; i<revCar.total; i++){
-    html += '<button type="button" class="rev-dot" data-i="'+i+'" '+
-            'aria-current="'+(i===revCar.index)+'" '+
-            'aria-label="Show review '+(i+1)+' of '+revCar.total+'"></button>';
+  for(var i = 0; i < revCar.total; i++){
+    html += '<button type="button" class="rev-dot" data-i="' + i + '" ' +
+            'aria-current="' + (i === revCar.index) + '" ' +
+            'aria-label="Show review ' + (i+1) + ' of ' + revCar.total + '"></button>';
   }
   wrap.innerHTML = html;
   var dots = wrap.querySelectorAll('.rev-dot');
-  for(var d=0; d<dots.length; d++){
+  for(var d = 0; d < dots.length; d++){
     dots[d].addEventListener('click', function(){
-      revGoTo(parseInt(this.getAttribute('data-i'),10), true);
+      revGoTo(parseInt(this.getAttribute('data-i'), 10), true);
     });
   }
 }
 
 function revGoTo(i, userAction){
   if(revCar.total < 1) return;
-  revCar.index = ((i % revCar.total) + revCar.total) % revCar.total;  /* wraps both ways */
+  revCar.index = ((i % revCar.total) + revCar.total) % revCar.total;
   revLayout();
   if(userAction) revRestartTimer();
 }
@@ -7648,42 +7635,38 @@ function revBindOnce(){
   if(revCar.bound) return;
   revCar.bound = true;
 
-  var prev = document.getElementById('revPrev');
-  var next = document.getElementById('revNext');
-  var car  = document.getElementById('revCarousel');
+  var prev  = document.getElementById('revPrev');
+  var next  = document.getElementById('revNext');
+  var car   = document.getElementById('revCarousel');
   var track = document.getElementById('revTrack');
 
   if(prev) prev.addEventListener('click', function(){ revPrevPage(true); });
   if(next) next.addEventListener('click', function(){ revNextPage(true); });
 
-  /* clicking a neighbour brings it to the front */
+  /* clicking a side card brings it to the front */
   if(track){
     track.addEventListener('click', function(e){
       var slide = e.target.closest ? e.target.closest('.rev-slide') : null;
       if(!slide || slide.classList.contains('is-active')) return;
       var all = track.querySelectorAll('.rev-slide');
-      for(var i=0; i<all.length; i++){
+      for(var i = 0; i < all.length; i++){
         if(all[i] === slide){ revGoTo(i, true); return; }
       }
     });
   }
 
   if(car){
-    /* hold still while the reader is actually engaging with it */
     car.addEventListener('mouseenter', function(){ revCar.paused = true;  revStopTimer(); });
     car.addEventListener('mouseleave', function(){ revCar.paused = false; revRestartTimer(); });
     car.addEventListener('focusin',    function(){ revCar.paused = true;  revStopTimer(); });
     car.addEventListener('focusout',   function(e){
       if(!car.contains(e.relatedTarget)){ revCar.paused = false; revRestartTimer(); }
     });
-
-    /* keyboard */
     car.addEventListener('keydown', function(e){
       if(e.key === 'ArrowLeft'){  e.preventDefault(); revPrevPage(true); }
       if(e.key === 'ArrowRight'){ e.preventDefault(); revNextPage(true); }
     });
 
-    /* touch swipe */
     var startX = 0, startY = 0, dragging = false;
     car.addEventListener('touchstart', function(e){
       if(!e.touches.length) return;
@@ -7702,29 +7685,25 @@ function revBindOnce(){
     }, {passive:true});
   }
 
-  /* stop burning cycles on a background tab */
   document.addEventListener('visibilitychange', function(){
     document.hidden ? revStopTimer() : revRestartTimer();
   });
 
-  /* the ring is spaced differently on narrow screens */
   var rt = null;
   window.addEventListener('resize', function(){
     clearTimeout(rt);
-    rt = setTimeout(function(){ revLayout(); }, 180);
+    rt = setTimeout(revLayout, 180);
   });
 }
 
-function initReviewCarousel(isResize){
+function initReviewCarousel(){
   var track = document.getElementById('revTrack');
   var car   = document.getElementById('revCarousel');
   if(!track || !car) return;
 
-  var slides = track.querySelectorAll('.rev-slide');
-  revCar.total = slides.length;
+  revCar.total = track.querySelectorAll('.rev-slide').length;
   if(revCar.index > revCar.total - 1) revCar.index = 0;
 
-  /* nothing to rotate through — hide the furniture entirely */
   var single = revCar.total < 2;
   var prev = document.getElementById('revPrev');
   var next = document.getElementById('revNext');
@@ -7738,8 +7717,7 @@ function initReviewCarousel(isResize){
   revBindOnce();
   revRestartTimer();
 
-  /* the first measurement can happen before webfonts settle, so take
-     it again on the next frame and once more shortly after */
+  /* re-measure once webfonts and layout have settled */
   if(window.requestAnimationFrame) requestAnimationFrame(revLayout);
   setTimeout(revLayout, 400);
 }
