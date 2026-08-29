@@ -1426,7 +1426,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .rev-slide{
   position:absolute;
   top:50%;left:50%;
-  width:min(380px,80vw);
+  width:min(330px,74vw);
   margin:0;
   transform-origin:50% 50%;
   transition:transform .8s cubic-bezier(.3,.9,.3,1),
@@ -1442,11 +1442,11 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .rev-slide>.tcard{
   display:flex;flex-direction:column;
   height:352px;
-  padding:24px 24px;
-  background:linear-gradient(160deg,rgba(18,10,42,.95) 0%,rgba(8,5,22,.97) 100%);
-  border:1px solid rgba(160,80,255,.16);
+  padding:24px 22px;
+  background:linear-gradient(160deg,rgba(20,11,46,.97) 0%,rgba(9,5,24,.99) 100%);
+  border:1px solid rgba(190,150,255,.30);
   border-radius:16px;
-  box-shadow:0 16px 40px rgba(0,0,0,.6);
+  box-shadow:0 16px 40px rgba(0,0,0,.65);
   transition:border-color .6s ease,box-shadow .6s ease;
 }
 /* the card in focus gets a bright rim, like the reference */
@@ -7515,24 +7515,42 @@ function revOffset(i){
 
 /* Cards recede in a flat line. Each step out moves less than the
    one before, which is what gives the stacked, receding look. */
-/* x is a percentage of the CARD's own width, so it has to clear the
-   centre card's half-width (50%) before a neighbour is visible at all. */
+/* Ring steps. `g` is the visible GAP we want between the edge of one
+   card and the edge of the next, as a fraction of card width. The
+   actual pixel offset is worked out from the measured card size in
+   revLayout(), so a card can never end up hidden behind its neighbour. */
 var REV_STEPS = {
-  wide:   [ {x:0,   s:1,   o:1,   b:0},
-            {x:64,  s:.84, o:.72, b:1},
-            {x:112, s:.70, o:.44, b:2.2},
-            {x:148, s:.58, o:.22, b:3.6} ],
-  narrow: [ {x:0,   s:1,   o:1,   b:0},
-            {x:60,  s:.80, o:.6,  b:1.2} ]
+  wide:   [ {g:0,    s:1,   o:1,   b:0},
+            {g:-.26, s:.84, o:.80, b:.8},
+            {g:-.32, s:.68, o:.46, b:2} ],
+  narrow: [ {g:0,    s:1,   o:1,   b:0},
+            {g:-.30, s:.80, o:.68, b:1} ]
 };
 
 function revLayout(){
   var track = document.getElementById('revTrack');
-  if(!track) return;
+  var vp = document.getElementById('revViewport');
+  if(!track || !vp) return;
   var slides = track.querySelectorAll('.rev-slide');
   var steps = revIsNarrow() ? REV_STEPS.narrow : REV_STEPS.wide;
   var depth = steps.length - 1;
   var reduced = revReducedMotion();
+
+  /* Measure for real, then convert each step's gap into a pixel offset.
+     offset = half of this card + half of the previous card + the gap,
+     so every card is guaranteed to clear the one in front of it. */
+  var cardW = (slides[0] && slides[0].offsetWidth) || 330;
+  var vpHalf = (vp.clientWidth || 900) / 2;
+  var px = [0];
+  for(var n=1; n<=depth; n++){
+    px[n] = px[n-1]
+          + (cardW * steps[n-1].s / 2)
+          + (cardW * steps[n].s / 2)
+          + (cardW * steps[n].g);
+  }
+  /* if the row would spill out of the viewport, pull the whole ring in */
+  var widest = px[depth] + cardW * steps[depth].s / 2;
+  var squeeze = widest > vpHalf ? (vpHalf / widest) : 1;
 
   for(var i=0; i<slides.length; i++){
     var s = slides[i];
@@ -7547,10 +7565,10 @@ function revLayout(){
 
     if(a > depth){
       /* park it out of sight on the side it will next appear from */
-      var far = steps[depth];
       var side = d > 0 ? 1 : -1;
-      s.style.transform = 'translate(-50%,-50%) translateX(' + (side * far.x) + '%)'
-                        + ' scale(' + (far.s * 0.9) + ')';
+      s.style.transform = 'translate(-50%,-50%) translateX('
+                        + (side * px[depth] * squeeze * 1.15) + 'px)'
+                        + ' scale(' + (steps[depth].s * 0.9) + ')';
       s.style.opacity = '0';
       s.style.filter = 'blur(6px)';
       s.style.zIndex = '0';
@@ -7561,7 +7579,7 @@ function revLayout(){
     var dir = d === 0 ? 0 : (d > 0 ? 1 : -1);
 
     s.style.transform = 'translate(-50%,-50%)'
-                      + ' translateX(' + (dir * st.x) + '%)'
+                      + ' translateX(' + (dir * px[a] * squeeze) + 'px)'
                       + ' scale(' + st.s + ')';
     s.style.opacity = reduced ? (active ? '1' : '0') : String(st.o);
     s.style.filter = (st.b && !reduced) ? 'blur(' + st.b + 'px)' : 'none';
@@ -7708,6 +7726,11 @@ function initReviewCarousel(isResize){
   revLayout();
   revBindOnce();
   revRestartTimer();
+
+  /* the first measurement can happen before webfonts settle, so take
+     it again on the next frame and once more shortly after */
+  if(window.requestAnimationFrame) requestAnimationFrame(revLayout);
+  setTimeout(revLayout, 400);
 }
 
 
