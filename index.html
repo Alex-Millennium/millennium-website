@@ -109,14 +109,17 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   z-index:89;
   transition:background .5s ease, border-color .5s ease, box-shadow .3s;
 }
-.nav.scrolled{background:rgba(4,2,18,0.72);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid rgba(240,180,41,0.14);box-shadow:0 2px 14px rgba(0,0,0,.32)}
+.nav.scrolled{background:rgba(4,2,18,0.72);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid rgba(240,180,41,0);box-shadow:none}
 /* The old 40px black shadow painted a band across the galaxy that read
    as a hard line under the bar. This fades the bar into the page
    instead of ending it abruptly. */
 .nav::after{
   content:'';position:absolute;left:0;right:0;top:100%;
-  height:26px;pointer-events:none;
-  background:linear-gradient(180deg,rgba(4,2,18,.5) 0%,rgba(4,2,18,0) 100%);
+  height:44px;pointer-events:none;
+  /* starts at the bar's OWN alpha (.72) — starting lower than that was
+     itself a step, which is what still read as a line across the page */
+  background:linear-gradient(180deg,
+    rgba(4,2,18,.72) 0%, rgba(4,2,18,.34) 45%, rgba(4,2,18,0) 100%);
   opacity:0;transition:opacity .5s ease;
 }
 .nav.scrolled::after{opacity:1}
@@ -269,9 +272,11 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 .sec-title{font-size:clamp(1.7rem,3vw,2.7rem);font-weight:800;letter-spacing:-.025em;line-height:1.2;margin-bottom:14px}
 .sec-sub{font-size:.95rem;color:rgba(255,255,255,.55);max-width:580px;margin:0 auto;line-height:1.75}
-.bg-dark{background:rgba(2,4,14,0.42)}
+/* Faded top and bottom so neighbouring sections blend into one another
+   instead of meeting at a hard horizontal seam over the galaxy. */
+.bg-dark{background:linear-gradient(180deg,rgba(2,4,14,0) 0%,rgba(2,4,14,.42) 9%,rgba(2,4,14,.42) 91%,rgba(2,4,14,0) 100%)}
 .bg-mid{background:rgba(8,12,30,0.38)}
-.bg-base{background:rgba(4,8,22,0.35)}
+.bg-base{background:linear-gradient(180deg,rgba(4,8,22,0) 0%,rgba(4,8,22,.35) 9%,rgba(4,8,22,.35) 91%,rgba(4,8,22,0) 100%)}
 
 /* ============================================================
    STATS BAR
@@ -964,34 +969,6 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   border-radius:12px;padding:16px 20px;margin-top:20px}
 .pay-ref p{font-size:.86rem;color:rgba(255,255,255,.8);line-height:1.75;margin:0}
 
-/* ══════════════════════════════════════════════════════════
-   HERO LOGO
-   Fills the hero's right column, which had been empty since
-   the page was built. The image is copied from the nav logo
-   at runtime so it costs no extra download.
-   ══════════════════════════════════════════════════════════ */
-.hero-logo{
-  display:flex;align-items:center;justify-content:center;
-}
-.hero-logo img{
-  width:100%;max-width:460px;height:auto;
-  filter:drop-shadow(0 10px 40px rgba(0,0,0,.55))
-         drop-shadow(0 0 60px rgba(240,180,41,.15));
-  animation:heroLogoIn 1.1s cubic-bezier(.2,.7,.3,1) both;
-}
-@keyframes heroLogoIn{
-  from{opacity:0;transform:translateY(18px) scale(.96)}
-  to{opacity:1;transform:none}
-}
-@media(max-width:900px){
-  /* above the text on a phone, and smaller so it doesn't
-     push the heading off the first screen */
-  .hero-logo{order:-1}
-  .hero-logo img{max-width:260px}
-}
-@media(prefers-reduced-motion:reduce){
-  .hero-logo img{animation:none}
-}
 
 /* ══════════════════════════════════════════════════════════
    IPSWICH ROOMS
@@ -1001,7 +978,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   gap:16px;margin-bottom:8px;
 }
 .ips-fact{
-  background:rgba(8,6,28,.5);
+  background:rgba(10,7,32,.85);
   border:1px solid rgba(160,80,255,.18);
   border-radius:14px;padding:20px 18px;text-align:center;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -1032,7 +1009,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   gap:16px;
 }
 .ips-room{
-  background:rgba(8,6,28,.5);
+  background:rgba(10,7,32,.85);
   border:1px solid rgba(160,80,255,.18);
   border-radius:14px;padding:24px 20px;text-align:center;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -1052,10 +1029,15 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 
 .ips-note{
   max-width:720px;margin:26px auto 0;
-  background:rgba(240,180,41,.07);
-  border:1px solid rgba(240,180,41,.22);
-  border-radius:14px;padding:18px 22px;
-  font-size:.86rem;line-height:1.7;color:rgba(255,255,255,.72);
+  /* solid enough to read; the gold tint sits on top of it */
+  background:
+    linear-gradient(180deg,rgba(240,180,41,.10),rgba(240,180,41,.05)),
+    rgba(10,7,32,.9);
+  border:1px solid rgba(240,180,41,.3);
+  border-radius:14px;padding:20px 24px;
+  font-size:.88rem;line-height:1.7;color:rgba(255,255,255,.85);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 8px 30px rgba(0,0,0,.28);
 }
 .ips-note strong{color:var(--gold-400)}
 
@@ -1065,11 +1047,15 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 .ips-inc-item{
   display:flex;align-items:flex-start;gap:11px;
-  background:rgba(8,6,28,.42);
-  border:1px solid rgba(160,80,255,.14);
-  border-radius:12px;padding:16px 18px;
+  /* was .42 — too sheer to read against the bright galaxy */
+  background:rgba(10,7,32,.88);
+  border:1px solid rgba(160,80,255,.22);
+  border-radius:12px;padding:17px 19px;
   font-size:.87rem;line-height:1.55;
+  color:rgba(255,255,255,.78);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
 }
+.ips-inc-item strong{color:#fff;font-weight:700}
 .ips-inc-item span:first-child{font-size:1.05rem;line-height:1.3}
 
 @media(max-width:600px){
@@ -1078,6 +1064,17 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   .ips-room{padding:20px 16px}
   .ips-room-price{font-size:1.7rem}
 }
+
+/* An explicit height, not min-height: the iframe inside is height:100%,
+   and a percentage height needs a definite parent to resolve against —
+   otherwise it falls back to the browser's default 150px iframe. */
+.ips-map{
+  height:460px;max-width:900px;margin:0 auto;
+  border-radius:14px;overflow:hidden;
+  border:1px solid rgba(160,80,255,.2);
+}
+.ips-map iframe{width:100%;height:100%;border:none;display:block}
+@media(max-width:700px){.ips-map{height:320px}}
 
 /* ══════════════════════════════════════════════════════════
    FREE INSURANCE SECTION
@@ -2242,10 +2239,7 @@ function initFirebase(){
           </button>
         </div>
       </div>
-      <!-- Right: Logo -->
-      <div class="hero-logo">
-        <img id="heroLogo" alt="Millennium Investments 2000 Ltd">
-      </div>
+      <!-- Right: Stat Cards -->
     </div>
     <!-- Scroll indicator -->
     <div class="scroll-ind">
@@ -2747,6 +2741,22 @@ function initFirebase(){
     </div>
   </section>
 
+  <!-- LOCATION -->
+  <section class="section bg-base">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Location</div>
+        <h2 class="sec-title">154 <span class="gold-text">Norwich Road</span></h2>
+        <p class="sec-sub">154 Norwich Road, Ipswich, IP1 2PT</p>
+      </div>
+      <div class="ips-map fade-in">
+        <iframe src="https://maps.google.com/maps?q=154+Norwich+Road,+Ipswich,+IP1+2PT,+UK&output=embed&hl=en"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="154 Norwich Road, Ipswich Location"></iframe>
+      </div>
+    </div>
+  </section>
+
   <!-- ROOMS & PRICING -->
   <section class="section bg-dark" id="ipswichPricing">
     <div class="sec-in">
@@ -2813,22 +2823,6 @@ function initFirebase(){
         <div class="ips-inc-item"><span>💷</span><span><strong>No deposit</strong><br>Move in without finding a deposit up front.</span></div>
         <div class="ips-inc-item"><span>📄</span><span><strong>Weekly licence</strong><br>A straightforward agreement in plain English.</span></div>
         <div class="ips-inc-item"><span>🛠️</span><span><strong>In-house maintenance</strong><br>Repairs handled promptly by our own team.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOCATION -->
-  <section class="section bg-dark">
-    <div class="sec-in">
-      <div class="sec-hd">
-        <div class="sec-tag">Location</div>
-        <h2 class="sec-title">154 <span class="gold-text">Norwich Road</span></h2>
-        <p class="sec-sub">154 Norwich Road, Ipswich, IP1 2PT</p>
-      </div>
-      <div class="loc-map-wrap fade-in" style="max-width:900px;margin:0 auto">
-        <iframe src="https://maps.google.com/maps?q=154+Norwich+Road,+Ipswich,+IP1+2PT,+UK&output=embed&hl=en"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="154 Norwich Road, Ipswich Location"></iframe>
       </div>
     </div>
   </section>
@@ -8015,19 +8009,6 @@ function scrollToIpsPrices(){
   var el = document.getElementById('ipswichPricing');
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
-
-/* ============================================================
-   HERO LOGO — reuse the nav logo's image
-   The logo is already embedded three times in this file at
-   ~38KB each; pointing at the same source costs nothing extra.
-   ============================================================ */
-function initHeroLogo(){
-  var hero = document.getElementById('heroLogo');
-  var nav  = document.querySelector('.nav-logo img');
-  if(hero && nav && nav.src) hero.src = nav.src;
-}
-document.addEventListener('DOMContentLoaded', initHeroLogo);
-if(document.readyState !== 'loading') initHeroLogo();
 
 /* ============================================================
    PAYMENTS — copy a bank detail to the clipboard
