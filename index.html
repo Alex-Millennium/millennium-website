@@ -5554,11 +5554,11 @@ async function doLogin(){
     } finally {
       if(btn){ btn.textContent='Sign In'; btn.disabled=false; }
     }
-  } else if(pwd === 'admin2000'){
-    /* Local dev fallback — used when Firebase SDK fails to load */
-    showAdminDash();
   } else {
-    showToast('Incorrect password.','error');
+    /* No hardcoded fallback. If Firebase has not initialised there is no
+       way to verify anyone, so refuse rather than trusting a password
+       that would be readable in this file by anyone viewing source. */
+    showToast('Sign-in is unavailable — could not reach the authentication service. Please check your connection and reload.','error');
   }
 }
 
@@ -5576,6 +5576,17 @@ function doLogout(){
 }
 
 function showAdminDash(){
+  /* Gate on a real Firebase session. Without this the dashboard could be
+     summoned straight from the browser console. Firestore rules are still
+     the thing that stops data being changed, but there is no reason to
+     render the panel for someone who is not signed in. */
+  const user = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length)
+               ? firebase.auth().currentUser : null;
+  if(!user){
+    showToast('Please sign in to access the dashboard.','error');
+    resetAdminLogin();
+    return;
+  }
   adminLoggedIn = true;
   document.getElementById('adminLogin').classList.add('hidden');
   document.getElementById('adminDash').classList.remove('hidden');
