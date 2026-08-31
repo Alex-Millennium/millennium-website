@@ -1346,7 +1346,12 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .help-walker,.help-walker *{animation:none!important;transition:none!important}
+  /* no travelling, no bobbing, no leg swing — but the cat may still blink
+     and flick an ear, which carries no motion-sickness risk */
+  .help-walker{transition:none!important;animation:none!important}
+  .help-walker .leg-a,.help-walker .leg-b,
+  .help-walker .walk-tail,.help-walker .wash-paw,
+  .help-walker .wash-head,.help-walker .back-tail{animation:none!important}
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -8643,13 +8648,32 @@ function catTick(){
   catTimer = setTimeout(catTick, wait);
 }
 
+function catReduced(){
+  try{
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }catch(e){ return false; }
+}
+
+/* Reduced motion gets a calm cat rather than a frozen one: it changes
+   pose every so often but never slides along the edge or animates its
+   legs, which is where the motion-sickness risk actually lies. */
+const CAT_STILL = ['sit','wash','back','sit'];
+let catStillStep = 0;
+
+function catStillTick(){
+  catPose(CAT_STILL[catStillStep % CAT_STILL.length]);
+  catStillStep++;
+  catTimer = setTimeout(catStillTick, 5200);
+}
+
 function startCat(){
   if(catTimer) return;
-  try{
-    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      catPose('sit'); return;
-    }
-  }catch(e){}
+  if(catReduced()){
+    catStillStep = 0;
+    catPose('sit');
+    catTimer = setTimeout(catStillTick, 5200);
+    return;
+  }
   catStep = 0;
   catTimer = setTimeout(catTick, 700);
 }
@@ -8658,11 +8682,10 @@ function stopCat(){
   if(catTimer){ clearTimeout(catTimer); catTimer = null; }
 }
 
-/* ── first visit: open by itself and stay open until dismissed ── */
+/* ── every page load: open by itself and stay open until dismissed ──
+   Deliberately not remembered across loads. Refreshing the page should
+   bring it back; only the X closes it for the current page view. */
 function helpFirstVisit(){
-  let seen = '1';
-  try{ seen = sessionStorage.getItem('mi_help_seen'); }catch(e){ seen = '1'; }
-  if(seen) return;
   helpSticky = true;
   setHelpOpen(true);
   helpAdd("Hello! I'm here if you need anything \u2014 ask me about rooms, bills, " +
@@ -8676,7 +8699,6 @@ document.addEventListener('DOMContentLoaded', function(){ setTimeout(helpFirstVi
    closes first so it does not sit over what they have just been sent to. */
 function helpGo(page, anchorId, tabId){
   helpSticky = false;          /* they engaged, so it need not stay pinned */
-  try{ sessionStorage.setItem('mi_help_seen','1'); }catch(e){}
   setHelpOpen(false);
   if(typeof showPage === 'function') showPage(page);
 
@@ -8795,8 +8817,7 @@ function closeHelp(){
 
 /* The X: closes it and ends the sticky first visit for good. */
 function dismissHelp(){
-  helpSticky = false;
-  try{ sessionStorage.setItem('mi_help_seen','1'); }catch(e){}
+  helpSticky = false;   /* normal behaviour from here until the next load */
   setHelpOpen(false);
 }
 
