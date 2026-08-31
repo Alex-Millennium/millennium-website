@@ -1287,7 +1287,9 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   position:absolute;top:-40px;left:8px;
   width:48px;height:48px;
   pointer-events:none;z-index:2;
-  transition:left 2.4s cubic-bezier(.42,0,.58,1), transform .3s ease;
+  /* duration is set per-walk in JS so the cat moves at a constant pace
+     instead of sprinting across long gaps and crawling over short ones */
+  transition:left 2.4s linear, transform .3s ease;
 }
 .help-walker svg{width:100%;height:100%;overflow:visible;display:block}
 .help-walker.flip{transform:scaleX(-1)}
@@ -8482,9 +8484,9 @@ const HELP_KB=[
   {id:"ipswich",cat:"Ipswich",q:{en:"Tell me about the Ipswich rooms"},k:["ipswich", "norwich road", "wilbury", "professional", "room in ipswich", "ip1"],a:{en:"We have rooms at <b>154 Norwich Road, Ipswich, IP1 2PT</b> \u2014 a large house share mainly occupied by working professionals, but open to everyone.<br><br>Rooms run from <b>\u00a3115 a week</b> for a single up to <b>\u00a3185</b> for a large double, with all bills included and no deposit. Kitchens and bathrooms are shared.<br><br>It's let on a weekly licence, so you're only ever 7 days' notice from moving on."},go:{p:"ipswich",a:"ipswichPricing",t:"\ud83c\udfe0 Ipswich rooms"}},
   {id:"ipswich_licence",cat:"Ipswich",q:{en:"What does a weekly licence mean?"},k:["weekly licence", "licence", "license", "what is a licence", "not a tenancy", "security of tenure"],a:{en:"A licence gives you permission to occupy a room rather than creating a tenancy. In practice that means:<br><br>\u2022 It runs <b>week to week</b> with no minimum term<br>\u2022 Either side can end it with <b>7 days' notice</b><br>\u2022 The licence fee is paid <b>weekly in advance</b><br>\u2022 We retain keys and rights of access, and rooms may occasionally be reallocated for management or safety reasons<br><br>It suits people who want flexibility. If you'd like the full terms explained, just ask the office."},go:{p:"ipswich",a:null,t:"\ud83c\udfe0 Ipswich rooms"}},
   {id:"ipswich_monthly",cat:"Ipswich",q:{en:"Can I pay monthly in Ipswich?"},k:["pay monthly ipswich", "monthly rate", "monthly option", "discount", "save money", "cheaper"],a:{en:"Yes. Paying monthly costs the equivalent of <b>four weeks' rent</b>, so across a 52-week year you pay for 48 weeks \u2014 a saving of four weeks' rent, between <b>\u00a3460 and \u00a3740 a year</b> depending on your room.<br><br>The agreement remains a weekly licence either way; the monthly option is simply a way to save."},go:{p:"ipswich",a:"ipswichPricing",t:"\ud83d\udcb7 See the rates"}},
-  {id:"loc_forest",cat:"Locations",q:{en:"Where is Forest Road House?"},k:["forest road house", "forest road", "block 1", "block 2", "where is forest road"],a:{en:"<b>Forest Road House</b> is at Forest Road, Colchester, Essex, <b>CO4 3XA</b> \u2014 it's also where our office is based.<br><br>You can see it on the map on our Student Accommodation page."},go:{p:"student",a:"locationsSection",t:"\ud83d\udccd Show me on the map"}},
-  {id:"loc_candan",cat:"Locations",q:{en:"Where is Candan House?"},k:["candan house", "candan", "where is candan"],a:{en:"<b>Candan House</b> is in Colchester, <b>CO4</b>, close to the University of Essex campus.<br><br>You can see its exact position on the map on our Student Accommodation page."},go:{p:"student",a:"locationsSection",t:"\ud83d\udccd Show me on the map"}},
-  {id:"loc_greenstead",cat:"Locations",q:{en:"Where is Greenstead House?"},k:["greenstead house", "greenstead", "where is greenstead"],a:{en:"<b>Greenstead House</b> is on Greenstead Road, Colchester, <b>CO4</b>, a short distance from the University of Essex.<br><br>You can see its exact position on the map on our Student Accommodation page."},go:{p:"student",a:"locationsSection",t:"\ud83d\udccd Show me on the map"}},
+  {id:"loc_forest",cat:"Locations",q:{en:"Where is Forest Road House?"},k:["forest road house", "forest road", "block 1", "block 2", "where is forest road"],a:{en:"<b>Forest Road House</b> is at Forest Road, Colchester, Essex, <b>CO4 3XA</b> \u2014 it's also where our office is based.<br><br>You can see it on the map on our Student Accommodation page."},go:{p:"student",a:"locationsSection",t:"\ud83d\udccd Show me on the map",tab:"loc-frh"}},
+  {id:"loc_candan",cat:"Locations",q:{en:"Where is Candan House?"},k:["candan house", "candan", "where is candan"],a:{en:"<b>Candan House</b> is in Colchester, <b>CO4</b>, close to the University of Essex campus.<br><br>You can see its exact position on the map on our Student Accommodation page."},go:{p:"student",a:"locationsSection",t:"\ud83d\udccd Show me on the map",tab:"loc-can"}},
+  {id:"loc_greenstead",cat:"Locations",q:{en:"Where is Greenstead House?"},k:["greenstead house", "greenstead", "where is greenstead"],a:{en:"<b>Greenstead House</b> is on Greenstead Road, Colchester, <b>CO4</b>, a short distance from the University of Essex.<br><br>You can see its exact position on the map on our Student Accommodation page."},go:{p:"student",a:"locationsSection",t:"\ud83d\udccd Show me on the map",tab:"loc-grn"}},
   {id:"loc_ipswich",cat:"Locations",q:{en:"Where is the Ipswich accommodation?"},k:["where is ipswich", "ipswich address", "norwich road address", "154 norwich", "wilbury address", "where in ipswich", "ipswich accommodation", "ipswich location", "ipswich rooms where", "where is the ipswich", "located in ipswich"],a:{en:"Our Ipswich rooms are at <b>154 Norwich Road, Ipswich, IP1 2PT</b>.<br><br>There's a map on the Ipswich Rooms page showing exactly where it is."},go:{p:"ipswich",a:"ipswichLocation",t:"\ud83d\udccd Show me on the map"}},
   {id:"loc_private",cat:"Locations",q:{en:"Where are your private rentals?"},k:["private rentals where", "houses where", "family homes", "where are your houses", "which areas", "areas you cover", "suffolk", "wales", "london", "private rentals", "where are your private", "private rental location", "houses located", "properties located"],a:{en:"We let private homes across <b>Essex, Suffolk, London and South Wales</b>.<br><br>Available properties are listed on our Private Rentals page \u2014 what's on there changes, so it's worth checking or asking the office."},go:{p:"private",a:null,t:"\ud83c\udfe0 See private rentals"}}
 ];
@@ -8570,19 +8572,38 @@ function catPose(pose){
   if(c) c.setAttribute('data-pose', pose);
 }
 
+const CAT_SPEED = 42;   /* pixels per second — an unhurried stroll */
+
+/* Walk to a point at a constant pace. Returns the travel time so the
+   routine can wait exactly as long as the walk takes. */
 function catWalkTo(x){
   const c = catEl();
-  if(!c) return;
+  if(!c) return 600;
   /* offsetWidth is 0 before layout — fall back rather than clamping the
      cat into the corner */
   const shell = document.getElementById('helpShell');
   const w = (shell && shell.offsetWidth) ? shell.offsetWidth : 340;
-  const max = Math.max(60, w - 60);
+  const max = Math.max(60, w - 56);
+  const from = parseFloat(c.style.left);
+  const start = isNaN(from) ? 8 : from;
   catX = Math.max(4, Math.min(max, x));
-  catFacing = (catX > (parseFloat(c.style.left) || 8)) ? 1 : -1;
+
+  const dist = Math.abs(catX - start);
+  const ms = Math.max(500, Math.round(dist / CAT_SPEED * 1000));
+
+  catFacing = (catX >= start) ? 1 : -1;
   c.classList.toggle('flip', catFacing < 0);
   catPose('walk');
+  c.style.transitionDuration = ms + 'ms, .3s';
   c.style.left = catX + 'px';
+  return ms;
+}
+
+/* the far ends of the panel, so it actually crosses rather than shuffling */
+function catSpan(){
+  const shell = document.getElementById('helpShell');
+  const w = (shell && shell.offsetWidth) ? shell.offsetWidth : 340;
+  return { min: 6, max: Math.max(60, w - 56) };
 }
 
 function catJump(){
@@ -8595,20 +8616,24 @@ function catJump(){
     const shell = document.getElementById('helpShell');
     const w = (shell && shell.offsetWidth) ? shell.offsetWidth : 340;
     c.style.left = Math.round(Math.random() * Math.max(60, w - 60)) + 'px';
+    c.style.transitionDuration = '0ms, .3s';   /* land instantly, do not slide */
     c.classList.add('hop-in');
     setTimeout(function(){ c.classList.remove('hop-in'); }, 900);
   }, 1500);
 }
 
-/* each step returns how long to wait before the next one */
+/* Each step returns how long to wait before the next. Walking is the
+   default state; the poses are short pauses between crossings. */
 const CAT_ROUTINE = [
-  function(){ catWalkTo(20 + Math.random()*60);  return 2600; },
-  function(){ catPose('wash');                   return 3400; },
-  function(){ catWalkTo(150 + Math.random()*90); return 2600; },
-  function(){ catPose('back');                   return 3800; },
-  function(){ catWalkTo(60 + Math.random()*120); return 2600; },
-  function(){ catPose('sit');                    return 3000; },
-  function(){ catJump();                         return 2600; },
+  function(){ const s = catSpan(); return catWalkTo(s.max) + 260; },        /* stroll right */
+  function(){ catPose('sit');  return 2400; },
+  function(){ const s = catSpan(); return catWalkTo(s.min) + 260; },        /* back left   */
+  function(){ catPose('wash'); return 3200; },                              /* wash a paw  */
+  function(){ const s = catSpan(); return catWalkTo(s.max * .55) + 260; },
+  function(){ catPose('back'); return 3400; },                              /* back turned */
+  function(){ const s = catSpan(); return catWalkTo(s.max) + 260; },
+  function(){ catJump();       return 2500; },                              /* off and on  */
+  function(){ const s = catSpan(); return catWalkTo(s.max * .3) + 260; },
 ];
 let catStep = 0;
 
@@ -8649,15 +8674,25 @@ document.addEventListener('DOMContentLoaded', function(){ setTimeout(helpFirstVi
 
 /* Take the visitor to the part of the site an answer refers to. The chat
    closes first so it does not sit over what they have just been sent to. */
-function helpGo(page, anchorId){
+function helpGo(page, anchorId, tabId){
   helpSticky = false;          /* they engaged, so it need not stay pinned */
   try{ sessionStorage.setItem('mi_help_seen','1'); }catch(e){}
   setHelpOpen(false);
   if(typeof showPage === 'function') showPage(page);
-  if(!anchorId) return;
+
   setTimeout(function(){
-    const el = document.getElementById(anchorId);
-    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    /* Select the specific building's tab before scrolling, so the visitor
+       lands on the one they asked about rather than whichever was open. */
+    if(tabId){
+      const btn = document.querySelector('[onclick*="' + tabId + '"]');
+      if(btn && typeof switchLocTab === 'function'){
+        switchLocTab(tabId, btn);
+      }
+    }
+    if(anchorId){
+      const el = document.getElementById(anchorId);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
   }, 220);
 }
 
@@ -8713,9 +8748,9 @@ function toggleHelpChips(){
    the map, page or section it describes. */
 function helpActionHtml(entry){
   if(!entry || !entry.go) return '';
+  const q = function(v){ return v ? JSON.stringify(v).replace(/"/g,'&quot;') : 'null'; };
   return '<br><button class="help-act" onclick="helpGo(' +
-    JSON.stringify(entry.go.p).replace(/"/g,'&quot;') + ',' +
-    (entry.go.a ? JSON.stringify(entry.go.a).replace(/"/g,'&quot;') : 'null') +
+    q(entry.go.p) + ',' + q(entry.go.a) + ',' + q(entry.go.tab) +
     ')">' + entry.go.t + '</button>';
 }
 
