@@ -1083,6 +1083,120 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 @media(max-width:700px){.ips-map{height:320px}}
 
 /* ══════════════════════════════════════════════════════════
+   HELP CHAT
+   ══════════════════════════════════════════════════════════ */
+.help-fab{
+  position:fixed;right:24px;bottom:172px;z-index:96;
+  width:56px;height:56px;border-radius:50%;
+  border:none;cursor:pointer;
+  background:linear-gradient(135deg,#7C3AED,#4F46E5);
+  color:#fff;font-size:1.45rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 24px rgba(80,40,200,.45);
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.help-fab:hover{transform:scale(1.08);box-shadow:0 8px 30px rgba(80,40,200,.6)}
+.help-fab .hf-close{display:none}
+.help-fab.open .hf-open{display:none}
+.help-fab.open .hf-close{display:block}
+
+.help-panel{
+  position:fixed;right:24px;bottom:240px;z-index:97;
+  width:min(380px,calc(100vw - 32px));
+  max-height:min(560px,calc(100vh - 280px));
+  display:none;flex-direction:column;overflow:hidden;
+  background:rgba(10,7,32,.97);
+  border:1px solid rgba(160,80,255,.3);
+  border-radius:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.help-panel.open{display:flex;animation:helpIn .28s cubic-bezier(.2,.8,.3,1)}
+@keyframes helpIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+
+.help-hd{
+  padding:16px 18px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(124,58,237,.28),rgba(79,70,229,.18));
+  border-bottom:1px solid rgba(160,80,255,.22);
+}
+.help-hd h4{font-size:.98rem;font-weight:700;margin:0 0 3px}
+.help-hd p{font-size:.75rem;color:rgba(255,255,255,.55);margin:0}
+
+.help-body{
+  flex:1;overflow-y:auto;padding:16px;
+  display:flex;flex-direction:column;gap:12px;
+  scrollbar-width:thin;
+}
+.help-body::-webkit-scrollbar{width:6px}
+.help-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
+
+.help-msg{max-width:88%;padding:11px 14px;border-radius:14px;font-size:.85rem;line-height:1.6}
+.help-msg b{color:var(--gold-400);font-weight:700}
+.help-msg.bot{
+  align-self:flex-start;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.09);
+  border-bottom-left-radius:5px;
+  color:rgba(255,255,255,.86);
+}
+.help-msg.me{
+  align-self:flex-end;
+  background:linear-gradient(135deg,rgba(124,58,237,.85),rgba(79,70,229,.85));
+  border-bottom-right-radius:5px;color:#fff;
+}
+
+.help-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 12px;flex-shrink:0}
+.help-chip{
+  border:1px solid rgba(160,80,255,.32);
+  background:rgba(124,58,237,.13);
+  color:rgba(255,255,255,.82);
+  border-radius:100px;padding:7px 13px;
+  font-size:.74rem;font-weight:600;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:var(--trans);
+}
+.help-chip:hover{background:rgba(124,58,237,.3);border-color:rgba(160,80,255,.6);color:#fff}
+
+.help-foot{
+  padding:12px 14px;flex-shrink:0;
+  border-top:1px solid rgba(255,255,255,.09);
+  display:flex;gap:8px;align-items:center;
+}
+.help-foot input{
+  flex:1;min-width:0;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:100px;padding:10px 15px;
+  color:#fff;font-size:.84rem;
+  font-family:'Plus Jakarta Sans',sans-serif;outline:none;
+  transition:border-color .2s ease;
+}
+.help-foot input:focus{border-color:rgba(160,80,255,.6)}
+.help-foot input::placeholder{color:rgba(255,255,255,.32)}
+.help-send{
+  flex-shrink:0;width:38px;height:38px;border-radius:50%;
+  border:none;cursor:pointer;
+  background:linear-gradient(135deg,#7C3AED,#4F46E5);
+  color:#fff;font-size:.95rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--trans);
+}
+.help-send:hover{transform:scale(1.08)}
+
+.help-note{
+  padding:0 16px 12px;flex-shrink:0;
+  font-size:.68rem;line-height:1.5;color:rgba(255,255,255,.35);text-align:center;
+}
+
+@media(max-width:600px){
+  .help-fab{right:16px;bottom:160px;width:50px;height:50px;font-size:1.3rem}
+  .help-panel{
+    right:8px;left:8px;bottom:220px;width:auto;
+    max-height:min(70vh,calc(100vh - 250px));
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
    FREE INSURANCE SECTION
    The two-column layout used to be an inline style, so no
    media query could reach it and phones kept both columns —
@@ -4228,6 +4342,29 @@ if(document.readyState === 'loading'){
 </div>
 
 <!-- FLOATING APPLY NOW BUTTON (visible on all pages) -->
+<!-- ══════════════════════════════════════════════════════════
+     HELP CHAT
+══════════════════════════════════════════════════════════ -->
+<button class="help-fab" id="helpFab" onclick="toggleHelp()" aria-label="Open help" title="Ask a question">
+  <span class="hf-open">💬</span><span class="hf-close">✕</span>
+</button>
+
+<div class="help-panel" id="helpPanel" role="dialog" aria-label="Help">
+  <div class="help-hd">
+    <h4>Ask us a question</h4>
+    <p>Instant answers to common questions</p>
+  </div>
+  <div class="help-body" id="helpBody"></div>
+  <div class="help-chips" id="helpChips"></div>
+  <div class="help-foot">
+    <input type="text" id="helpInput" placeholder="Type your question…"
+           onkeydown="if(event.key==='Enter')sendHelp()" aria-label="Your question">
+    <button class="help-send" onclick="sendHelp()" aria-label="Send">➤</button>
+  </div>
+  <div class="help-note">
+    For anything specific to your room or tenancy, please contact the office.
+  </div>
+</div>
 <button class="apply-now-fab" onclick="openApplyModal()" id="applyFab">
   <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
   Apply Now
@@ -4622,6 +4759,7 @@ function showPage(id){
   if(nav) nav.style.display = isAdmin ? 'none' : '';
   if(fab) fab.style.display = isAdmin ? 'none' : '';
   if(fabGroup) fabGroup.style.display = isAdmin ? 'none' : '';
+  if(typeof helpSetVisible === 'function') helpSetVisible(!isAdmin);
   if(notifBarSP) notifBarSP.style.display = isAdmin ? 'none' : '';
 
   // Page-specific init
@@ -5503,6 +5641,9 @@ function resetAdminLogin(){
   if(footer) footer.style.cssText = '';
   if(fab) fab.style.cssText = '';
   if(fabGroup) fabGroup.style.cssText = '';
+  /* the help bubble is driven by showPage(), which knows whether we are on
+     the admin page — resetAdminLogin() runs when ARRIVING at the login
+     screen too, so restoring it here immediately undid the hide */
   if(notifBar) notifBar.style.cssText = '';
   ['adminEmail','adminPwd'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
@@ -5600,6 +5741,7 @@ function showAdminDash(){
   if(footer) footer.style.cssText = 'display:none!important';
   if(fab) fab.style.cssText = 'display:none!important';
   if(fabGroup) fabGroup.style.cssText = 'display:none!important';
+  if(typeof helpSetVisible === 'function') helpSetVisible(false);
   if(notifBar) notifBar.style.cssText = 'display:none!important';
   renderAdminStats();
   renderAdminProps();
@@ -7565,6 +7707,7 @@ function returnToAdmin(){
   if(footer) footer.style.cssText = 'display:none!important';
   if(fab) fab.style.cssText = 'display:none!important';
   if(fabGroup) fabGroup.style.cssText = 'display:none!important';
+  if(typeof helpSetVisible === 'function') helpSetVisible(false);
 }
 
 function exitAdminMode(){
@@ -8051,6 +8194,204 @@ function setIpsCycle(cycle){
 function scrollToIpsPrices(){
   var el = document.getElementById('ipswichPricing');
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+
+/* ============================================================
+   HELP CHAT — keyword lookup, no AI
+   Answers come from a fixed table written from the tenancy
+   agreements and the Ipswich licence. Nothing is generated, so
+   the wording is always the approved wording. Anything scoring
+   below the confidence floor is handed to the office rather
+   than answered with a guess.
+   ============================================================ */
+const HELP_KB=[
+  {id:"hours",cat:"Office",q:{en:"What are your office hours?"},k:["office hours", "opening", "open", "opening times", "when are you open", "what time", "close", "closing", "hours", "times", "sunday", "weekend"],a:{en:"Our office is open <b>Monday to Saturday, 9:00am to 6:00pm</b>. We're closed on Sundays.<br><br>You can reach us on <b>01206 500202</b> or email <b>enquiries@forestrd.co.uk</b>."}},
+  {id:"where",cat:"Office",q:{en:"Where is your office?"},k:["where is your office", "office address", "where are you based", "find you", "located", "location of office", "head office", "visit office"],a:{en:"Our office is at <b>Forest Road House, Forest Road, Colchester, Essex, CO4 3XA</b>.<br><br>It's open Monday to Saturday, 9:00am to 6:00pm."}},
+  {id:"visit",cat:"Office",q:{en:"Can I visit the office?"},k:["can i visit", "turn up", "walk in", "come to the office", "drop in", "appointment needed", "without appointment"],a:{en:"Yes \u2014 you're welcome to come to the office during opening hours, <b>Monday to Saturday, 9:00am to 6:00pm</b>.<br><br>If you're coming about a specific room or a viewing, it's best to call ahead on <b>01206 500202</b> so we can make sure the right person is available."}},
+  {id:"response",cat:"Office",q:{en:"How quickly will you reply?"},k:["how long to reply", "response time", "when will you respond", "reply to my email", "hear back", "waiting for a reply", "answer my email"],a:{en:"We aim to respond to emails within <b>24 to 48 hours</b>. Occasionally it can take a little longer during busy periods.<br><br>If something is urgent, please call <b>01206 500202</b> during office hours rather than waiting on email."}},
+  {id:"contact",cat:"Office",q:{en:"How do I contact you?"},k:["contact", "phone number", "telephone", "call you", "email address", "get in touch", "reach you", "speak to someone"],a:{en:"<b>Phone:</b> 01206 500202<br><b>Mobile:</b> 07872 428232<br><b>Email:</b> enquiries@forestrd.co.uk<br><br>Office hours are Monday to Saturday, 9:00am to 6:00pm."}},
+  {id:"emergency",cat:"Office",q:{en:"Is there an out-of-hours number?"},k:["out of hours", "emergency number", "emergency contact", "after hours", "night", "urgent number", "weekend emergency", "sunday emergency"],a:{en:"For genuine emergencies outside office hours, call <b>07872 428232</b> or <b>07984 642813</b>.<br><br>Please use these for urgent matters only \u2014 anything that isn't an emergency is best raised during office hours, Monday to Saturday 9:00am to 6:00pm."}},
+  {id:"locations",cat:"Locations",q:{en:"Where are your buildings?"},k:["where are your buildings", "locations", "properties", "complexes", "which buildings", "addresses", "sites"],a:{en:"<b>Colchester \u2014 student accommodation:</b><br>\u2022 Forest Road House, Forest Road, CO4 3XA<br>\u2022 Candan House, Colchester, CO4<br>\u2022 Greenstead House, Greenstead Road, CO4<br><br><b>Ipswich \u2014 rooms:</b><br>\u2022 154 Norwich Road, Ipswich, IP1 2PT<br><br>We also let private homes across Essex, Suffolk, London and South Wales."}},
+  {id:"university",cat:"Locations",q:{en:"Are you near the University of Essex?"},k:["university of essex", "uni", "campus", "near the university", "walk to uni", "distance to campus", "colchester campus"],a:{en:"All three of our Colchester student complexes are in the CO4 area, close to the University of Essex Colchester campus.<br><br>You can see each building's exact position on the map on our Student Accommodation page."}},
+  {id:"viewing",cat:"Viewings",q:{en:"Can I view a room first?"},k:["view", "viewing", "see the room", "look around", "visit the property", "tour", "book a viewing", "arrange a viewing", "see it first"],a:{en:"Yes. Viewings are arranged directly with the office \u2014 call <b>01206 500202</b> or email <b>enquiries@forestrd.co.uk</b> and we'll agree a date and time.<br><br>Viewings take place during office hours, Monday to Saturday between 9:00am and 6:00pm."}},
+  {id:"remote",cat:"Viewings",q:{en:"Can I view from overseas?"},k:["overseas", "abroad", "from another country", "cant come to view", "remote viewing", "video", "photos", "virtual", "before i arrive in the uk"],a:{en:"Yes. If you're overseas and can't attend in person, we can send <b>photos and videos</b> of the room where they're available.<br><br>Just email <b>enquiries@forestrd.co.uk</b> telling us which building and room type you're interested in."}},
+  {id:"apply",cat:"Applying",q:{en:"How do I apply?"},k:["how do i apply", "application", "apply for a room", "sign up", "book a room", "reserve", "get a room", "start an application"],a:{en:"You can apply directly through this website \u2014 use the <b>Apply Now</b> button and complete the short form.<br><br>If you'd rather talk it through first, call <b>01206 500202</b> during office hours."}},
+  {id:"docs",cat:"Applying",q:{en:"What documents do I need?"},k:["documents", "paperwork", "what do i need to provide", "id", "identification", "passport", "proof", "right to rent"],a:{en:"For a student room we'll need:<br>\u2022 <b>Photo ID</b> \u2014 passport or driving licence<br>\u2022 <b>Proof of your right to rent</b> in the UK \u2014 passport and visa, or a Home Office share code<br>\u2022 <b>An enrolment certificate</b> from your university confirming full-time study<br><br>Please note a <b>CAS letter on its own isn't enough</b> for the right-to-rent check \u2014 we'll need your passport and visa as well."}},
+  {id:"guarantor",cat:"Applying",q:{en:"Do I need a guarantor?"},k:["guarantor", "guarantee", "someone to guarantee", "cosign", "co-signer", "parent sign", "uk guarantor"],a:{en:"<b>Students:</b> no guarantor is required.<br><br><b>Private rentals:</b> we don't usually ask for one. A guarantor may be requested where an applicant doesn't satisfy the credit check \u2014 this is decided case by case."}},
+  {id:"fees",cat:"Applying",q:{en:"Are there any agency fees?"},k:["agency fee", "admin fee", "application fee", "hidden costs", "extra charges to apply", "cost to apply"],a:{en:"No. There are <b>no agency or admin fees</b> to apply.<br><br>There's also no tenancy deposit \u2014 though the first month's rent is payable in advance once the agreement is signed."}},
+  {id:"benefits",cat:"Applying",q:{en:"Do you accept Housing Benefit or Universal Credit?"},k:["housing benefit", "universal credit", "uc", "benefits", "dss", "lha", "claim"],a:{en:"This applies mainly to our private rentals, and is considered on a <b>case-by-case basis</b> depending on individual circumstances.<br><br>Please email <b>enquiries@forestrd.co.uk</b> with your situation and we'll look at it properly."}},
+  {id:"student_only",cat:"Applying",q:{en:"Do I have to be a student?"},k:["do i have to be a student", "non student", "professional", "working", "not a student", "who can live"],a:{en:"Our <b>Colchester complexes are for full-time students</b> only \u2014 you'll need an enrolment certificate before keys are released.<br><br>Our <b>Ipswich rooms at 154 Norwich Road are open to everyone</b>, and are mainly occupied by working professionals.<br><br>We also let private homes to anyone across Essex, Suffolk, London and South Wales."}},
+  {id:"included",cat:"Rent",q:{en:"What's included in the rent?"},k:["included", "bills", "what do i pay for", "utilities", "electric", "water", "wifi", "internet", "broadband", "all inclusive"],a:{en:"For <b>student rooms</b>, your rent covers electricity, heating, water and broadband (Glide Student).<br><br>The <b>coin-operated laundry is not included</b> and is paid separately per use.<br><br>For <b>private rentals</b>, tenants pay council tax, water, gas and electricity directly to the suppliers."}},
+  {id:"deposit",cat:"Rent",q:{en:"Is there a deposit?"},k:["deposit", "bond", "security deposit", "upfront", "up front", "pay before moving in", "advance"],a:{en:"<b>No tenancy deposit</b> is taken.<br><br>One month's rent is payable <b>in advance</b> once both parties have signed the agreement \u2014 so there's an up-front payment, but nothing held as a deposit."}},
+  {id:"payrent",cat:"Rent",q:{en:"How do I pay my rent?"},k:["pay rent", "payment method", "bank transfer", "how to pay", "standing order", "when is rent due", "due date"],a:{en:"Rent is paid by <b>bank transfer, monthly in advance</b>, on the date set out in your agreement.<br><br>Please use your <b>room number and surname</b> as the payment reference. Full bank details are on our Payments page.<br><br>If you're paying from overseas, any international transfer charges are the sender's responsibility \u2014 the full rent must arrive on the due date."}},
+  {id:"late",cat:"Rent",q:{en:"What happens if I pay late?"},k:["late", "miss a payment", "cant pay", "behind on rent", "arrears", "overdue", "struggling to pay"],a:{en:"We'll send a reminder the day rent becomes overdue, followed by a formal written notice after seven days. Interest at 3% above the Bank of England base rate begins to accrue after 14 days.<br><br>If you're having difficulty paying, please <b>contact the office early</b> on 01206 500202 \u2014 it's far easier to sort out before arrears build up."}},
+  {id:"increase",cat:"Rent",q:{en:"Can my rent go up?"},k:["rent increase", "go up", "put the rent up", "review", "raise the rent", "change the rent"],a:{en:"Rent can only be increased <b>once a year</b>, never within the first 52 weeks of your agreement, and only with at least <b>two months' written notice</b> using the statutory process.<br><br>Our rates have been frozen since 2024."}},
+  {id:"movein",cat:"Moving in",q:{en:"How does moving in work?"},k:["move in", "moving in", "key", "keys", "collect", "pick up keys", "check in", "arrival", "first day"],a:{en:"Once your agreement is signed, payment has been made and we've received all your documents, you simply <b>collect your keys from the office</b> during opening hours \u2014 Monday to Saturday, 9:00am to 6:00pm.<br><br>If you can't get there during those hours, we can sometimes arrange for a member of staff to meet you outside office hours. This is occasional rather than guaranteed, so please ask in advance."}},
+  {id:"latearrival",cat:"Moving in",q:{en:"What if I arrive outside office hours?"},k:["arrive late", "out of hours arrival", "late flight", "evening arrival", "sunday arrival", "after 6", "cant collect keys"],a:{en:"Let us know your arrival time as early as you can. We can sometimes arrange for someone to meet you outside office hours, but it's <b>occasional rather than guaranteed</b>.<br><br>Call <b>01206 500202</b> or email <b>enquiries@forestrd.co.uk</b> well before you travel so we can try to arrange it."}},
+  {id:"enrolment",cat:"Moving in",q:{en:"Do I need my enrolment certificate?"},k:["enrolment", "enrollment", "certificate", "proof of study", "student status", "university letter"],a:{en:"Yes \u2014 for student rooms we need a valid <b>enrolment certificate or acceptance letter</b> confirming full-time study <b>before keys are released</b>.<br><br>You'll also need to provide a renewed certificate at the start of each academic year."}},
+  {id:"guests",cat:"House rules",q:{en:"Can I have guests to stay?"},k:["guest", "visitor", "friend stay", "overnight", "partner stay", "someone stay over", "have people over"],a:{en:"<b>Colchester student rooms:</b> guests are welcome during reasonable hours. Overnight guests are limited to <b>two nights per calendar month</b> and you must tell the office in advance. No guest may stay in the room after midnight without written consent.<br><br><b>Ipswich rooms:</b> overnight guests are <b>not permitted without prior written permission</b>, and guests must not remain in the property unless you're there."}},
+  {id:"noise",cat:"House rules",q:{en:"Are there quiet hours?"},k:["noise", "quiet", "loud", "music", "party", "parties", "disturbance", "neighbours"],a:{en:"<b>Colchester:</b> quiet hours are 11pm\u20138am on weekdays and midnight\u20139am at weekends. Parties need prior written consent.<br><br><b>Ipswich:</b> no loud music or noise after <b>10pm</b>."}},
+  {id:"smoking",cat:"House rules",q:{en:"Can I smoke or vape?"},k:["smoke", "smoking", "vape", "vaping", "cigarette", "e-cigarette", "shisha", "cannabis"],a:{en:"No. Smoking and vaping of any substance is <b>strictly prohibited indoors</b> \u2014 including bedrooms, communal areas, stairwells and corridors.<br><br>Cleaning and remediation charges apply if this is breached."}},
+  {id:"pets",cat:"House rules",q:{en:"Can I keep a pet?"},k:["pet", "pets", "dog", "cat", "animal", "hamster", "fish"],a:{en:"For <b>private rentals</b> you have a statutory right to request permission to keep a pet. Put the request in writing with the type and breed, and we'll respond within 28 days. Consent won't be unreasonably refused, though pet damage insurance may be required.<br><br>For student rooms and Ipswich, please contact the office to discuss."}},
+  {id:"cooking",cat:"House rules",q:{en:"Can I cook in my room?"},k:["cook in my room", "kettle", "microwave in room", "air fryer", "rice cooker", "cooking equipment", "hot plate"],a:{en:"<b>Ipswich rooms:</b> cooking, food preparation and cooking equipment \u2014 including kettles \u2014 are <b>not permitted in bedrooms</b>. Please use the shared kitchen.<br><br><b>Colchester:</b> personal cooking appliances are your responsibility to keep clean and safe, and must be removed if they pose a fire or hygiene risk. Portable heaters are not permitted."}},
+  {id:"parking",cat:"Living",q:{en:"Is there parking?"},k:["parking", "car", "park my car", "bike", "bicycle", "cycle", "bike shed", "vehicle"],a:{en:"Free on-site parking is available at our Colchester student complexes, along with a secure bike shed for cyclists.<br><br>For other properties, please check with the office on <b>01206 500202</b>."}},
+  {id:"laundry",cat:"Living",q:{en:"Is there laundry?"},k:["laundry", "washing machine", "washer", "dryer", "wash clothes", "tumble dryer", "launderette"],a:{en:"Yes \u2014 our Colchester student buildings have a <b>coin-operated laundry room</b>. This is a paid service charged per use and isn't included in your rent.<br><br>Please clean the lint filter after every use \u2014 it's a fire safety requirement."}},
+  {id:"shared",cat:"Living",q:{en:"What facilities are shared?"},k:["shared", "communal", "kitchen", "bathroom", "share", "facilities", "common room", "en suite"],a:{en:"<b>Colchester:</b> each flat has a communal kitchen and a communal bathroom with shower and toilet, plus shared corridors, common rooms and outdoor areas.<br><br><b>Ipswich:</b> kitchens and bathrooms are shared between residents."}},
+  {id:"internet",cat:"Living",q:{en:"Is there WiFi?"},k:["wifi", "wi-fi", "internet", "broadband", "connection", "speed", "glide", "wifi", "wi fi", "signal", "router"],a:{en:"Yes \u2014 100 Mbps broadband is included in the rent throughout every room and communal area of our student accommodation, provided by <b>Glide Student</b>.<br><br>Any broadband faults should be reported to Glide Student directly, using the details in your welcome pack."}},
+  {id:"insurance",cat:"Living",q:{en:"Is my property insured?"},k:["insurance", "insured", "contents", "belongings", "theft", "cover", "gallagher"],a:{en:"Yes \u2014 free contents insurance is provided via <b>Gallagher</b> for our student residents, covering your room contents and belongings at no cost to you.<br><br>You can upgrade for extra cover if you want to. There's a sign-up link on our Student Accommodation page."}},
+  {id:"security",cat:"Living",q:{en:"How secure is the building?"},k:["security", "secure", "cctv", "camera", "safe", "crime", "locked"],a:{en:"Our student properties have <b>4K Ultra HD CCTV</b> across all sites.<br><br>Please never prop open fire doors or building entrances, and report anything that concerns you to the office."}},
+  {id:"inspections",cat:"Living",q:{en:"Will you enter my room?"},k:["inspection", "enter my room", "come into my room", "privacy", "access", "check my room", "landlord entry"],a:{en:"<b>Colchester student rooms:</b> routine inspections take place monthly with at least <b>24 hours' written notice</b>. Where we reasonably suspect a breach, notice may be one hour. In a genuine emergency \u2014 fire, flood, gas leak or risk to life \u2014 we may enter without notice.<br><br><b>Private rentals:</b> inspections up to four times a year with 24 hours' notice.<br><br><b>Ipswich rooms</b> are let under a licence, so we retain keys and rights of access for inspections, maintenance and safety checks."}},
+  {id:"repairs",cat:"Repairs",q:{en:"How do I report a repair?"},k:["repair", "broken", "fix", "maintenance", "not working", "fault", "leak", "heating not working", "report a problem", "damage", "heating is broken", "boiler", "no hot water", "shower broken", "light not working", "heater"],a:{en:"Report it to the office <b>in writing within 48 hours</b> of noticing it \u2014 email <b>enquiries@forestrd.co.uk</b> or call <b>01206 500202</b> and follow up in writing.<br><br>Repairs are carried out by our own in-house maintenance team. How quickly we attend depends on how serious the problem is \u2014 urgent issues are dealt with as soon as possible."}},
+  {id:"urgent",cat:"Repairs",q:{en:"What counts as an emergency?"},k:["emergency repair", "urgent repair", "flood", "fire", "gas leak", "no heating", "no water", "burst pipe", "electrical fault"],a:{en:"Fire, flood, a gas leak, a serious electrical fault or anything presenting a risk to life or the structure of the building.<br><br>For these, call <b>07872 428232</b> or <b>07984 642813</b> at any time. In a fire, evacuate immediately \u2014 please note there are <b>no fire extinguishers in communal areas</b> and you should never attempt to fight a fire yourself."}},
+  {id:"lockout",cat:"Repairs",q:{en:"I'm locked out \u2014 what do I do?"},k:["locked out", "lost my key", "lockout", "cant get in", "key not working", "lost fob"],a:{en:"During office hours, come to the office and we'll let you in.<br><br>Outside office hours, call <b>07872 428232</b> or <b>07984 642813</b>. A <b>\u00a310 call-out charge</b> applies for out-of-hours lockouts.<br><br>Replacement keys or fobs are <b>\u00a310 per item</b>."}},
+  {id:"notice",cat:"Ending",q:{en:"How much notice do I need to give?"},k:["notice", "leave", "move out", "end my tenancy", "cancel", "terminate", "give notice", "quit", "vacate"],a:{en:"<b>Colchester students and private rentals:</b> <b>two calendar months'</b> written notice, expiring at the end of a rental period. You remain responsible for rent until the notice expires.<br><br><b>Ipswich rooms:</b> the weekly licence needs <b>at least 7 days'</b> notice from either side.<br><br>Notice must be in writing to Forest Road House, Forest Road, Colchester, CO4 3XA, or by email."}},
+  {id:"early",cat:"Ending",q:{en:"Can I leave early?"},k:["leave early", "break my contract", "early termination", "get out early", "end early", "change my mind"],a:{en:"For student and private agreements, if we agree in writing to accept less than two months' notice, a <b>cancellation fee of one month's rent</b> applies as a contribution to re-letting costs.<br><br>Ipswich rooms are far more flexible \u2014 just 7 days' notice, with no cancellation fee.<br><br>Please talk to us as early as possible if your plans change."}},
+  {id:"withdraw",cat:"Ending",q:{en:"What if I withdraw from my course?"},k:["withdraw", "drop out", "leave university", "course ends", "deferral", "suspend studies", "fail", "no longer a student"],a:{en:"You must tell us <b>in writing within 48 hours</b> of ceasing to be a full-time student \u2014 that includes withdrawal, suspension, deferral or completing your studies.<br><br>We can then agree to end the tenancy by mutual written agreement, either immediately or on a date that suits both sides."}},
+  {id:"checkout",cat:"Ending",q:{en:"What do I need to do when I leave?"},k:["check out", "checkout", "moving out", "leaving", "hand back", "last day", "clean before leaving", "forwarding address"],a:{en:"On your final day, please return all keys and fobs, remove all belongings and rubbish, leave the room clean and in the condition recorded in your inventory, and give us a <b>forwarding address in writing</b>.<br><br>A check-out inspection is carried out afterwards."}},
+  {id:"stay",cat:"Ending",q:{en:"Can I stay another year?"},k:["stay another year", "renew", "next year", "returning", "come back", "re-book", "second year"],a:{en:"Yes \u2014 returning students get <b>first refusal</b> on rooms, with no waiting lists.<br><br>Let the office know in good time and we'll sort it out."}},
+  {id:"ipswich",cat:"Ipswich",q:{en:"Tell me about the Ipswich rooms"},k:["ipswich", "norwich road", "wilbury", "professional", "room in ipswich", "ip1"],a:{en:"We have rooms at <b>154 Norwich Road, Ipswich, IP1 2PT</b> \u2014 a large house share mainly occupied by working professionals, but open to everyone.<br><br>Rooms run from <b>\u00a3115 a week</b> for a single up to <b>\u00a3185</b> for a large double, with all bills included and no deposit. Kitchens and bathrooms are shared.<br><br>It's let on a weekly licence, so you're only ever 7 days' notice from moving on."}},
+  {id:"ipswich_licence",cat:"Ipswich",q:{en:"What does a weekly licence mean?"},k:["weekly licence", "licence", "license", "what is a licence", "not a tenancy", "security of tenure"],a:{en:"A licence gives you permission to occupy a room rather than creating a tenancy. In practice that means:<br><br>\u2022 It runs <b>week to week</b> with no minimum term<br>\u2022 Either side can end it with <b>7 days' notice</b><br>\u2022 The licence fee is paid <b>weekly in advance</b><br>\u2022 We retain keys and rights of access, and rooms may occasionally be reallocated for management or safety reasons<br><br>It suits people who want flexibility. If you'd like the full terms explained, just ask the office."}},
+  {id:"ipswich_monthly",cat:"Ipswich",q:{en:"Can I pay monthly in Ipswich?"},k:["pay monthly ipswich", "monthly rate", "monthly option", "discount", "save money", "cheaper"],a:{en:"Yes. Paying monthly costs the equivalent of <b>four weeks' rent</b>, so across a 52-week year you pay for 48 weeks \u2014 a saving of four weeks' rent, between <b>\u00a3460 and \u00a3740 a year</b> depending on your room.<br><br>The agreement remains a weekly licence either way; the monthly option is simply a way to save."}}
+];
+
+const HELP_LANG = 'en';   /* answers are language-keyed so more can be added */
+
+const HELP_QUICK = ['hours','viewing','included','deposit','apply','notice','repairs','ipswich'];
+
+const HELP_STOP = new Set(['the','a','an','is','are','do','does','i','my','me','you','your',
+  'can','could','what','when','where','how','to','of','in','on','for','it','and','or','if',
+  'be','have','has','with','at','any','there','this','that','we','us','please','would','will']);
+
+function helpNorm(s){
+  return (s||'').toLowerCase()
+    .replace(/['’]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+/* How many entries use each single-word keyword. A word used by only one
+   entry ("parking", "laundry", "deposit") is highly diagnostic on its own,
+   so it scores enough to clear the floor unaided. A word shared by several
+   entries ("room", "pay") barely counts. Built once at load. */
+const HELP_UNIQ = (function(){
+  const n = {};
+  HELP_KB.forEach(function(e){
+    const seen = {};
+    e.k.forEach(function(kw){
+      const k = helpNorm(kw);
+      if(k && k.indexOf(' ') === -1 && !seen[k]){ seen[k] = 1; n[k] = (n[k]||0) + 1; }
+    });
+  });
+  return n;
+})();
+
+/* Score an entry against the visitor's words. Phrase hits count for much
+   more than single words, so "office hours" beats a stray "open". */
+function helpScore(entry, text, words){
+  let score = 0;
+  entry.k.forEach(function(kw){
+    const k = helpNorm(kw);
+    if(!k) return;
+    if(k.indexOf(' ') > -1){
+      if(text.indexOf(k) > -1) score += 6 + k.split(' ').length;
+    } else if(words.indexOf(k) > -1){
+      score += (HELP_UNIQ[k] === 1) ? 5 : 2;
+    }
+  });
+  const q = helpNorm(entry.q[HELP_LANG] || '');
+  q.split(' ').forEach(function(w){
+    if(w.length > 3 && !HELP_STOP.has(w) && words.indexOf(w) > -1) score += 1;
+  });
+  return score;
+}
+
+function helpFind(input){
+  const text = helpNorm(input);
+  if(!text) return null;
+  const words = text.split(' ').filter(function(w){ return w && !HELP_STOP.has(w); });
+  if(!words.length) return null;
+
+  let best = null, bestScore = 0;
+  HELP_KB.forEach(function(e){
+    const s = helpScore(e, text, words);
+    if(s > bestScore){ bestScore = s; best = e; }
+  });
+  /* confidence floor — below this we would be guessing */
+  return bestScore >= 4 ? best : null;
+}
+
+function helpAdd(html, who){
+  const body = document.getElementById('helpBody');
+  if(!body) return;
+  const el = document.createElement('div');
+  el.className = 'help-msg ' + (who === 'me' ? 'me' : 'bot');
+  el.innerHTML = html;
+  body.appendChild(el);
+  body.scrollTop = body.scrollHeight;
+}
+
+function helpFallback(){
+  return "I don't have an answer for that one, but the team will. " +
+    "Email <b>enquiries@forestrd.co.uk</b> and we'll come back to you within 24 to 48 hours, " +
+    "or call <b>01206 500202</b> Monday to Saturday, 9:00am to 6:00pm.";
+}
+
+function helpChips(){
+  const wrap = document.getElementById('helpChips');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  HELP_QUICK.forEach(function(id){
+    const e = HELP_KB.find(function(x){ return x.id === id; });
+    if(!e) return;
+    const b = document.createElement('button');
+    b.className = 'help-chip';
+    b.textContent = e.q[HELP_LANG];
+    b.onclick = function(){ helpAsk(e.q[HELP_LANG]); };
+    wrap.appendChild(b);
+  });
+}
+
+function helpAsk(question){
+  helpAdd(question, 'me');
+  const hit = helpFind(question);
+  setTimeout(function(){
+    helpAdd(hit ? hit.a[HELP_LANG] : helpFallback(), 'bot');
+  }, 260);
+}
+
+function sendHelp(){
+  const input = document.getElementById('helpInput');
+  if(!input) return;
+  const v = input.value.trim();
+  if(!v) return;
+  input.value = '';
+  helpAsk(v);
+}
+
+function toggleHelp(){
+  const panel = document.getElementById('helpPanel');
+  const fab   = document.getElementById('helpFab');
+  if(!panel || !fab) return;
+  const open = panel.classList.toggle('open');
+  fab.classList.toggle('open', open);
+  if(open){
+    if(!document.getElementById('helpBody').children.length){
+      helpAdd("Hello — ask me anything about our accommodation, or pick a question below. " +
+              "For anything about your own room or tenancy, the office is best.", 'bot');
+      helpChips();
+    }
+    setTimeout(function(){ const i = document.getElementById('helpInput'); if(i) i.focus(); }, 240);
+  }
+}
+
+/* the panel would otherwise sit over the admin dashboard */
+function helpSetVisible(show){
+  const f = document.getElementById('helpFab');
+  const p = document.getElementById('helpPanel');
+  if(f) f.style.display = show ? 'flex' : 'none';
+  if(!show && p){ p.classList.remove('open'); if(f) f.classList.remove('open'); }
 }
 
 /* ============================================================
