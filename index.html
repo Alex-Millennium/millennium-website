@@ -1086,7 +1086,7 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
    HELP CHAT
    ══════════════════════════════════════════════════════════ */
 .help-fab{
-  position:fixed;right:24px;bottom:172px;z-index:96;
+  position:fixed;left:24px;bottom:28px;z-index:96;
   width:56px;height:56px;border-radius:50%;
   border:none;cursor:pointer;
   background:linear-gradient(135deg,#7C3AED,#4F46E5);
@@ -1101,9 +1101,9 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .help-fab.open .hf-close{display:block}
 
 .help-panel{
-  position:fixed;right:24px;bottom:240px;z-index:97;
+  position:fixed;left:24px;bottom:96px;z-index:97;
   width:min(380px,calc(100vw - 32px));
-  max-height:min(560px,calc(100vh - 280px));
+  max-height:min(620px,calc(100vh - 150px));
   display:none;flex-direction:column;overflow:hidden;
   background:rgba(10,7,32,.97);
   border:1px solid rgba(160,80,255,.3);
@@ -1146,6 +1146,23 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 
 .help-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 12px;flex-shrink:0}
+.help-chips.hidden{display:none}
+
+/* header row + the toggle that brings the suggestions back */
+.help-hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.help-hd-txt{min-width:0}
+.help-sugg-btn{
+  flex-shrink:0;cursor:pointer;
+  border:1px solid rgba(160,80,255,.35);
+  background:rgba(124,58,237,.16);
+  color:rgba(255,255,255,.78);
+  border-radius:100px;padding:6px 12px;
+  font-size:.7rem;font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  white-space:nowrap;transition:var(--trans);
+}
+.help-sugg-btn:hover{background:rgba(124,58,237,.34);color:#fff}
+.help-sugg-btn.on{background:var(--gold-500);border-color:var(--gold-500);color:#1a1200}
 .help-chip{
   border:1px solid rgba(160,80,255,.32);
   background:rgba(124,58,237,.13);
@@ -1189,10 +1206,10 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 }
 
 @media(max-width:600px){
-  .help-fab{right:16px;bottom:160px;width:50px;height:50px;font-size:1.3rem}
+  .help-fab{left:16px;bottom:20px;width:50px;height:50px;font-size:1.3rem}
   .help-panel{
-    right:8px;left:8px;bottom:220px;width:auto;
-    max-height:min(70vh,calc(100vh - 250px));
+    left:8px;right:8px;bottom:80px;width:auto;
+    max-height:min(70vh,calc(100vh - 130px));
   }
 }
 
@@ -4025,7 +4042,7 @@ if(document.readyState === 'loading'){
       <div class="faq-category">
         <div class="faq-cat-title">🎓 Applying</div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I live with my friend or group of friends?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, you will need to let us know who you'll be staying with — so it's best that you come and register with your friend or group of friends. Providing we have availability, we will always try to help keep friends together.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What are your office hours?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Our office is open <strong>Monday to Saturday, 9:00am to 6:00pm</strong>. We are closed on Sundays.<br><br>You can reach us on <strong>01206 500202</strong> or at <a href="mailto:enquiries@forestrd.co.uk">enquiries@forestrd.co.uk</a>.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How quickly will you respond to my email?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>We aim to respond within <strong>24 to 48 hours</strong>. Occasionally it may take a little longer during busy periods.<br><br>If something is urgent, please call <strong>01206 500202</strong> during office hours rather than waiting for an email reply.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is there an out-of-hours or emergency contact?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>For genuine emergencies outside office hours, please call <strong>07872 428232</strong> or <strong>07984 642813</strong>.<br><br>Please use these numbers for urgent matters only. Anything that is not an emergency is best raised during office hours.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How do I arrange a viewing?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Viewings are arranged directly with the office. Call <strong>01206 500202</strong> or email <a href="mailto:enquiries@forestrd.co.uk">enquiries@forestrd.co.uk</a> and we will agree a date and time with you.<br><br>Viewings take place during office hours, Monday to Saturday between 9:00am and 6:00pm.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>I am overseas — can I see the room before I arrive?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes. If you cannot attend in person, we can send <strong>photos and videos</strong> of the room where they are available.<br><br>Email <a href="mailto:enquiries@forestrd.co.uk">enquiries@forestrd.co.uk</a> telling us which building and room type you are interested in.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I live with my friend or group of friends?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, you will need to let us know who you'll be staying with — so it's best that you come and register with your friend or group of friends. Providing we have availability, we will always try to help keep friends together.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need a UK-based guarantor?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, a guarantor is not required.</p></div></div>
 
@@ -4085,11 +4102,11 @@ if(document.readyState === 'loading'){
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you do regular inspections?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, we (the landlord or his representatives) carry out monthly room inspections for health and safety reasons.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is there a laundrette available?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>On the ground floor of each block, there is a laundry room with coin-operated washing machines and drying machines available for use.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is there a laundrette available?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes — there is a laundry room on the ground floor of each block with coin-operated washing machines and dryers.<br><br>Please note the laundry is a paid service charged per use and is <strong>not included in your rent</strong>. Please clean the lint filter after every use, as this is a fire safety requirement.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What health and safety features does each room have?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Each room has a smoke detector, a half-hour fire door with intumescent strip surround, as well as heavy duty hinges and door closures. All furniture supplied conforms with the Furniture and Furnishings (Fire) (Safety) Regulations 1988.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is there a vending machine available?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>For your convenience there are vending machines located on the ground floor of Block 2, Forest Road House, where various soft drinks, chocolates and crisps are available for purchase.</p></div></div>
+        
       </div>
 
       <!-- MOVING IN/OUT -->
@@ -4098,7 +4115,7 @@ if(document.readyState === 'loading'){
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When can I move in?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>In some instances it is possible to move in before your contract start date of 1st September. Please check with the administration office prior to moving in.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Where do I collect my keys?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Keys can be collected from the on-site office at Forest Road, by the car park.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Where do I collect my keys?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Keys are collected from the on-site office at Forest Road, by the car park, during opening hours — <strong>Monday to Saturday, 9:00am to 6:00pm</strong>.<br><br>If you cannot get there during those hours, please tell us in advance. We can sometimes arrange for a member of staff to meet you outside office hours, though this is occasional rather than guaranteed.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How long will you reserve my room?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The reservation period starts from the date on which we take the advanced rent and runs for 15 days, including the day the advanced rent is taken. If no agreement has been entered into by the expiry of the 15th day, the reservation will be deemed cancelled. This applies subject to prior arrangements having been made to extend the 15-day period.</p></div></div>
 
@@ -4106,7 +4123,7 @@ if(document.readyState === 'loading'){
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>I'm returning next year — can I keep my room?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes, you can keep the same room. Please make sure that you inform us at your earliest convenience. You will need to go through the booking procedure and confirm your booking.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>I no longer want to stay — can I leave?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>If you have signed the Tenancy Agreement, then you are bound by this agreement.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>I no longer want to stay — can I leave?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes. You can end your tenancy at any time by giving <strong>two calendar months’ written notice</strong>, expiring at the end of a rental period. You remain responsible for the rent until that notice expires.<br><br>If we agree in writing to accept shorter notice, a cancellation fee of one month’s rent applies as a contribution towards re-letting costs. Please speak to the office as early as you can if your plans change.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When can I move out?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You may move out at any point, but please note that the rent will continue to become due for the entire term of the tenancy, irrespective of when you decide to move out. Your liability to pay the rent will also continue until the expiry of the term.</p></div></div>
       </div>
@@ -4128,7 +4145,7 @@ if(document.readyState === 'loading'){
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I view the property before signing?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes — we strongly encourage viewings. We can arrange in-person viewings at a time that suits you, including evenings and weekends where possible.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need a UK-based guarantor?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>In most cases, yes — particularly if you are a first-time renter or your income does not meet our affordability checks. We will let you know during the application process whether a guarantor is required.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need a UK-based guarantor?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Not usually. A guarantor may be requested where an applicant does not satisfy our credit check, and this is considered case by case. We will let you know during the application process if one is needed.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do you carry out referencing and credit checks?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Yes. We work with reputable referencing partners to verify identity, address history, employment / income and credit. References from previous landlords are also requested where applicable.</p></div></div>
 
@@ -4187,7 +4204,7 @@ if(document.readyState === 'loading'){
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How do I report a maintenance issue?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>You can report issues by emailing <a href="mailto:enquiries@forestrd.co.uk">enquiries@forestrd.co.uk</a>, calling 01206 500202, or using the contact form on this website. Emergencies (major water leak, no heating in winter, no power, security risk) should always be reported by phone.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How quickly are repairs completed?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Emergencies (loss of heating, water, power or security risk) are attended to within 24 hours. Urgent repairs typically within 3–5 working days. Routine repairs are scheduled within 14–28 days. We will always keep you informed of timescales.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How quickly are repairs completed?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>It depends on how serious the problem is. Genuine emergencies — loss of heating, water or power, or anything presenting a security or safety risk — are attended to as quickly as possible. Less urgent repairs are scheduled according to priority.<br><br>Repairs are carried out by our own in-house maintenance team, and we will keep you informed of timescales throughout.</p></div></div>
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need contents insurance?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Our buildings insurance covers the property itself, but not your personal belongings. We strongly recommend taking out tenants' contents insurance to protect your possessions.</p></div></div>
 
@@ -4351,8 +4368,12 @@ if(document.readyState === 'loading'){
 
 <div class="help-panel" id="helpPanel" role="dialog" aria-label="Help">
   <div class="help-hd">
-    <h4>Ask us a question</h4>
-    <p>Instant answers to common questions</p>
+    <div class="help-hd-txt">
+      <h4>Ask us a question</h4>
+      <p>Instant answers to common questions</p>
+    </div>
+    <button class="help-sugg-btn on" id="helpSuggBtn" onclick="toggleHelpChips()"
+            aria-label="Show or hide suggested questions">Suggestions</button>
   </div>
   <div class="help-body" id="helpBody"></div>
   <div class="help-chips" id="helpChips"></div>
@@ -8353,8 +8374,26 @@ function helpChips(){
   });
 }
 
+/* Collapse the suggestions once a conversation starts — they take up a lot
+   of vertical space and squeeze the reading area. The header button brings
+   them back on demand. */
+function setHelpChips(show){
+  const wrap = document.getElementById('helpChips');
+  const btn  = document.getElementById('helpSuggBtn');
+  if(wrap) wrap.classList.toggle('hidden', !show);
+  if(btn)  btn.classList.toggle('on', !!show);
+}
+
+function toggleHelpChips(){
+  const wrap = document.getElementById('helpChips');
+  if(!wrap) return;
+  if(!wrap.children.length) helpChips();
+  setHelpChips(wrap.classList.contains('hidden'));
+}
+
 function helpAsk(question){
   helpAdd(question, 'me');
+  setHelpChips(false);
   const hit = helpFind(question);
   setTimeout(function(){
     helpAdd(hit ? hit.a[HELP_LANG] : helpFallback(), 'bot');
