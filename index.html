@@ -4629,7 +4629,15 @@ function showPage(id){
   if(id === 'student') { renderStudProps(); renderFeats('studFeatGrid', STUD_FEATURES); }
   if(id === 'private') { renderPrivate(); }
   if(id === 'about')   { renderFeats('aboutFeatGrid', ABOUT_VALUES); }
-  if(id === 'admin')   { resetAdminLogin(); }
+  if(id === 'admin')   {
+    /* If Firebase already has a signed-in session, go straight to the
+       dashboard. onAuthStateChanged only fires on a CHANGE of state, so
+       arriving here while already authenticated would otherwise show the
+       login form to someone who is in fact logged in. */
+    const signedIn = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length)
+                     ? !!firebase.auth().currentUser : false;
+    if(signedIn){ showAdminDash(); } else { resetAdminLogin(); }
+  }
 
   // Trigger scroll animations
   setTimeout(triggerFadeIns, 120);
@@ -5507,6 +5515,8 @@ function setupAuthObserver(){
   firebase.auth().onAuthStateChanged(user => {
     const onAdminPage = document.getElementById('page-admin')?.classList.contains('active');
     if(user){
+      /* only paints when the admin page is open; showPage('admin') covers
+         the case where the session already existed before arriving */
       if(onAdminPage) showAdminDash();
     } else {
       resetAdminLogin();
