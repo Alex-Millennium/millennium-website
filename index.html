@@ -1100,9 +1100,18 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .help-fab.open .hf-open{display:none}
 .help-fab.open .hf-close{display:block}
 
-.help-panel{
+/* The shell carries the position and stays overflow:visible so the cat can
+   sit above the panel; the panel itself keeps overflow:hidden for its
+   rounded corners, which would otherwise clip the cat. */
+.help-shell{
   position:fixed;left:24px;bottom:96px;z-index:97;
   width:min(380px,calc(100vw - 32px));
+  display:none;overflow:visible;
+}
+.help-shell.open{display:block}
+
+.help-panel{
+  position:relative;width:100%;
   max-height:min(620px,calc(100vh - 150px));
   display:none;flex-direction:column;overflow:hidden;
   background:rgba(10,7,32,.97);
@@ -1211,10 +1220,9 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   body.help-open .contact-fab-group,
   body.help-open #applyFab{display:none!important}
   .help-fab{left:16px;bottom:20px;width:50px;height:50px;font-size:1.3rem}
-  .help-panel{
-    left:8px;right:8px;bottom:80px;width:auto;
-    max-height:min(70vh,calc(100vh - 130px));
-  }
+  .help-shell{left:8px;right:8px;bottom:80px;width:auto}
+  .help-panel{max-height:min(70vh,calc(100vh - 140px))}
+  .help-walker{width:40px;height:40px;top:-34px}
 }
 
 /* ── chat action buttons ───────────────────────────────────── */
@@ -1267,6 +1275,76 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 @media(prefers-reduced-motion:reduce){
   .help-cat .cat-ear-l,.help-cat .cat-ear-r,
   .help-cat .cat-eye,.help-cat .cat-tail{animation:none}
+}
+
+/* ══════════════════════════════════════════════════════════
+   THE CAT ON THE PANEL
+   One SVG holding four poses; JS shows one at a time and slides
+   the whole thing along the top edge. All motion stops under
+   prefers-reduced-motion.
+   ══════════════════════════════════════════════════════════ */
+.help-walker{
+  position:absolute;top:-40px;left:8px;
+  width:48px;height:48px;
+  pointer-events:none;z-index:2;
+  transition:left 2.4s cubic-bezier(.42,0,.58,1), transform .3s ease;
+}
+.help-walker svg{width:100%;height:100%;overflow:visible;display:block}
+.help-walker.flip{transform:scaleX(-1)}
+
+/* only one pose visible at a time */
+.help-walker .pose{display:none}
+.help-walker[data-pose="walk"]  .pose-walk{display:block}
+.help-walker[data-pose="wash"]  .pose-wash{display:block}
+.help-walker[data-pose="back"]  .pose-back{display:block}
+.help-walker[data-pose="sit"]   .pose-sit{display:block}
+
+/* walking — legs swing, body bobs */
+.help-walker[data-pose="walk"]{animation:catBob .42s ease-in-out infinite}
+@keyframes catBob{0%,100%{margin-top:0}50%{margin-top:-2px}}
+.leg-a{transform-origin:center top;animation:legFwd .42s ease-in-out infinite}
+.leg-b{transform-origin:center top;animation:legFwd .42s ease-in-out infinite -.21s}
+@keyframes legFwd{0%,100%{transform:rotate(16deg)}50%{transform:rotate(-16deg)}}
+.walk-tail{transform-origin:8px 22px;animation:walkTail 1.1s ease-in-out infinite}
+@keyframes walkTail{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(12deg)}}
+
+/* washing a paw, facing the viewer */
+.wash-paw{transform-origin:32px 40px;animation:washPaw .85s ease-in-out infinite}
+@keyframes washPaw{
+  0%,100%{transform:translate(0,0) rotate(0deg)}
+  50%{transform:translate(0,-7px) rotate(-13deg)}
+}
+.wash-head{transform-origin:32px 30px;animation:washHead .85s ease-in-out infinite}
+@keyframes washHead{0%,100%{transform:rotate(0deg)}50%{transform:rotate(7deg)}}
+
+/* back turned, tail draped over the edge */
+.back-tail{transform-origin:32px 34px;animation:backTail 3.4s ease-in-out infinite}
+@keyframes backTail{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg)}}
+
+/* sitting still — just an ear flick and a blink */
+.sit-ear{transform-origin:22px 20px;animation:sitEar 6s ease-in-out infinite}
+@keyframes sitEar{0%,90%,100%{transform:rotate(0)}93%{transform:rotate(-15deg)}96%{transform:rotate(5deg)}}
+.cat-blink{transform-origin:center;animation:catBlink2 5s ease-in-out infinite}
+@keyframes catBlink2{0%,93%,100%{transform:scaleY(1)}96%,97%{transform:scaleY(.1)}}
+
+/* the leap off the edge and back */
+.help-walker.jump{animation:catJump 1.5s cubic-bezier(.3,.1,.4,1) forwards}
+@keyframes catJump{
+  0%{transform:translateY(0) rotate(0)}
+  22%{transform:translateY(-26px) rotate(-12deg)}
+  55%{transform:translateY(34px) rotate(10deg);opacity:1}
+  75%{transform:translateY(46px) rotate(4deg);opacity:0}
+  100%{transform:translateY(0);opacity:0}
+}
+.help-walker.hop-in{animation:catHopIn .85s cubic-bezier(.2,.9,.3,1) forwards}
+@keyframes catHopIn{
+  0%{transform:translateY(44px);opacity:0}
+  60%{transform:translateY(-8px);opacity:1}
+  100%{transform:translateY(0);opacity:1}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .help-walker,.help-walker *{animation:none!important;transition:none!important}
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -4435,6 +4513,63 @@ if(document.readyState === 'loading'){
   </span><span class="hf-close">✕</span>
 </button>
 
+<div class="help-shell" id="helpShell">
+
+<!-- the cat that walks along the top edge -->
+<div class="help-walker" id="helpWalker" data-pose="walk" aria-hidden="true">
+  <svg viewBox="0 0 64 56" fill="none">
+    <!-- side view, walking -->
+    <g class="pose pose-walk">
+      <path class="walk-tail" d="M10 22c-6-2-9 3-6 8" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+      <ellipse cx="30" cy="30" rx="18" ry="11" fill="#fff"/>
+      <circle cx="46" cy="22" r="9" fill="#fff"/>
+      <path d="M40 15l1-7 6 4z" fill="#fff"/><path d="M52 15l-1-7-6 4z" fill="#fff"/>
+      <circle cx="49" cy="21" r="1.7" fill="#4F46E5"/>
+      <rect class="leg-a" x="19" y="38" width="4" height="11" rx="2" fill="#fff"/>
+      <rect class="leg-b" x="27" y="38" width="4" height="11" rx="2" fill="#fff"/>
+      <rect class="leg-b" x="36" y="38" width="4" height="11" rx="2" fill="#fff"/>
+      <rect class="leg-a" x="43" y="38" width="4" height="11" rx="2" fill="#fff"/>
+    </g>
+
+    <!-- facing the viewer, washing a paw -->
+    <g class="pose pose-wash">
+      <path d="M14 44c14 4 22 4 36 0" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="32" cy="42" rx="14" ry="10" fill="#fff"/>
+      <g class="wash-head">
+        <circle cx="32" cy="28" r="12" fill="#fff"/>
+        <path d="M23 19l-1-9 8 5z" fill="#fff"/><path d="M41 19l1-9-8 5z" fill="#fff"/>
+        <ellipse class="cat-blink" cx="27" cy="27" rx="2.1" ry="2.8" fill="#4F46E5"/>
+        <ellipse class="cat-blink" cx="37" cy="27" rx="2.1" ry="2.8" fill="#4F46E5"/>
+        <path d="M32 32.5c-1 0-1.8.7-1.8.7s.8 1.8 1.8 1.8 1.8-1.8 1.8-1.8-.8-.7-1.8-.7z" fill="#7C3AED"/>
+      </g>
+      <ellipse class="wash-paw" cx="32" cy="40" rx="4" ry="5" fill="#fff"/>
+    </g>
+
+    <!-- back turned, tail hanging over the edge -->
+    <g class="pose pose-back">
+      <ellipse cx="32" cy="34" rx="14" ry="16" fill="#fff"/>
+      <circle cx="32" cy="19" r="10" fill="#fff"/>
+      <path d="M24 12l-1-8 7 4z" fill="#fff"/><path d="M40 12l1-8-7 4z" fill="#fff"/>
+      <path class="back-tail" d="M44 34c7 3 9 11 7 19" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/>
+    </g>
+
+    <!-- sitting, facing the viewer -->
+    <g class="pose pose-sit">
+      <ellipse cx="32" cy="42" rx="13" ry="10" fill="#fff"/>
+      <path d="M20 46c8 3 16 3 24 0" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="32" cy="27" r="12" fill="#fff"/>
+      <path class="sit-ear" d="M23 18l-1-9 8 5z" fill="#fff"/>
+      <path d="M41 18l1-9-8 5z" fill="#fff"/>
+      <ellipse class="cat-blink" cx="27" cy="26" rx="2.1" ry="2.8" fill="#4F46E5"/>
+      <ellipse class="cat-blink" cx="37" cy="26" rx="2.1" ry="2.8" fill="#4F46E5"/>
+      <path d="M32 31.5c-1 0-1.8.7-1.8.7s.8 1.8 1.8 1.8 1.8-1.8 1.8-1.8-.8-.7-1.8-.7z" fill="#7C3AED"/>
+      <g stroke="#7C3AED" stroke-width="1.2" stroke-linecap="round" opacity=".7">
+        <path d="M20 30h-6M20 33l-5 2M44 30h6M44 33l5 2"/>
+      </g>
+    </g>
+  </svg>
+</div>
+
 <div class="help-panel" id="helpPanel" role="dialog" aria-label="Help">
   <div class="help-hd">
     <div class="help-hd-txt">
@@ -4443,6 +4578,8 @@ if(document.readyState === 'loading'){
     </div>
     <button class="help-sugg-btn on" id="helpSuggBtn" onclick="toggleHelpChips()"
             aria-label="Show or hide suggested questions">Suggestions</button>
+    <button class="help-sugg-btn" onclick="dismissHelp()" aria-label="Close"
+            style="padding:6px 11px;font-size:.85rem;line-height:1">✕</button>
   </div>
   <div class="help-body" id="helpBody"></div>
   <div class="help-chips" id="helpChips"></div>
@@ -4455,6 +4592,8 @@ if(document.readyState === 'loading'){
     For anything specific to your room or tenancy, please contact the office.
   </div>
 </div>
+
+</div><!-- /help-shell -->
 <button class="apply-now-fab" onclick="openApplyModal()" id="applyFab">
   <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
   Apply Now
@@ -8314,7 +8453,7 @@ const HELP_KB=[
   {id:"student_only",cat:"Applying",q:{en:"Do I have to be a student?"},k:["do i have to be a student", "non student", "professional", "working", "not a student", "who can live"],a:{en:"Our <b>Colchester complexes are for full-time students</b> only \u2014 you'll need an enrolment certificate before keys are released.<br><br>Our <b>Ipswich rooms at 154 Norwich Road are open to everyone</b>, and are mainly occupied by working professionals.<br><br>We also let private homes to anyone across Essex, Suffolk, London and South Wales."},go:{p:"ipswich",a:"ipswichPricing",t:"\ud83c\udfe0 Ipswich rooms"}},
   {id:"included",cat:"Rent",q:{en:"What's included in the rent?"},k:["included", "bills", "what do i pay for", "utilities", "electric", "water", "wifi", "internet", "broadband", "all inclusive"],a:{en:"For <b>student rooms</b>, your rent covers electricity, heating, water and broadband (Glide Student).<br><br>The <b>coin-operated laundry is not included</b> and is paid separately per use.<br><br>For <b>private rentals</b>, tenants pay council tax, water, gas and electricity directly to the suppliers."},go:{p:"student",a:"studentPricing",t:"\ud83d\udcb7 See what\u2019s included"}},
   {id:"deposit",cat:"Rent",q:{en:"Is there a deposit?"},k:["deposit", "bond", "security deposit", "upfront", "up front", "pay before moving in", "advance"],a:{en:"<b>No tenancy deposit</b> is taken.<br><br>One month's rent is payable <b>in advance</b> once both parties have signed the agreement \u2014 so there's an up-front payment, but nothing held as a deposit."},go:{p:"student",a:"studentPricing",t:"\ud83d\udcb7 See pricing"}},
-  {id:"payrent",cat:"Rent",q:{en:"How do I pay my rent?"},k:["pay rent", "payment method", "bank transfer", "how to pay", "standing order", "when is rent due", "due date"],a:{en:"Rent is paid by <b>bank transfer, monthly in advance</b>, on the date set out in your agreement.<br><br>Please use your <b>room number and surname</b> as the payment reference. Full bank details are on our Payments page.<br><br>If you're paying from overseas, any international transfer charges are the sender's responsibility \u2014 the full rent must arrive on the due date."},go:{p:"payments",a:null,t:"\ud83c\udfe6 Payment details"}},
+  {id:"payrent",cat:"Rent",q:{en:"How do I pay my rent?"},k:["pay rent", "payment method", "bank transfer", "how to pay", "standing order", "when is rent due", "due date", "how do i pay", "how do i pay you", "payment", "payments", "bank details", "account details", "sort code", "where do i pay", "make a payment", "paying"],a:{en:"Rent is paid by <b>bank transfer, monthly in advance</b>, on the date set out in your agreement.<br><br>Please use your <b>room number and surname</b> as the payment reference. Full bank details are on our Payments page.<br><br>If you're paying from overseas, any international transfer charges are the sender's responsibility \u2014 the full rent must arrive on the due date."},go:{p:"payments",a:null,t:"🏦 Go to Payments"}},
   {id:"late",cat:"Rent",q:{en:"What happens if I pay late?"},k:["late", "miss a payment", "cant pay", "behind on rent", "arrears", "overdue", "struggling to pay"],a:{en:"We'll send a reminder the day rent becomes overdue, followed by a formal written notice after seven days. Interest at 3% above the Bank of England base rate begins to accrue after 14 days.<br><br>If you're having difficulty paying, please <b>contact the office early</b> on 01206 500202 \u2014 it's far easier to sort out before arrears build up."},go:{p:"payments",a:null,t:"\ud83c\udfe6 Payment details"}},
   {id:"increase",cat:"Rent",q:{en:"Can my rent go up?"},k:["rent increase", "go up", "put the rent up", "review", "raise the rent", "change the rent"],a:{en:"Rent can only be increased <b>once a year</b>, never within the first 52 weeks of your agreement, and only with at least <b>two months' written notice</b> using the statutory process.<br><br>Our rates have been frozen since 2024."},go:{p:"student",a:"studentPricing",t:"\ud83d\udcb7 See pricing"}},
   {id:"movein",cat:"Moving in",q:{en:"How does moving in work?"},k:["move in", "moving in", "key", "keys", "collect", "pick up keys", "check in", "arrival", "first day"],a:{en:"Once your agreement is signed, payment has been made and we've received all your documents, you simply <b>collect your keys from the office</b> during opening hours \u2014 Monday to Saturday, 9:00am to 6:00pm.<br><br>If you can't get there during those hours, we can sometimes arrange for a member of staff to meet you outside office hours. This is occasional rather than guaranteed, so please ask in advance."},go:{p:"faq",a:null,t:"\u2753 More in Help"}},
@@ -8417,10 +8556,103 @@ function helpFind(input){
   return bestScore >= 4 ? best : null;
 }
 
+/* ── the cat ──────────────────────────────────────────────────
+   A small state machine: walk a few steps, sit and wash a paw
+   facing the visitor, turn its back with its tail over the edge,
+   occasionally leap off and hop back on. Runs only while the
+   panel is open, and not at all under reduced motion. */
+let catTimer = null, catX = 8, catFacing = 1;
+
+function catEl(){ return document.getElementById('helpWalker'); }
+
+function catPose(pose){
+  const c = catEl();
+  if(c) c.setAttribute('data-pose', pose);
+}
+
+function catWalkTo(x){
+  const c = catEl();
+  if(!c) return;
+  /* offsetWidth is 0 before layout — fall back rather than clamping the
+     cat into the corner */
+  const shell = document.getElementById('helpShell');
+  const w = (shell && shell.offsetWidth) ? shell.offsetWidth : 340;
+  const max = Math.max(60, w - 60);
+  catX = Math.max(4, Math.min(max, x));
+  catFacing = (catX > (parseFloat(c.style.left) || 8)) ? 1 : -1;
+  c.classList.toggle('flip', catFacing < 0);
+  catPose('walk');
+  c.style.left = catX + 'px';
+}
+
+function catJump(){
+  const c = catEl();
+  if(!c) return;
+  catPose('walk');
+  c.classList.add('jump');
+  setTimeout(function(){
+    c.classList.remove('jump');
+    const shell = document.getElementById('helpShell');
+    const w = (shell && shell.offsetWidth) ? shell.offsetWidth : 340;
+    c.style.left = Math.round(Math.random() * Math.max(60, w - 60)) + 'px';
+    c.classList.add('hop-in');
+    setTimeout(function(){ c.classList.remove('hop-in'); }, 900);
+  }, 1500);
+}
+
+/* each step returns how long to wait before the next one */
+const CAT_ROUTINE = [
+  function(){ catWalkTo(20 + Math.random()*60);  return 2600; },
+  function(){ catPose('wash');                   return 3400; },
+  function(){ catWalkTo(150 + Math.random()*90); return 2600; },
+  function(){ catPose('back');                   return 3800; },
+  function(){ catWalkTo(60 + Math.random()*120); return 2600; },
+  function(){ catPose('sit');                    return 3000; },
+  function(){ catJump();                         return 2600; },
+];
+let catStep = 0;
+
+function catTick(){
+  const wait = CAT_ROUTINE[catStep % CAT_ROUTINE.length]();
+  catStep++;
+  catTimer = setTimeout(catTick, wait);
+}
+
+function startCat(){
+  if(catTimer) return;
+  try{
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      catPose('sit'); return;
+    }
+  }catch(e){}
+  catStep = 0;
+  catTimer = setTimeout(catTick, 700);
+}
+
+function stopCat(){
+  if(catTimer){ clearTimeout(catTimer); catTimer = null; }
+}
+
+/* ── first visit: open by itself and stay open until dismissed ── */
+function helpFirstVisit(){
+  let seen = '1';
+  try{ seen = sessionStorage.getItem('mi_help_seen'); }catch(e){ seen = '1'; }
+  if(seen) return;
+  helpSticky = true;
+  setHelpOpen(true);
+  helpAdd("Hello! I'm here if you need anything \u2014 ask me about rooms, bills, " +
+          "viewings, moving in, or anything else. Tap the \u2715 to close me.", 'bot');
+  helpChips();
+  setHelpChips(true);
+}
+document.addEventListener('DOMContentLoaded', function(){ setTimeout(helpFirstVisit, 1200); });
+
 /* Take the visitor to the part of the site an answer refers to. The chat
    closes first so it does not sit over what they have just been sent to. */
 function helpGo(page, anchorId){
-  closeHelp();
+  helpSticky = false;          /* they engaged, so it need not stay pinned */
+  try{ sessionStorage.setItem('mi_help_seen','1'); }catch(e){}
+  setHelpOpen(false);
   if(typeof showPage === 'function') showPage(page);
   if(!anchorId) return;
   setTimeout(function(){
@@ -8506,12 +8738,31 @@ function sendHelp(){
   helpAsk(v);
 }
 
-function closeHelp(){
+/* While this is true the panel stays put: it survives page changes and
+   ignores outside clicks. Only the X clears it. */
+let helpSticky = false;
+
+function setHelpOpen(open){
+  const shell = document.getElementById('helpShell');
   const panel = document.getElementById('helpPanel');
   const fab   = document.getElementById('helpFab');
-  if(panel) panel.classList.remove('open');
-  if(fab)   fab.classList.remove('open');
-  document.body.classList.remove('help-open');
+  if(shell) shell.classList.toggle('open', open);
+  if(panel) panel.classList.toggle('open', open);
+  if(fab)   fab.classList.toggle('open', open);
+  document.body.classList.toggle('help-open', open);
+  if(open){ startCat(); } else { stopCat(); }
+}
+
+function closeHelp(){
+  if(helpSticky) return;      /* the greeting stays until dismissed */
+  setHelpOpen(false);
+}
+
+/* The X: closes it and ends the sticky first visit for good. */
+function dismissHelp(){
+  helpSticky = false;
+  try{ sessionStorage.setItem('mi_help_seen','1'); }catch(e){}
+  setHelpOpen(false);
 }
 
 /* Close when the visitor taps anywhere else, or presses Escape. Bound once,
@@ -8530,11 +8781,10 @@ document.addEventListener('keydown', function(e){
 
 function toggleHelp(){
   const panel = document.getElementById('helpPanel');
-  const fab   = document.getElementById('helpFab');
-  if(!panel || !fab) return;
-  const open = panel.classList.toggle('open');
-  fab.classList.toggle('open', open);
-  document.body.classList.toggle('help-open', open);
+  if(!panel) return;
+  const open = !panel.classList.contains('open');
+  if(!open && helpSticky){ dismissHelp(); return; }   /* tapping the cat dismisses too */
+  setHelpOpen(open);
   if(open){
     if(!document.getElementById('helpBody').children.length){
       helpAdd("Hello — ask me anything about our accommodation, or pick a question below. " +
@@ -8551,9 +8801,12 @@ function helpSetVisible(show){
   const p = document.getElementById('helpPanel');
   if(f) f.style.display = show ? 'flex' : 'none';
   if(!show && p){
+    const sh = document.getElementById('helpShell');
+    if(sh) sh.classList.remove('open');
     p.classList.remove('open');
     if(f) f.classList.remove('open');
     document.body.classList.remove('help-open');
+    stopCat();
   }
 }
 
