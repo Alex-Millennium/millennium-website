@@ -1933,8 +1933,18 @@ function initFirebase(){
 
 /* This call went missing when duplicate script blocks were cleared out.
    Without it initializeApp never ran, firebase.apps stayed empty, and the
-   login fell through to the hardcoded fallback every time. */
-initFirebase();
+   login fell through to the hardcoded fallback every time.
+
+   It must wait for DOMContentLoaded: initFirebase() hands off to
+   setupAuthObserver(), loadFromLocal() and refreshCurrentPage(), none of
+   which are defined this early in the file. Running it here directly meant
+   the auth observer was never attached — sign-in succeeded, but nothing
+   was listening, so the dashboard never appeared. */
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', initFirebase);
+} else {
+  initFirebase();
+}
 </script>
 <canvas id="galaxyCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block"></canvas>
 <canvas id="edgeCloudCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block"></canvas>
