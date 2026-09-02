@@ -1436,17 +1436,59 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   margin:0 0 16px;min-height:2.7em;
   letter-spacing:.005em;
 }
-.rc-price{display:flex;align-items:baseline;gap:7px}
+/* No panel or pedestal behind the price — the glow comes from the glyphs
+   themselves via drop-shadow, which follows their actual shapes. A
+   background layer here lit up a rectangle instead of the number. */
+.rc-price{
+  position:relative;display:flex;align-items:baseline;gap:7px;
+  padding:6px 0 2px;
+}
+
 .rc-amt{
-  font-size:2.7rem;font-weight:800;line-height:1;
-  background:linear-gradient(180deg,#ffd97a,var(--gold-500));
+  font-size:2.85rem;font-weight:800;line-height:1;
+  letter-spacing:-.015em;
+  /* a light band sits off to the right of the gradient and sweeps
+     across the digits on hover */
+  background:linear-gradient(100deg,
+      var(--gold-500) 0%, #ffd97a 34%, #fff6d0 46%,
+      #ffd97a 58%, var(--gold-500) 82%);
+  background-size:260% 100%;
+  background-position:100% 0;
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;color:var(--gold-500);
-  transition:transform .3s cubic-bezier(.2,.8,.3,1);
+  /* drop-shadow rather than text-shadow: it follows the glyph alpha, so
+     it works with clipped gradient text where text-shadow would paint a
+     solid block behind the transparent fill */
+  filter:drop-shadow(0 2px 5px rgba(240,180,41,.35))
+         drop-shadow(0 0 11px rgba(240,180,41,.22));
+  transition:transform .35s cubic-bezier(.2,.8,.3,1),
+             background-position .8s cubic-bezier(.3,.7,.4,1),
+             filter .35s ease;
   transform-origin:left bottom;display:inline-block;
 }
-.rcard:hover .rc-amt{transform:scale(1.06)}
-.rc-unit{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.45)}
+.rcard:hover .rc-amt{
+  transform:scale(1.07) translateY(-1px);
+  background-position:0 0;
+  filter:drop-shadow(0 3px 7px rgba(240,180,41,.5))
+         drop-shadow(0 0 15px rgba(240,180,41,.34));
+}
+.rcard.is-best .rc-amt{
+  filter:drop-shadow(0 2px 5px rgba(74,222,128,.32))
+         drop-shadow(0 0 12px rgba(240,180,41,.22));
+}
+
+.rc-unit{
+  font-size:.8rem;font-weight:700;
+  color:rgba(255,255,255,.42);
+  letter-spacing:.02em;
+  transition:color .3s ease;
+}
+.rcard:hover .rc-unit{color:rgba(255,255,255,.62)}
+
+@media(prefers-reduced-motion:reduce){
+  .rc-amt{transition:none;background-position:0 0}
+  .rcard:hover .rc-amt{transform:none}
+}
 .rc-pw{font-size:.75rem;color:rgba(255,255,255,.38);margin-top:7px;letter-spacing:.01em}
 
 .rc-feats{
@@ -1466,23 +1508,34 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .rc-feats li:nth-child(-n+2){color:rgba(255,255,255,.92);font-weight:600}
 .rc-tick{color:#4ade80;font-weight:800;flex-shrink:0;font-size:.9rem}
 
-.rc-terms-btn{
-  width:100%;margin-top:16px;cursor:pointer;
-  background:transparent;border:1px solid rgba(255,255,255,.14);
-  border-radius:10px;padding:9px 12px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:.76rem;font-weight:700;color:rgba(255,255,255,.6);
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  transition:var(--trans);
+/* The card turns over rather than pushing a drawer open: the inclusions
+   and the price detail occupy the same space, so the grid never jumps. */
+.rc-face{position:relative}
+.rc-feats,.rcard-body{
+  transition:opacity .25s ease, transform .3s cubic-bezier(.2,.8,.3,1);
 }
-.rc-terms-btn:hover{border-color:rgba(240,180,41,.45);color:var(--gold-400)}
+.rcard-body{
+  position:absolute;top:0;left:0;right:0;
+  opacity:0;transform:translateY(8px);pointer-events:none;
+}
+.rcard.open .rc-feats{opacity:0;transform:translateY(-8px);pointer-events:none}
+.rcard.open .rcard-body{opacity:1;transform:none;pointer-events:auto}
+
+.rc-flip-hint{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:14px;padding:8px 10px;
+  font-size:.72rem;font-weight:700;letter-spacing:.02em;
+  color:rgba(255,255,255,.42);
+  border-top:1px solid rgba(255,255,255,.07);
+  transition:color .25s ease;
+}
+.rcard:hover .rc-flip-hint{color:var(--gold-400)}
 .rcard-chev{transition:transform .3s ease;display:inline-block}
 .rcard.open .rcard-chev{transform:rotate(180deg)}
-.rcard.open .rc-terms-btn{color:var(--gold-400);border-color:rgba(240,180,41,.45)}
+.rcard.open .rc-flip-hint{color:var(--gold-400)}
 
-.rcard-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
-.rcard.open .rcard-body{max-height:260px}
-.rcard-rows{padding-top:12px}
+.rcard{cursor:pointer}
+.rcard-rows{padding-top:0}
 .rcard-row{
   display:flex;justify-content:space-between;align-items:baseline;gap:10px;
   padding:6px 0;font-size:.8rem;color:rgba(255,255,255,.55);
@@ -3218,6 +3271,7 @@ if(document.readyState === 'loading'){
           <div class="ips-toggle" role="group" aria-label="Payment frequency">
             <button class="on" onclick="setRoomCycle('monthly',this)">Monthly</button>
             <button onclick="setRoomCycle('weekly',this)">Weekly</button>
+            <button onclick="setRoomCycle('yearly',this)">Yearly</button>
           </div>
         </div>
         <div class="rcard-grid" id="roomGrid-frh"><!-- rendered from the room store --></div>
@@ -3230,6 +3284,7 @@ if(document.readyState === 'loading'){
           <div class="ips-toggle" role="group" aria-label="Payment frequency">
             <button class="on" onclick="setRoomCycle('monthly',this)">Monthly</button>
             <button onclick="setRoomCycle('weekly',this)">Weekly</button>
+            <button onclick="setRoomCycle('yearly',this)">Yearly</button>
           </div>
         </div>
         <div class="rcard-grid" id="roomGrid-can"><!-- rendered from the room store --></div>
@@ -3242,6 +3297,7 @@ if(document.readyState === 'loading'){
           <div class="ips-toggle" role="group" aria-label="Payment frequency">
             <button class="on" onclick="setRoomCycle('monthly',this)">Monthly</button>
             <button onclick="setRoomCycle('weekly',this)">Weekly</button>
+            <button onclick="setRoomCycle('yearly',this)">Yearly</button>
           </div>
         </div>
         <div class="rcard-grid" id="roomGrid-grn"><!-- rendered from the room store --></div>
@@ -3340,37 +3396,102 @@ if(document.readyState === 'loading'){
         <div class="ips-toggle" role="group" aria-label="Payment frequency">
           <button id="ipsWeeklyBtn" class="on" onclick="setIpsCycle('weekly')">Weekly</button>
           <button id="ipsMonthlyBtn" onclick="setIpsCycle('monthly')">Monthly</button>
+          <button id="ipsYearlyBtn" onclick="setIpsCycle('yearly')">Yearly</button>
         </div>
       </div>
 
-      <div class="ips-rooms fade-in">
-        <div class="ips-room">
-          <div class="ips-room-name">Single</div>
-          <div class="ips-room-price"><span class="ips-amt" data-weekly="£115" data-monthly="£460">£115</span></div>
-          <div class="ips-room-per"><span class="ips-per">per week</span></div>
-          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £460 per month" data-monthly="or £115 per week">or £460 per month</span></div>
+      <div class="rcard-grid ips-card-grid">
+          <div class="rcard rc-std" id="rc-ipswich-single" data-open-label="Compare weekly vs monthly" data-back-label="Back to details">
+            <span class="rc-badge">STANDARD</span>
+            <h4 class="rc-name">Single Room</h4>
+            <div class="rc-price">
+              <span class="rc-amt" data-monthly="460" data-weekly="115" data-yearly="5,520">£115</span>
+              <span class="rc-unit">/ week</span>
+            </div>
+            <div class="rc-pw" data-monthly="£115 per week" data-weekly="£460 per month" data-yearly="£5,980 a year paying weekly">£460 per month</div>
+            <div class="rc-save">💷 Save <b>£460</b> a year paying monthly</div>
+            <div class="rc-face">
+              <ul class="rc-feats"><li><span class="rc-tick">✓</span>Single room</li><li><span class="rc-tick">✓</span>All bills included</li><li><span class="rc-tick">✓</span>Shared kitchen</li><li><span class="rc-tick">✓</span>Shared bathroom</li><li><span class="rc-tick">✓</span>No deposit required</li><li><span class="rc-tick">✓</span>Weekly licence — 7 days’ notice</li></ul>
+              <div class="rcard-body"><div class="rcard-rows">
+                <div class="rcard-row"><span>Weekly rate</span><b>£115</b></div>
+                <div class="rcard-row"><span>Monthly rate</span><b>£460</b></div>
+                <div class="rcard-row"><span>A year, paying weekly</span><b>£5,980</b></div>
+                <div class="rcard-row total"><span>A year, paying monthly</span><b>£5,520</b></div>
+                <div class="rcard-row save"><span>You save</span><b>£460</b></div>
+              </div></div>
+            </div>
+            <div class="rc-flip-hint"><span class="rc-hint-txt">Compare weekly vs monthly</span><span class="rcard-chev">▾</span></div>
+            <button class="btn btn-gold rc-cta" onclick="openPrivateAppModal()">Enquire</button>
+          </div>
+          <div class="rcard rc-more" id="rc-ipswich-large-single" data-open-label="Compare weekly vs monthly" data-back-label="Back to details">
+            <span class="rc-badge">MORE SPACE</span>
+            <h4 class="rc-name">Large Single Room</h4>
+            <div class="rc-price">
+              <span class="rc-amt" data-monthly="520" data-weekly="130" data-yearly="6,240">£130</span>
+              <span class="rc-unit">/ week</span>
+            </div>
+            <div class="rc-pw" data-monthly="£130 per week" data-weekly="£520 per month" data-yearly="£6,760 a year paying weekly">£520 per month</div>
+            <div class="rc-save">💷 Save <b>£520</b> a year paying monthly</div>
+            <div class="rc-face">
+              <ul class="rc-feats"><li><span class="rc-tick">✓</span>Large single room</li><li><span class="rc-tick">✓</span>All bills included</li><li><span class="rc-tick">✓</span>Shared kitchen</li><li><span class="rc-tick">✓</span>Shared bathroom</li><li><span class="rc-tick">✓</span>No deposit required</li><li><span class="rc-tick">✓</span>Weekly licence — 7 days’ notice</li></ul>
+              <div class="rcard-body"><div class="rcard-rows">
+                <div class="rcard-row"><span>Weekly rate</span><b>£130</b></div>
+                <div class="rcard-row"><span>Monthly rate</span><b>£520</b></div>
+                <div class="rcard-row"><span>A year, paying weekly</span><b>£6,760</b></div>
+                <div class="rcard-row total"><span>A year, paying monthly</span><b>£6,240</b></div>
+                <div class="rcard-row save"><span>You save</span><b>£520</b></div>
+              </div></div>
+            </div>
+            <div class="rc-flip-hint"><span class="rc-hint-txt">Compare weekly vs monthly</span><span class="rcard-chev">▾</span></div>
+            <button class="btn btn-gold rc-cta" onclick="openPrivateAppModal()">Enquire</button>
+          </div>
+          <div class="rcard rc-ens" id="rc-ipswich-double" data-open-label="Compare weekly vs monthly" data-back-label="Back to details">
+            <span class="rc-badge">DOUBLE</span>
+            <h4 class="rc-name">Double Room</h4>
+            <div class="rc-price">
+              <span class="rc-amt" data-monthly="660" data-weekly="165" data-yearly="7,920">£165</span>
+              <span class="rc-unit">/ week</span>
+            </div>
+            <div class="rc-pw" data-monthly="£165 per week" data-weekly="£660 per month" data-yearly="£8,580 a year paying weekly">£660 per month</div>
+            <div class="rc-save">💷 Save <b>£660</b> a year paying monthly</div>
+            <div class="rc-face">
+              <ul class="rc-feats"><li><span class="rc-tick">✓</span>Double room</li><li><span class="rc-tick">✓</span>All bills included</li><li><span class="rc-tick">✓</span>Shared kitchen</li><li><span class="rc-tick">✓</span>Shared bathroom</li><li><span class="rc-tick">✓</span>No deposit required</li><li><span class="rc-tick">✓</span>Weekly licence — 7 days’ notice</li></ul>
+              <div class="rcard-body"><div class="rcard-rows">
+                <div class="rcard-row"><span>Weekly rate</span><b>£165</b></div>
+                <div class="rcard-row"><span>Monthly rate</span><b>£660</b></div>
+                <div class="rcard-row"><span>A year, paying weekly</span><b>£8,580</b></div>
+                <div class="rcard-row total"><span>A year, paying monthly</span><b>£7,920</b></div>
+                <div class="rcard-row save"><span>You save</span><b>£660</b></div>
+              </div></div>
+            </div>
+            <div class="rc-flip-hint"><span class="rc-hint-txt">Compare weekly vs monthly</span><span class="rcard-chev">▾</span></div>
+            <button class="btn btn-gold rc-cta" onclick="openPrivateAppModal()">Enquire</button>
+          </div>
+          <div class="rcard rc-prem" id="rc-ipswich-large-double" data-open-label="Compare weekly vs monthly" data-back-label="Back to details">
+            <span class="rc-badge">PREMIUM</span>
+            <h4 class="rc-name">Large Double Room</h4>
+            <div class="rc-price">
+              <span class="rc-amt" data-monthly="740" data-weekly="185" data-yearly="8,880">£185</span>
+              <span class="rc-unit">/ week</span>
+            </div>
+            <div class="rc-pw" data-monthly="£185 per week" data-weekly="£740 per month" data-yearly="£9,620 a year paying weekly">£740 per month</div>
+            <div class="rc-save">💷 Save <b>£740</b> a year paying monthly</div>
+            <div class="rc-face">
+              <ul class="rc-feats"><li><span class="rc-tick">✓</span>Large double room</li><li><span class="rc-tick">✓</span>All bills included</li><li><span class="rc-tick">✓</span>Shared kitchen</li><li><span class="rc-tick">✓</span>Shared bathroom</li><li><span class="rc-tick">✓</span>No deposit required</li><li><span class="rc-tick">✓</span>Weekly licence — 7 days’ notice</li></ul>
+              <div class="rcard-body"><div class="rcard-rows">
+                <div class="rcard-row"><span>Weekly rate</span><b>£185</b></div>
+                <div class="rcard-row"><span>Monthly rate</span><b>£740</b></div>
+                <div class="rcard-row"><span>A year, paying weekly</span><b>£9,620</b></div>
+                <div class="rcard-row total"><span>A year, paying monthly</span><b>£8,880</b></div>
+                <div class="rcard-row save"><span>You save</span><b>£740</b></div>
+              </div></div>
+            </div>
+            <div class="rc-flip-hint"><span class="rc-hint-txt">Compare weekly vs monthly</span><span class="rcard-chev">▾</span></div>
+            <button class="btn btn-gold rc-cta" onclick="openPrivateAppModal()">Enquire</button>
+          </div>
         </div>
-        <div class="ips-room">
-          <div class="ips-room-name">Large Single</div>
-          <div class="ips-room-price"><span class="ips-amt" data-weekly="£130" data-monthly="£520">£130</span></div>
-          <div class="ips-room-per"><span class="ips-per">per week</span></div>
-          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £520 per month" data-monthly="or £130 per week">or £520 per month</span></div>
-        </div>
-        <div class="ips-room">
-          <div class="ips-room-name">Double</div>
-          <div class="ips-room-price"><span class="ips-amt" data-weekly="£165" data-monthly="£660">£165</span></div>
-          <div class="ips-room-per"><span class="ips-per">per week</span></div>
-          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £660 per month" data-monthly="or £165 per week">or £660 per month</span></div>
-        </div>
-        <div class="ips-room">
-          <div class="ips-room-name">Large Double</div>
-          <div class="ips-room-price"><span class="ips-amt" data-weekly="£185" data-monthly="£740">£185</span></div>
-          <div class="ips-room-per"><span class="ips-per">per week</span></div>
-          <div class="ips-room-alt"><span class="ips-alt" data-weekly="or £740 per month" data-monthly="or £185 per week">or £740 per month</span></div>
-        </div>
-      </div>
 
-      <div class="ips-note fade-in">
+        <div class="ips-note fade-in">
         <strong>Paying monthly saves you money.</strong> The monthly rate is four weeks&rsquo; rent, so over a
         52-week year you pay for 48 weeks &mdash; a saving of four weeks&rsquo; rent, between £460 and £740 a
         year depending on your room. The agreement remains a weekly licence either way; monthly payment is
@@ -5412,6 +5533,7 @@ function showPage(id){
   if(id === 'private') { renderPrivate(); }
   if(id === 'about')   { renderFeats('aboutFeatGrid', ABOUT_VALUES); }
   if(id === 'student' && typeof renderRoomCards === 'function') renderRoomCards();
+  if(id === 'ipswich' && typeof initRoomCards === 'function') setTimeout(initRoomCards, 40);
   if(id === 'student' && typeof initRoomCards === 'function') setTimeout(initRoomCards, 40);
   if(id === 'admin')   {
     /* If Firebase already has a signed-in session, go straight to the
@@ -8828,6 +8950,19 @@ function renderTestimonialsOnSite(){
    ============================================================ */
 function setIpsCycle(cycle){
   var monthly = (cycle === 'monthly');
+  document.querySelectorAll('#ipswichPricing .rc-amt').forEach(function(el){
+    var v = el.dataset[cycle];
+    if(v) el.textContent = '\u00a3' + v;
+  });
+  document.querySelectorAll('#ipswichPricing .rc-unit').forEach(function(el){
+    el.textContent = (cycle === 'yearly') ? '/ year' : (monthly ? '/ month' : '/ week');
+  });
+  document.querySelectorAll('#ipswichPricing .rc-pw').forEach(function(el){
+    var v = el.dataset[cycle];
+    if(v) el.textContent = v;
+  });
+  var yb = document.getElementById('ipsYearlyBtn');
+  if(yb) yb.classList.toggle('on', cycle === 'yearly');
   document.querySelectorAll('.ips-amt').forEach(function(el){
     el.textContent = monthly ? el.dataset.monthly : el.dataset.weekly;
   });
@@ -8839,8 +8974,8 @@ function setIpsCycle(cycle){
   });
   var w = document.getElementById('ipsWeeklyBtn');
   var m = document.getElementById('ipsMonthlyBtn');
-  if(w) w.classList.toggle('on', !monthly);
-  if(m) m.classList.toggle('on', monthly);
+  if(w) w.classList.toggle('on', cycle === 'weekly');
+  if(m) m.classList.toggle('on', cycle === 'monthly');
 }
 
 function scrollToIpsPrices(){
@@ -9835,6 +9970,11 @@ function esc(s){
 function roomCardHtml(r){
   const total = parseFloat(String(r.total).replace(/,/g,'')) || 0;
   const save  = '£' + Math.round(total * 0.05).toLocaleString();
+  /* paying for the year up front takes 5% off the 11-month total */
+  const yearly   = total ? Math.round(total * 0.95).toLocaleString() : '';
+  const yearNote = total
+    ? '\u00a3' + total.toLocaleString() + ' before the 5% discount'
+    : '';
   const feats = (r.feats && r.feats.length) ? r.feats : defaultFeats(r.name);
   const ticks = feats.map(function(f){
     return '<li><span class="rc-tick">\u2713</span>' + esc(f) + '</li>';
@@ -9844,21 +9984,26 @@ function roomCardHtml(r){
     '<span class="rc-badge">' + esc(r.badge || 'STANDARD') + '</span>' +
     '<h4 class="rc-name">' + esc(r.name) + '</h4>' +
     '<div class="rc-price">' +
-      '<span class="rc-amt" data-monthly="' + esc(r.monthly) + '" data-weekly="' + esc(r.weekly) + '">\u00a3' + esc(r.monthly) + '</span>' +
+      '<span class="rc-amt" data-monthly="' + esc(r.monthly) + '" data-weekly="' + esc(r.weekly) + '"' +
+        ' data-yearly="' + esc(yearly) + '">\u00a3' + esc(r.monthly) + '</span>' +
       '<span class="rc-unit">/ month</span>' +
     '</div>' +
-    '<div class="rc-pw" data-monthly="\u00a3' + esc(r.weekly) + ' per week" data-weekly="\u00a3' + esc(r.monthly) + ' per month">\u00a3' + esc(r.weekly) + ' per week</div>' +
+    '<div class="rc-pw" data-monthly="\u00a3' + esc(r.weekly) + ' per week"' +
+      ' data-weekly="\u00a3' + esc(r.monthly) + ' per month"' +
+      ' data-yearly="' + yearNote + '">\u00a3' + esc(r.weekly) + ' per week</div>' +
     (total ? '<div class="rc-save">\ud83d\udcb7 Save <b>' + save + '</b> a year paying annually</div>' : '') +
-    '<ul class="rc-feats">' + ticks + '</ul>' +
-    '<button class="rc-terms-btn" onclick="toggleRoomCard(this)" aria-expanded="false">' +
-      'View term prices <span class="rcard-chev">\u25be</span></button>' +
-    '<div class="rcard-body"><div class="rcard-rows">' +
-      '<div class="rcard-row"><span>1st Term</span><b>\u00a3' + esc(r.t1) + '</b></div>' +
-      '<div class="rcard-row"><span>2nd Term</span><b>\u00a3' + esc(r.t2) + '</b></div>' +
-      '<div class="rcard-row"><span>3rd Term</span><b>\u00a3' + esc(r.t3) + '</b></div>' +
-      '<div class="rcard-row total"><span>Total (11 months)</span><b>\u00a3' + esc(r.total) + '</b></div>' +
-      (total ? '<div class="rcard-row save"><span>Pay annually, save 5%</span><b>' + save + '</b></div>' : '') +
-    '</div></div>' +
+    '<div class="rc-face">' +
+      '<ul class="rc-feats">' + ticks + '</ul>' +
+      '<div class="rcard-body"><div class="rcard-rows">' +
+        '<div class="rcard-row"><span>1st Term</span><b>\u00a3' + esc(r.t1) + '</b></div>' +
+        '<div class="rcard-row"><span>2nd Term</span><b>\u00a3' + esc(r.t2) + '</b></div>' +
+        '<div class="rcard-row"><span>3rd Term</span><b>\u00a3' + esc(r.t3) + '</b></div>' +
+        '<div class="rcard-row total"><span>Total (11 months)</span><b>\u00a3' + esc(r.total) + '</b></div>' +
+        (total ? '<div class="rcard-row save"><span>Pay annually, save 5%</span><b>' + save + '</b></div>' : '') +
+      '</div></div>' +
+    '</div>' +
+    '<div class="rc-flip-hint"><span class="rc-hint-txt">View term prices</span>' +
+      '<span class="rcard-chev">\u25be</span></div>' +
     '<button class="btn btn-gold rc-cta" onclick="enquireAbout(\'' + esc(r.enq || r.name).replace(/'/g,"\\'") + '\')">Enquire</button>' +
   '</div>';
 }
@@ -9900,18 +10045,20 @@ function renderRoomCards(){
    ============================================================ */
 let roomCycle = 'monthly';
 
+const CYCLE_UNIT = { weekly:'/ week', monthly:'/ month', yearly:'/ year' };
+
 function setRoomCycle(cycle, btn){
   roomCycle = cycle;
-  document.querySelectorAll('.rc-amt').forEach(function(el){
-    const v = (cycle === 'weekly') ? el.dataset.weekly : el.dataset.monthly;
-    if(v !== undefined) el.textContent = '£' + v;
+  document.querySelectorAll('#studentPricing .rc-amt').forEach(function(el){
+    const v = el.dataset[cycle];
+    if(v) el.textContent = '£' + v;
   });
-  document.querySelectorAll('.rc-unit').forEach(function(el){
-    el.textContent = (cycle === 'weekly') ? '/ week' : '/ month';
+  document.querySelectorAll('#studentPricing .rc-unit').forEach(function(el){
+    el.textContent = CYCLE_UNIT[cycle] || '/ month';
   });
-  document.querySelectorAll('.rc-pw').forEach(function(el){
-    const v = (cycle === 'weekly') ? el.dataset.weekly : el.dataset.monthly;
-    if(v !== undefined) el.textContent = v;
+  document.querySelectorAll('#studentPricing .rc-pw').forEach(function(el){
+    const v = el.dataset[cycle];
+    if(v) el.textContent = v;
   });
   if(btn){
     const row = btn.parentElement;
@@ -9923,12 +10070,17 @@ function setRoomCycle(cycle, btn){
       });
     });
   }
+  /* the yearly figure already has the discount in it, so the saving pill
+     would be telling the visitor about a discount they are looking at */
+  document.querySelectorAll('#studentPricing .rc-save').forEach(function(el){
+    el.style.display = (cycle === 'yearly') ? 'none' : '';
+  });
 }
 
 /* Mark the cheapest room in each building. Computed from the weekly rate,
    so it is a statement of fact rather than a marketing claim. */
 function markBestValue(){
-  document.querySelectorAll('#studentPricing .rcard-grid').forEach(function(grid){
+  document.querySelectorAll('#studentPricing .rcard-grid, #ipswichPricing .rcard-grid').forEach(function(grid){
     let best = null, bestVal = Infinity;
     grid.querySelectorAll('.rcard').forEach(function(c){
       c.classList.remove('is-best');
@@ -9978,16 +10130,25 @@ function animateRoomPrices(){
     });
   }, { threshold: 0.35 });
 
-  document.querySelectorAll('#studentPricing .rc-amt').forEach(function(el){ io.observe(el); });
+  document.querySelectorAll('#studentPricing .rc-amt, #ipswichPricing .rc-amt').forEach(function(el){ io.observe(el); });
 }
 
 /* Spotlight that follows the pointer, plus photo cycling on hover. */
 function wireRoomCardEffects(){
   const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  document.querySelectorAll('#studentPricing .rcard').forEach(function(card){
+  document.querySelectorAll('#studentPricing .rcard, #ipswichPricing .rcard').forEach(function(card){
     if(card.dataset.wired) return;
     card.dataset.wired = '1';
+
+    card.addEventListener('click', function(e){
+      if(e.target.closest('.rc-cta') || e.target.closest('.rc-photo')) return;
+      toggleRoomCard(card);
+    });
+    card.setAttribute('tabindex','0');
+    card.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleRoomCard(card); }
+    });
 
     if(!card.querySelector('.rc-glow')){
       const g = document.createElement('div');
@@ -10146,21 +10307,29 @@ document.addEventListener('keydown', function(e){
    One open at a time within a building, so the grid does not
    grow unevenly when several are expanded.
    ============================================================ */
+/* Clicking anywhere on the card turns it over, except the Enquire button
+   and the photos, which have jobs of their own. */
 function toggleRoomCard(btn){
-  const card = btn.closest('.rcard');
+  const card = btn.closest ? btn.closest('.rcard') : btn;
   if(!card) return;
   const grid = card.closest('.rcard-grid');
   const wasOpen = card.classList.contains('open');
   if(grid){
     grid.querySelectorAll('.rcard.open').forEach(function(c){
       c.classList.remove('open');
-      const b = c.querySelector('.rcard-head');
-      if(b) b.setAttribute('aria-expanded','false');
+
     });
   }
-  if(!wasOpen){
-    card.classList.add('open');
-    btn.setAttribute('aria-expanded','true');
+  if(!wasOpen) card.classList.add('open');
+
+  /* keep the prompt honest about what the next click does */
+  if(grid){
+    grid.querySelectorAll('.rcard').forEach(function(c){
+      const t = c.querySelector('.rc-hint-txt');
+      if(t) t.textContent = c.classList.contains('open')
+        ? (c.dataset.backLabel || 'Back to details')
+        : (c.dataset.openLabel || 'View term prices');
+    });
   }
 }
 
