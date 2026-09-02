@@ -1723,6 +1723,92 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   .tour-bar.live i{animation:none;width:100%}
 }
 
+/* ══════════════════════════════════════════════════════════
+   REFERRAL SCHEME
+   ══════════════════════════════════════════════════════════ */
+.ref-wrap{
+  max-width:920px;margin:0 auto;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start;
+}
+@media(max-width:820px){.ref-wrap{grid-template-columns:1fr;gap:20px}}
+
+.ref-panel{
+  background:linear-gradient(165deg,rgba(20,13,52,.8),rgba(9,5,28,.82));
+  border:1px solid rgba(160,80,255,.28);
+  border-radius:18px;padding:28px 26px;
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:0 8px 30px rgba(0,0,0,.34);
+}
+.ref-steps{list-style:none;padding:0;margin:0}
+.ref-steps li{
+  display:flex;gap:14px;padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.ref-steps li:last-child{border-bottom:none;padding-bottom:0}
+.ref-num{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#7C3AED,#4F46E5);
+  color:#fff;font-size:.78rem;font-weight:800;
+}
+.ref-steps b{display:block;font-size:.9rem;color:#fff;margin-bottom:3px;font-weight:700}
+.ref-steps span{font-size:.83rem;line-height:1.6;color:rgba(255,255,255,.6)}
+
+.ref-reward{
+  margin-top:20px;padding:16px 18px;border-radius:12px;
+  background:linear-gradient(90deg,rgba(74,222,128,.16),rgba(74,222,128,.05));
+  border:1px solid rgba(74,222,128,.3);
+  font-size:.87rem;line-height:1.6;color:rgba(215,255,230,.92);
+}
+.ref-reward b{color:#4ade80}
+
+/* the generated code */
+.ref-code-box{
+  display:none;margin-top:18px;padding:22px;border-radius:14px;text-align:center;
+  background:linear-gradient(135deg,rgba(240,180,41,.16),rgba(240,180,41,.05));
+  border:1px dashed rgba(240,180,41,.5);
+  animation:refPop .45s cubic-bezier(.2,.8,.3,1);
+}
+.ref-code-box.on{display:block}
+@keyframes refPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.ref-code-lab{
+  font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-bottom:10px;
+}
+.ref-code{
+  font-size:1.6rem;font-weight:800;letter-spacing:.06em;
+  color:var(--gold-500);font-variant-numeric:tabular-nums;
+  word-break:break-all;line-height:1.2;
+}
+.ref-code-hint{font-size:.78rem;color:rgba(255,255,255,.5);margin-top:12px;line-height:1.6}
+.ref-copy{margin-top:14px}
+
+.ref-badge{
+  display:inline-block;font-size:.66rem;font-weight:800;
+  letter-spacing:.11em;text-transform:uppercase;
+  padding:6px 13px;border-radius:100px;margin-bottom:14px;
+  background:rgba(74,222,128,.16);border:1px solid rgba(74,222,128,.35);
+  color:#8ef0b0;
+}
+
+/* admin list */
+.ref-row{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:13px 15px;margin-bottom:9px;border-radius:11px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+}
+.ref-row code{
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:.78rem;color:var(--gold-500);font-weight:700;
+}
+.ref-pill{
+  font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;
+}
+.ref-pending{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.ref-applied{background:rgba(240,180,41,.2);color:var(--gold-400)}
+.ref-paid{background:rgba(74,222,128,.2);color:#4ade80}
+
 /* ── parents prompt on the student page ────────────────────── */
 .par-strip{
   max-width:820px;margin:0 auto;
@@ -3527,6 +3613,78 @@ if(document.readyState === 'loading'){
     </div>
     </section>
 
+  <!-- REFER A FRIEND -->
+  <section class="section bg-base" id="referSection" style="display:none">
+    <div class="sec-in">
+      <div class="sec-hd">
+        <div class="sec-tag">Refer a Friend</div>
+        <h2 class="sec-title">Know someone looking for a <span class="gold-text">room?</span></h2>
+        <p class="sec-sub">If you already live with us, pass your code to a friend. When they move in, we say thank you.</p>
+      </div>
+
+      <div class="ref-wrap">
+        <!-- how it works -->
+        <div class="ref-panel fade-in">
+          <span class="ref-badge" id="refBadge">For current residents</span>
+          <ol class="ref-steps">
+            <li><span class="ref-num">1</span><span><b>Get your code</b>
+              Fill in your name and building and we will create a code that belongs to you.</span></li>
+            <li><span class="ref-num">2</span><span><b>Send it to your friend</b>
+              Message it to them however you like — there is nothing for you to fill in on their behalf.</span></li>
+            <li><span class="ref-num">3</span><span><b>They enter it when applying</b>
+              There is a referral code box on the application form. That is all they need to do.</span></li>
+            <li><span class="ref-num">4</span><span><b>We take it from there</b>
+              Once they have signed, we will be in touch to arrange your reward.</span></li>
+          </ol>
+          <div class="ref-reward" id="refReward"></div>
+        </div>
+
+        <!-- get a code -->
+        <div class="ref-panel fade-in">
+          <h4 style="font-size:1rem;font-weight:700;margin:0 0 16px">Get your referral code</h4>
+
+          <div class="form-group">
+            <label class="form-label">Your full name *</label>
+            <input type="text" class="form-input" id="refName" placeholder="As it appears on your tenancy">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your building *</label>
+            <select class="form-input form-select" id="refBuilding">
+              <option value="">Choose…</option>
+              <option value="Forest Road House">Forest Road House</option>
+              <option value="Candan House">Candan House</option>
+              <option value="Greenstead House">Greenstead House</option>
+              <option value="154 Norwich Road, Ipswich">154 Norwich Road, Ipswich</option>
+              <option value="Private Rental">Private rental</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your email *</label>
+            <input type="email" class="form-input" id="refEmail" placeholder="So we can reach you about your reward">
+          </div>
+
+          <button class="btn btn-gold" style="width:100%" onclick="generateReferral()" id="refBtn">
+            Create my code
+          </button>
+
+          <div class="ref-code-box" id="refCodeBox">
+            <div class="ref-code-lab">Your referral code</div>
+            <div class="ref-code" id="refCode"></div>
+            <button class="btn btn-sm btn-ghost ref-copy" onclick="copyReferral()">📋 Copy code</button>
+            <p class="ref-code-hint">
+              Give this to your friend. They enter it on the application form under
+              “Referral code”. We have emailed you a copy too.
+            </p>
+          </div>
+
+          <p style="font-size:.73rem;color:rgba(255,255,255,.32);margin-top:14px;line-height:1.6">
+            We only ask for your details — never your friend's. They enter the code themselves when they apply.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FOR PARENTS -->
   <section class="section bg-dark" style="padding-top:20px;padding-bottom:20px">
     <div class="sec-in">
@@ -4543,6 +4701,7 @@ if(document.readyState === 'loading'){
       <div class="admin-tabs">
         <button class="admin-tab active" onclick="switchAdminTab('properties',this)">🏠 Properties</button>
         <button class="admin-tab" onclick="switchAdminTab('rooms',this)">🛏️ Rooms</button>
+        <button class="admin-tab" onclick="switchAdminTab('referrals',this)">🎁 Referrals</button>
         <button class="admin-tab" onclick="switchAdminTab('photos',this)">📸 Photos</button>
         <button class="admin-tab" onclick="switchAdminTab('team',this)">👥 Team</button>
         <button class="admin-tab" onclick="switchAdminTab('adverts',this)">📢 Adverts</button>
@@ -4679,6 +4838,51 @@ if(document.readyState === 'loading'){
                     style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)">Cancel</button>
           </div>
         </div>
+      </div>
+      <!-- ── REFERRALS ─────────────────────────────────────── -->
+      <div class="admin-tab-panel hidden" id="atab-referrals">
+        <p style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:18px">
+          The referral section stays hidden on the website until you set a reward below.
+          Every code generated, and every application that uses one, is emailed to
+          <strong>enquiries@forestrd.co.uk</strong> — so you do not have to check this page to catch them.
+        </p>
+
+        <div style="background:rgba(10,7,32,.8);border:1px solid rgba(160,80,255,.25);border-radius:14px;padding:22px;margin-bottom:26px">
+          <h4 style="font-size:.98rem;font-weight:700;margin:0 0 16px">Scheme settings</h4>
+
+          <div class="form-group">
+            <label class="form-label">
+              <input type="checkbox" class="form-input" id="refActive" style="margin-right:8px">
+              Show the referral section on the website
+            </label>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+            <div class="form-group">
+              <label class="form-label">What the referrer gets *</label>
+              <input type="text" class="form-input" id="refReward1" placeholder="e.g. £50 credited against your rent">
+            </div>
+            <div class="form-group">
+              <label class="form-label">What the friend gets (optional)</label>
+              <input type="text" class="form-input" id="refReward2" placeholder="e.g. £25 off their first month">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Conditions (optional)</label>
+            <input type="text" class="form-input" id="refTerms"
+                   placeholder="e.g. Paid once your friend has signed and moved in. Maximum three per year.">
+          </div>
+
+          <button class="btn btn-gold btn-sm" onclick="saveReferralSettings()">Save settings</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+          <h4 style="font-size:.98rem;font-weight:700;margin:0">Codes issued</h4>
+          <button class="btn btn-sm" onclick="exportReferrals()"
+                  style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)">⬇ Export CSV</button>
+        </div>
+        <div id="refAdminList"></div>
       </div>
       <div class="admin-tab-panel hidden" id="atab-photos">
         <p style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:16px">Select a property to view and manage its photos.</p>
@@ -6013,6 +6217,7 @@ function showPage(id){
   if(id === 'private') { renderPrivate(); }
   if(id === 'about')   { renderFeats('aboutFeatGrid', ABOUT_VALUES); }
   if(id === 'student' && typeof renderRoomCards === 'function') renderRoomCards();
+  if(id === 'student' && typeof renderReferralSection === 'function') renderReferralSection();
   if(id === 'ipswich' && typeof initRoomCards === 'function') setTimeout(initRoomCards, 40);
   if(id === 'student' && typeof initRoomCards === 'function') setTimeout(initRoomCards, 40);
   if(id === 'admin')   {
@@ -6981,6 +7186,7 @@ function showAdminDash(){
   setTimeout(function(){
     if(typeof fillRoomPhotoPicker === 'function') fillRoomPhotoPicker();
     if(typeof renderRoomAdmin === 'function') renderRoomAdmin();
+    if(typeof renderReferralAdmin === 'function') renderReferralAdmin();
   }, 60);
   document.getElementById('adminLogin').classList.add('hidden');
   document.getElementById('adminDash').classList.remove('hidden');
@@ -8083,6 +8289,7 @@ async function submitPrivateApp(e){
     {label:'Emergency Contact Details', value:gF('emergency_contact')},
     /* Additional (25) */
     {label:'Additional Information',    value:gF('additional_info')},
+    {label:'REFERRAL CODE',             value:gF('referral_code') || '\u2014'},
     /* Consents (26-28) */
     {label:'Declaration Confirmed',            value:gC('declaration')?'YES (ticked)':'NO'},
     {label:'Credit & Tracing Consent (Sch. C)', value:gC('credit_consent')?'YES (ticked)':'NO'},
@@ -10207,6 +10414,99 @@ function deletePano(key, i){
   }
 }
 
+
+/* ============================================================
+   ADMIN — REFERRALS
+   ============================================================ */
+function renderReferralAdmin(){
+  const c = refConfig();
+  const set = function(id, v){ const el = document.getElementById(id); if(el) el.value = v || ''; };
+  const chk = document.getElementById('refActive');
+  if(chk) chk.checked = !!c.active;
+  set('refReward1', c.reward);
+  set('refReward2', c.friendReward);
+  set('refTerms',   c.terms);
+
+  const list = loadReferrals();
+  const host = document.getElementById('refAdminList');
+  if(!host) return;
+  if(!list.length){
+    host.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:.85rem">No codes issued yet.</p>';
+    return;
+  }
+  host.innerHTML = list.map(function(r, i){
+    const cls = r.status === 'paid' ? 'ref-paid' : (r.status === 'applied' ? 'ref-applied' : 'ref-pending');
+    return '<div class="ref-row">' +
+      '<code>' + esc(r.code) + '</code>' +
+      '<span style="flex:1;min-width:150px;font-size:.85rem">' + esc(r.name) +
+        '<span style="color:rgba(255,255,255,.4);font-size:.76rem"> \u00b7 ' + esc(r.building) + '</span></span>' +
+      '<span style="font-size:.74rem;color:rgba(255,255,255,.4)">' +
+        new Date(r.created).toLocaleDateString('en-GB') + '</span>' +
+      '<span class="ref-pill ' + cls + '">' + esc(r.status) + '</span>' +
+      '<span style="display:flex;gap:5px">' +
+        '<button class="btn btn-sm" onclick="setReferralStatus(' + i + ',\'applied\')" style="background:rgba(240,180,41,.2);color:var(--gold-400);padding:5px 10px">Applied</button>' +
+        '<button class="btn btn-sm" onclick="setReferralStatus(' + i + ',\'paid\')" style="background:rgba(74,222,128,.2);color:#4ade80;padding:5px 10px">Paid</button>' +
+        '<button class="btn btn-sm" onclick="deleteReferral(' + i + ')" style="background:rgba(220,60,60,.22);color:#ff9a9a;padding:5px 9px">\ud83d\uddd1</button>' +
+      '</span></div>';
+  }).join('');
+}
+
+function saveReferralSettings(){
+  const reward = (document.getElementById('refReward1').value || '').trim();
+  const active = document.getElementById('refActive').checked;
+  if(active && !reward){
+    showToast('Set what the referrer gets before switching the scheme on','error');
+    return;
+  }
+  saveRefConfig({
+    active: active,
+    reward: reward,
+    friendReward: (document.getElementById('refReward2').value || '').trim(),
+    terms: (document.getElementById('refTerms').value || '').trim()
+  });
+  if(typeof renderReferralSection === 'function') renderReferralSection();
+  showToast(active ? 'Referral scheme is live on the site' : 'Settings saved \u2014 section hidden', 'success');
+}
+
+function setReferralStatus(i, status){
+  const list = loadReferrals();
+  if(!list[i]) return;
+  list[i].status = status;
+  saveReferrals(list);
+  renderReferralAdmin();
+}
+
+function deleteReferral(i){
+  const list = loadReferrals();
+  if(!list[i]) return;
+  if(!confirm('Delete the code ' + list[i].code + '?')) return;
+  list.splice(i,1);
+  saveReferrals(list);
+  renderReferralAdmin();
+  showToast('Code deleted','success');
+}
+
+/* A CSV so the record survives outside this browser, which matters while
+   the panel is still storing locally. */
+function exportReferrals(){
+  const list = loadReferrals();
+  if(!list.length){ showToast('Nothing to export yet','error'); return; }
+  const rows = [['Code','Name','Building','Email','Created','Status']].concat(
+    list.map(function(r){
+      return [r.code, r.name, r.building, r.email,
+              new Date(r.created).toLocaleString('en-GB'), r.status];
+    }));
+  const csv = rows.map(function(r){
+    return r.map(function(c){ return '"' + String(c == null ? '' : c).replace(/"/g,'""') + '"'; }).join(',');
+  }).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'referrals-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
 /* ============================================================
    ADMIN — ROOM PHOTO MANAGER
    Photos are stored per room card id. Uploads are resized in the
@@ -10833,6 +11133,128 @@ function initRoomCards(){
 
 
 
+
+
+/* ============================================================
+   REFERRAL SCHEME
+   Two-sided: the tenant gets a code, the friend enters it when
+   applying. Both events email the office, so nothing depends on
+   anyone remembering to open the admin panel.
+   ============================================================ */
+const REF_KEY = 'mi_referrals', REF_CFG = 'mi_referral_cfg';
+
+function refConfig(){
+  let c = {};
+  try{ c = JSON.parse(localStorage.getItem(REF_CFG) || '{}'); }catch(e){}
+  return Object.assign({ active:false, reward:'', friendReward:'', terms:'' }, c);
+}
+function saveRefConfig(c){
+  try{ localStorage.setItem(REF_CFG, JSON.stringify(c)); return true; }catch(e){ return false; }
+}
+function loadReferrals(){
+  try{ return JSON.parse(localStorage.getItem(REF_KEY) || '[]'); }catch(e){ return []; }
+}
+function saveReferrals(list){
+  try{ localStorage.setItem(REF_KEY, JSON.stringify(list)); return true; }
+  catch(e){ showToast('Could not save the referral locally','error'); return false; }
+}
+
+/* The section stays hidden until the reward has been set, so the site
+   never advertises a scheme with blank terms. */
+function renderReferralSection(){
+  const sec = document.getElementById('referSection');
+  if(!sec) return;
+  const c = refConfig();
+  if(!c.active || !c.reward){ sec.style.display = 'none'; return; }
+  sec.style.display = '';
+
+  const box = document.getElementById('refReward');
+  if(box){
+    box.innerHTML = '\ud83c\udf81 <b>' + esc(c.reward) + '</b>' +
+      (c.friendReward ? '<br>Your friend gets <b>' + esc(c.friendReward) + '</b> too.' : '') +
+      (c.terms ? '<br><span style="font-size:.78rem;color:rgba(255,255,255,.5)">' + esc(c.terms) + '</span>' : '');
+  }
+}
+
+/* Readable rather than random: the building and the name are visible in
+   the code, so a code in an inbox tells you who it belongs to. */
+function makeRefCode(name, building){
+  const b = {'Forest Road House':'FRH','Candan House':'CAN','Greenstead House':'GRN',
+             '154 Norwich Road, Ipswich':'IPS','Private Rental':'PRV'}[building] || 'MI';
+  const first = (name.trim().split(/\s+/)[0] || 'REF').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
+  const n = Math.floor(1000 + Math.random() * 9000);
+  return b + '-' + (first || 'REF') + '-' + n;
+}
+
+async function generateReferral(){
+  const name  = (document.getElementById('refName').value || '').trim();
+  const bldg  = document.getElementById('refBuilding').value;
+  const email = (document.getElementById('refEmail').value || '').trim();
+
+  if(!name || !bldg || !email){ showToast('Please fill in all three fields','error'); return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showToast('Please enter a valid email address','error'); return; }
+
+  const btn = document.getElementById('refBtn');
+  btn.textContent = 'Creating\u2026'; btn.disabled = true;
+
+  const code = makeRefCode(name, bldg);
+  const rec  = { code:code, name:name, building:bldg, email:email,
+                 created:new Date().toISOString(), status:'pending', friend:'' };
+
+  try{
+    const data = new FormData();
+    data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
+    data.append('subject', 'New referral code \u2014 ' + code);
+    data.append('from_name', 'Millennium Investments Website');
+    data.append('Referral code', code);
+    data.append('Resident', name);
+    data.append('Building', bldg);
+    data.append('Email', email);
+    data.append('Created', new Date().toLocaleString('en-GB'));
+    data.append('Note', 'This resident has generated a referral code. It will appear on any application that uses it.');
+    const res  = await fetch('https://api.web3forms.com/submit', {method:'POST', body:data});
+    const json = await res.json();
+    if(!json.success) throw new Error(json.message || 'send failed');
+  }catch(e){
+    /* the code still works even if the notification fails */
+    showToast('Code created, but we could not email a copy. Please note it down.','error');
+  }
+
+  const list = loadReferrals();
+  list.unshift(rec);
+  saveReferrals(list);
+
+  document.getElementById('refCode').textContent = code;
+  document.getElementById('refCodeBox').classList.add('on');
+  btn.textContent = 'Create another code'; btn.disabled = false;
+  showToast('Your referral code is ready', 'success');
+}
+
+function copyReferral(){
+  const code = document.getElementById('refCode').textContent;
+  if(!code) return;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(function(){ showToast('Code copied','success'); });
+  } else {
+    const t = document.createElement('textarea');
+    t.value = code; document.body.appendChild(t); t.select();
+    try{ document.execCommand('copy'); showToast('Code copied','success'); }catch(e){}
+    document.body.removeChild(t);
+  }
+}
+
+/* Called by the application form so the code travels with the application. */
+function referralForApplication(){
+  const el = document.getElementById('appReferralCode');
+  const v = el ? (el.value || '').trim().toUpperCase() : '';
+  if(!v) return null;
+  const match = loadReferrals().filter(function(r){ return r.code.toUpperCase() === v; })[0];
+  if(match){
+    match.status = 'applied';
+    saveReferrals(loadReferrals().map(function(r){ return r.code === match.code ? match : r; }));
+  }
+  return { code: v, referrer: match ? (match.name + ' (' + match.building + ')') : 'not recognised' };
+}
 
 /* Send parents straight to their section of Help rather than making them
    hunt for it among seventy other questions. */
@@ -12703,6 +13125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <label class="form-label">Anything else we should know?</label>
             <textarea name="additional_info" class="form-input form-textarea" placeholder="Specific requirements, accessibility needs, questions…"></textarea>
           </div>
+            <div class="form-group"><label class="form-label">Referral code <span style="font-weight:500;color:rgba(255,255,255,.4)">(optional)</span></label><input type="text" name="referral_code" class="form-input" placeholder="If a friend gave you a code, enter it here" style="text-transform:uppercase"></div>
         </div>
 
         <div class="form-row">
@@ -12908,6 +13331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="form-row full">
           <div class="form-group"><label class="form-label">Any requirements or questions?</label><textarea name="additional_info" class="form-input form-textarea" placeholder="Accessibility needs, parking, questions…"></textarea></div>
+            <div class="form-group"><label class="form-label">Referral code <span style="font-weight:500;color:rgba(255,255,255,.4)">(optional)</span></label><input type="text" name="referral_code" class="form-input" placeholder="If a friend gave you a code, enter it here" style="text-transform:uppercase"></div>
         </div>
 
         <div class="form-row">
