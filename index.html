@@ -1855,6 +1855,23 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
     padding-top:16px;width:100%}
 }
 
+/* The application card is light while the rest of the site is dark. These
+   sit after the base form rules and match their specificity, so any input
+   inside the card reads dark-on-white whatever is added later. */
+.wiz-card input.form-input:not([type="checkbox"]):not([type="radio"]),
+.wiz-card select.form-select,
+.wiz-card textarea.form-input,
+.wiz-card textarea.form-textarea{
+  background:#fff;color:#1a1a1a;
+}
+.wiz-card input.form-input::placeholder,
+.wiz-card textarea.form-input::placeholder,
+.wiz-card textarea.form-textarea::placeholder{color:#a8a099}
+.wiz-card select.form-select option{background:#fff;color:#1a1a1a}
+/* the referral validation line sits on the light card too */
+.wiz-card .ref-check.ok{color:#15803d}
+.wiz-card .ref-check.bad{color:#c53030}
+
 /* ── parents prompt on the student page ────────────────────── */
 .par-strip{
   max-width:820px;margin:0 auto;
@@ -2663,18 +2680,18 @@ textarea.form-input{
 .wiz-card .form-label{
   color:#3a3a3a;font-weight:600;font-size:.82rem;margin-bottom:6px;display:block
 }
-.wiz-card .form-input,.wiz-card .form-select,.wiz-card .form-textarea{
+.wiz-card .form-input:not([type="checkbox"]):not([type="radio"]),.wiz-card .form-select,.wiz-card .form-textarea{
   background:#fff;border:1.5px solid #d8d0bc;color:#1a1a1a;
   border-radius:8px;padding:11px 14px;font-size:.9rem;transition:border-color .2s,box-shadow .2s;
   width:100%;font-family:inherit
 }
-.wiz-card .form-input:hover,.wiz-card .form-select:hover,.wiz-card .form-textarea:hover{
+.wiz-card .form-input:not([type="checkbox"]):not([type="radio"]):hover,.wiz-card .form-select:hover,.wiz-card .form-textarea:hover{
   border-color:#c8b878
 }
-.wiz-card .form-input:focus,.wiz-card .form-select:focus,.wiz-card .form-textarea:focus{
+.wiz-card .form-input:not([type="checkbox"]):not([type="radio"]):focus,.wiz-card .form-select:focus,.wiz-card .form-textarea:focus{
   outline:none;border-color:#F0B429;box-shadow:0 0 0 3px rgba(240,180,41,0.18)
 }
-.wiz-card .form-input::placeholder{color:#a8a099}
+.wiz-card .form-input::placeholder,.wiz-card .form-textarea::placeholder{color:#a8a099}
 .wiz-card .form-textarea{min-height:80px;resize:vertical}
 .wiz-card .form-input[type="file"]{padding:8px;background:#faf7ec;border-style:dashed}
 .wiz-card .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
