@@ -1809,6 +1809,52 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .ref-applied{background:rgba(240,180,41,.2);color:var(--gold-400)}
 .ref-paid{background:rgba(74,222,128,.2);color:#4ade80}
 
+.ref-check{display:block;font-size:.78rem;line-height:1.5;margin-top:7px;min-height:1em}
+.ref-check.ok{color:#4ade80}
+.ref-check.bad{color:#ff9a9a}
+
+/* ── refer a friend: banner across the top of the section ──── */
+.ref-hero{
+  max-width:920px;margin:0 auto 26px;
+  display:flex;align-items:center;gap:26px;flex-wrap:wrap;
+  padding:26px 30px;border-radius:20px;
+  background:
+    radial-gradient(120% 160% at 12% 0%,rgba(74,222,128,.16),transparent 58%),
+    linear-gradient(120deg,rgba(124,58,237,.22),rgba(240,180,41,.1));
+  border:1px solid rgba(74,222,128,.28);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:0 10px 40px rgba(0,0,0,.35);
+}
+.ref-hero-ico{
+  flex-shrink:0;width:60px;height:60px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+  background:linear-gradient(135deg,rgba(74,222,128,.28),rgba(240,180,41,.18));
+  border:1px solid rgba(74,222,128,.35);
+}
+.ref-hero-txt{flex:1;min-width:230px}
+.ref-hero-txt h3{font-size:1.35rem;font-weight:800;margin:0 0 7px;line-height:1.3;color:#fff}
+.ref-hero-txt p{font-size:.9rem;line-height:1.6;color:rgba(255,255,255,.65);margin:0}
+.ref-hero-amt{
+  flex-shrink:0;text-align:center;padding-left:26px;
+  border-left:1px solid rgba(255,255,255,.14);
+}
+.ref-hero-amt .n{
+  display:block;font-size:2.3rem;font-weight:800;line-height:1;
+  background:linear-gradient(180deg,#a6f5c4,#4ade80);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:#4ade80;
+  filter:drop-shadow(0 2px 6px rgba(74,222,128,.35));
+}
+.ref-hero-amt .l{
+  display:block;font-size:.68rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:6px;
+}
+@media(max-width:700px){
+  .ref-hero{padding:22px;gap:18px;text-align:center;justify-content:center}
+  .ref-hero-amt{padding-left:0;border-left:none;border-top:1px solid rgba(255,255,255,.14);
+    padding-top:16px;width:100%}
+}
+
 /* ── parents prompt on the student page ────────────────────── */
 .par-strip{
   max-width:820px;margin:0 auto;
@@ -3622,6 +3668,16 @@ if(document.readyState === 'loading'){
         <p class="sec-sub">If you already live with us, pass your code to a friend. When they move in, we say thank you.</p>
       </div>
 
+      <div class="ref-hero fade-in" id="refHero">
+        <span class="ref-hero-ico">🎁</span>
+        <span class="ref-hero-txt">
+          <h3 id="refHeroTitle">Recommend us to a friend</h3>
+          <p id="refHeroSub">You already know what living here is like. If a friend is looking for a room,
+             pass them your code — and we will say thank you properly.</p>
+        </span>
+        <span class="ref-hero-amt" id="refHeroAmt"></span>
+      </div>
+
       <div class="ref-wrap">
         <!-- how it works -->
         <div class="ref-panel fade-in">
@@ -4848,7 +4904,14 @@ if(document.readyState === 'loading'){
         </p>
 
         <div style="background:rgba(10,7,32,.8);border:1px solid rgba(160,80,255,.25);border-radius:14px;padding:22px;margin-bottom:26px">
-          <h4 style="font-size:.98rem;font-weight:700;margin:0 0 16px">Scheme settings</h4>
+          <h4 style="font-size:.98rem;font-weight:700;margin:0 0 6px">Scheme settings</h4>
+          <p style="font-size:.8rem;line-height:1.6;color:rgba(255,220,150,.75);margin:0 0 16px;
+                    padding:10px 13px;border-radius:9px;
+                    background:rgba(240,180,41,.09);border:1px solid rgba(240,180,41,.24)">
+            \u26a0 These amounts are a <strong>suggestion, not a decision</strong> \u2014 \u00a350 to the referrer
+            and \u00a325 to the friend. Confirm or change them before the site goes live, since they appear
+            publicly as an offer.
+          </p>
 
           <div class="form-group">
             <label class="form-label">
@@ -4875,6 +4938,30 @@ if(document.readyState === 'loading'){
           </div>
 
           <button class="btn btn-gold btn-sm" onclick="saveReferralSettings()">Save settings</button>
+        </div>
+
+        <div style="background:rgba(10,7,32,.8);border:1px solid rgba(160,80,255,.25);border-radius:14px;padding:22px;margin-bottom:26px">
+          <h4 style="font-size:.98rem;font-weight:700;margin:0 0 6px">Issue a code yourself</h4>
+          <p style="font-size:.8rem;color:rgba(255,255,255,.45);margin:0 0 16px">
+            For anyone who has hit the two-a-month limit, or who would rather ask in person.
+            Codes issued here bypass the limit and are marked verified.
+          </p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px">
+            <div class="form-group"><label class="form-label">Name *</label>
+              <input type="text" class="form-input" id="mrefName" placeholder="Their full name"></div>
+            <div class="form-group"><label class="form-label">Building *</label>
+              <select class="form-input form-select" id="mrefBuilding">
+                <option value="Forest Road House">Forest Road House</option>
+                <option value="Candan House">Candan House</option>
+                <option value="Greenstead House">Greenstead House</option>
+                <option value="154 Norwich Road, Ipswich">154 Norwich Road, Ipswich</option>
+                <option value="Private Rental">Private rental</option>
+              </select></div>
+            <div class="form-group"><label class="form-label">Email</label>
+              <input type="email" class="form-input" id="mrefEmail" placeholder="Optional"></div>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="issueReferralManually()">+ Issue code</button>
+          <span id="mrefOut" style="margin-left:12px;font-size:.9rem;font-weight:800;color:var(--gold-500)"></span>
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
@@ -8289,7 +8376,19 @@ async function submitPrivateApp(e){
     {label:'Emergency Contact Details', value:gF('emergency_contact')},
     /* Additional (25) */
     {label:'Additional Information',    value:gF('additional_info')},
-    {label:'REFERRAL CODE',             value:gF('referral_code') || '\u2014'},
+    {label:'REFERRAL CODE',             value:(function(){
+        const r = (typeof referralForApplication === 'function') ? referralForApplication() : null;
+        return r ? r.code : '\u2014';
+      })()},
+    {label:'REFERRED BY',               value:(function(){
+        const r = (typeof referralForApplication === 'function') ? referralForApplication() : null;
+        if(!r) return '\u2014';
+        /* spend the code only when the application is actually sent */
+        if(r.valid && typeof refConsume === 'function'){
+          refConsume(r.code, gF('full_name') || gF('first_name') || 'Applicant', gF('email') || '');
+        }
+        return r.detail;
+      })()},
     /* Consents (26-28) */
     {label:'Declaration Confirmed',            value:gC('declaration')?'YES (ticked)':'NO'},
     {label:'Credit & Tracing Consent (Sch. C)', value:gC('credit_consent')?'YES (ticked)':'NO'},
@@ -10415,6 +10514,90 @@ function deletePano(key, i){
 }
 
 
+
+/* ============================================================
+   REFERRAL INTEGRITY
+   Three rules, enforced in one place so the application form and
+   the admin panel cannot disagree:
+     - a code works once and once only
+     - two codes per person per calendar month
+     - a code can be suspended without deleting the record
+   ============================================================ */
+const REF_MONTHLY_CAP = 2;
+
+function refFind(code){
+  const v = String(code || '').trim().toUpperCase();
+  if(!v) return null;
+  return loadReferrals().filter(function(r){ return r.code.toUpperCase() === v; })[0] || null;
+}
+
+/* One place that decides whether a code may be used, so the form and the
+   submit handler can never reach different conclusions. */
+function refCheck(code){
+  const v = String(code || '').trim().toUpperCase();
+  if(!v) return {ok:true, empty:true, msg:''};
+  const r = refFind(v);
+  if(!r)            return {ok:false, msg:'That code was not recognised. Please check it with your friend.'};
+  if(r.suspended)   return {ok:false, msg:'That code is no longer active. Please contact the office.'};
+  if(r.usedBy)      return {ok:false, msg:'That code has already been used. Each code works once only.'};
+  return {ok:true, rec:r, msg:'Referred by ' + r.name + ' at ' + r.building + '.'};
+}
+
+/* How many codes this person has taken out in the current calendar month.
+   Counted on email, since that is the one thing they have to give us. */
+function refCountThisMonth(email){
+  const e = String(email || '').trim().toLowerCase();
+  const now = new Date();
+  return loadReferrals().filter(function(r){
+    if(String(r.email || '').toLowerCase() !== e) return false;
+    const d = new Date(r.created);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  }).length;
+}
+
+/* Marks the code as spent. Called when an application is actually sent,
+   not when the box is filled in, so an abandoned form does not burn it. */
+function refConsume(code, applicantName, applicantEmail){
+  const r = refFind(code);
+  if(!r || r.usedBy || r.suspended) return null;
+  const list = loadReferrals().map(function(x){
+    if(x.code === r.code){
+      x.usedBy    = applicantName || 'Applicant';
+      x.usedEmail = applicantEmail || '';
+      x.usedAt    = new Date().toISOString();
+      x.status    = 'applied';
+    }
+    return x;
+  });
+  saveReferrals(list);
+  return refFind(code);
+}
+
+/* Live feedback under the referral box on the application form. */
+function validateReferralField(input){
+  const box = input.parentElement.querySelector('.ref-check');
+  const res = refCheck(input.value);
+  if(!box) return res;
+  if(res.empty){ box.textContent = ''; box.className = 'ref-check'; return res; }
+  box.textContent = res.msg;
+  box.className = 'ref-check ' + (res.ok ? 'ok' : 'bad');
+  return res;
+}
+
+/* What the application email should say about the referral. */
+function referralForApplication(){
+  const el = document.querySelector('input[name="referral_code"]');
+  const v  = el ? (el.value || '').trim().toUpperCase() : '';
+  if(!v) return null;
+  const res = refCheck(v);
+  if(!res.ok) return { code:v, valid:false, detail:'INVALID \u2014 ' + res.msg };
+  const r = res.rec;
+  return {
+    code: v, valid: true, rec: r,
+    detail: r.name + ' \u2014 ' + r.building + ' \u2014 ' + r.email
+  };
+}
+
 /* ============================================================
    ADMIN — REFERRALS
    ============================================================ */
@@ -10436,19 +10619,56 @@ function renderReferralAdmin(){
   }
   host.innerHTML = list.map(function(r, i){
     const cls = r.status === 'paid' ? 'ref-paid' : (r.status === 'applied' ? 'ref-applied' : 'ref-pending');
-    return '<div class="ref-row">' +
+    return '<div class="ref-row"' + (r.suspended ? ' style="opacity:.55"' : '') + '>' +
       '<code>' + esc(r.code) + '</code>' +
-      '<span style="flex:1;min-width:150px;font-size:.85rem">' + esc(r.name) +
-        '<span style="color:rgba(255,255,255,.4);font-size:.76rem"> \u00b7 ' + esc(r.building) + '</span></span>' +
+      '<span style="flex:1;min-width:170px;font-size:.85rem">' + esc(r.name) +
+        '<span style="color:rgba(255,255,255,.4);font-size:.76rem"> \u00b7 ' + esc(r.building) + '</span>' +
+        (r.verified ? '<span style="color:#4ade80;font-size:.7rem"> \u2713 issued in person</span>' : '') +
+        (r.usedBy ? '<br><span style="color:rgba(255,255,255,.45);font-size:.75rem">Used by ' +
+          esc(r.usedBy) + ' on ' + new Date(r.usedAt).toLocaleDateString('en-GB') + '</span>' : '') +
+      '</span>' +
       '<span style="font-size:.74rem;color:rgba(255,255,255,.4)">' +
         new Date(r.created).toLocaleDateString('en-GB') + '</span>' +
-      '<span class="ref-pill ' + cls + '">' + esc(r.status) + '</span>' +
+      '<span class="ref-pill ' + cls + '">' + (r.suspended ? 'suspended' : esc(r.status)) + '</span>' +
       '<span style="display:flex;gap:5px">' +
-        '<button class="btn btn-sm" onclick="setReferralStatus(' + i + ',\'applied\')" style="background:rgba(240,180,41,.2);color:var(--gold-400);padding:5px 10px">Applied</button>' +
         '<button class="btn btn-sm" onclick="setReferralStatus(' + i + ',\'paid\')" style="background:rgba(74,222,128,.2);color:#4ade80;padding:5px 10px">Paid</button>' +
+        '<button class="btn btn-sm" onclick="toggleReferralSuspend(' + i + ')" style="background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);padding:5px 10px">' +
+          (r.suspended ? 'Restore' : 'Suspend') + '</button>' +
         '<button class="btn btn-sm" onclick="deleteReferral(' + i + ')" style="background:rgba(220,60,60,.22);color:#ff9a9a;padding:5px 9px">\ud83d\uddd1</button>' +
       '</span></div>';
   }).join('');
+}
+
+
+function issueReferralManually(){
+  const name  = (document.getElementById('mrefName').value || '').trim();
+  const bldg  = document.getElementById('mrefBuilding').value;
+  const email = (document.getElementById('mrefEmail').value || '').trim();
+  if(!name){ showToast('Enter a name','error'); return; }
+
+  const code = makeRefCode(name, bldg);
+  const list = loadReferrals();
+  list.unshift({ code:code, name:name, building:bldg, email:email,
+                 created:new Date().toISOString(), status:'pending',
+                 usedBy:'', usedEmail:'', usedAt:'', suspended:false,
+                 verified:true, source:'office' });
+  saveReferrals(list);
+  document.getElementById('mrefOut').textContent = code;
+  document.getElementById('mrefName').value = '';
+  document.getElementById('mrefEmail').value = '';
+  renderReferralAdmin();
+  showToast('Code ' + code + ' issued','success');
+}
+
+/* Suspending keeps the record but stops the code working \u2014 better than
+   deleting when something looks wrong and you want to look into it. */
+function toggleReferralSuspend(i){
+  const list = loadReferrals();
+  if(!list[i]) return;
+  list[i].suspended = !list[i].suspended;
+  saveReferrals(list);
+  renderReferralAdmin();
+  showToast(list[i].suspended ? 'Code suspended' : 'Code restored','success');
 }
 
 function saveReferralSettings(){
@@ -10491,10 +10711,12 @@ function deleteReferral(i){
 function exportReferrals(){
   const list = loadReferrals();
   if(!list.length){ showToast('Nothing to export yet','error'); return; }
-  const rows = [['Code','Name','Building','Email','Created','Status']].concat(
+  const rows = [['Code','Name','Building','Email','Created','Status','Used by','Used on','Suspended','Issued']].concat(
     list.map(function(r){
       return [r.code, r.name, r.building, r.email,
-              new Date(r.created).toLocaleString('en-GB'), r.status];
+              new Date(r.created).toLocaleString('en-GB'), r.status,
+              r.usedBy || '', r.usedAt ? new Date(r.usedAt).toLocaleString('en-GB') : '',
+              r.suspended ? 'yes' : 'no', r.source || 'website'];
     }));
   const csv = rows.map(function(r){
     return r.map(function(c){ return '"' + String(c == null ? '' : c).replace(/"/g,'""') + '"'; }).join(',');
@@ -11143,10 +11365,20 @@ function initRoomCards(){
    ============================================================ */
 const REF_KEY = 'mi_referrals', REF_CFG = 'mi_referral_cfg';
 
+/* Pre-filled with a suggested scheme so the section is live and testable.
+   These are a starting point, not a decision — change or switch them off in
+   Admin \u2192 Referrals, and whatever is saved there wins from then on. */
+const REF_DEFAULTS = {
+  active: true,
+  reward: '\u00a350 off your rent',
+  friendReward: '\u00a325 off their first month',
+  terms: 'Paid once your friend has signed and their first month\u2019s rent has cleared. Two codes per person per month.'
+};
+
 function refConfig(){
-  let c = {};
-  try{ c = JSON.parse(localStorage.getItem(REF_CFG) || '{}'); }catch(e){}
-  return Object.assign({ active:false, reward:'', friendReward:'', terms:'' }, c);
+  let c = null;
+  try{ c = JSON.parse(localStorage.getItem(REF_CFG) || 'null'); }catch(e){}
+  return Object.assign({}, REF_DEFAULTS, c || {});
 }
 function saveRefConfig(c){
   try{ localStorage.setItem(REF_CFG, JSON.stringify(c)); return true; }catch(e){ return false; }
@@ -11170,9 +11402,25 @@ function renderReferralSection(){
 
   const box = document.getElementById('refReward');
   if(box){
-    box.innerHTML = '\ud83c\udf81 <b>' + esc(c.reward) + '</b>' +
+    box.innerHTML = '\ud83c\udf81 You get <b>' + esc(c.reward) + '</b>' +
       (c.friendReward ? '<br>Your friend gets <b>' + esc(c.friendReward) + '</b> too.' : '') +
       (c.terms ? '<br><span style="font-size:.78rem;color:rgba(255,255,255,.5)">' + esc(c.terms) + '</span>' : '');
+  }
+
+  /* pull the headline figure out of the reward text for the banner, so the
+     number reads large without asking Alex to type it twice */
+  const amt = document.getElementById('refHeroAmt');
+  if(amt){
+    const m = String(c.reward).match(/\u00a3\s?[\d,]+(?:\.\d{2})?/);
+    amt.innerHTML = m
+      ? '<span class="n">' + m[0].replace(/\s/g,'') + '</span><span class="l">Thank you</span>'
+      : '<span class="n">\ud83c\udf1f</span><span class="l">Thank you</span>';
+  }
+  const sub = document.getElementById('refHeroSub');
+  if(sub && c.friendReward){
+    sub.innerHTML = 'You already know what living here is like. If a friend is looking for a room, ' +
+      'pass them your code \u2014 you get <b style="color:#4ade80">' + esc(c.reward) +
+      '</b> and they get <b style="color:#4ade80">' + esc(c.friendReward) + '</b>.';
   }
 }
 
@@ -11197,9 +11445,28 @@ async function generateReferral(){
   const btn = document.getElementById('refBtn');
   btn.textContent = 'Creating\u2026'; btn.disabled = true;
 
+  /* Two per person per calendar month. Beyond that we ask them to come in,
+     which is both a fraud check and a conversation worth having. */
+  if(refCountThisMonth(email) >= REF_MONTHLY_CAP){
+    btn.textContent = 'Create my code'; btn.disabled = false;
+    showToast('You have already taken two codes this month \u2014 please pop into the office for another.','error');
+    const box = document.getElementById('refCodeBox');
+    box.classList.add('on');
+    document.getElementById('refCode').textContent = 'Please visit us';
+    document.querySelector('#refCodeBox .ref-code-hint').innerHTML =
+      'We limit codes to <b>two per month</b> so the scheme stays fair.<br><br>' +
+      'For a third, come and see us at Forest Road House, Monday to Saturday 9am\u20136pm, ' +
+      'or call <b>01206 500202</b>. We are happy to issue one \u2014 it just needs doing in person.';
+    const cp = document.querySelector('#refCodeBox .ref-copy');
+    if(cp) cp.style.display = 'none';
+    return;
+  }
+
   const code = makeRefCode(name, bldg);
   const rec  = { code:code, name:name, building:bldg, email:email,
-                 created:new Date().toISOString(), status:'pending', friend:'' };
+                 created:new Date().toISOString(), status:'pending',
+                 usedBy:'', usedEmail:'', usedAt:'', suspended:false,
+                 verified:false, source:'website' };
 
   try{
     const data = new FormData();
@@ -11224,6 +11491,8 @@ async function generateReferral(){
   list.unshift(rec);
   saveReferrals(list);
 
+  const cp = document.querySelector('#refCodeBox .ref-copy');
+  if(cp) cp.style.display = '';
   document.getElementById('refCode').textContent = code;
   document.getElementById('refCodeBox').classList.add('on');
   btn.textContent = 'Create another code'; btn.disabled = false;
@@ -11243,18 +11512,7 @@ function copyReferral(){
   }
 }
 
-/* Called by the application form so the code travels with the application. */
-function referralForApplication(){
-  const el = document.getElementById('appReferralCode');
-  const v = el ? (el.value || '').trim().toUpperCase() : '';
-  if(!v) return null;
-  const match = loadReferrals().filter(function(r){ return r.code.toUpperCase() === v; })[0];
-  if(match){
-    match.status = 'applied';
-    saveReferrals(loadReferrals().map(function(r){ return r.code === match.code ? match : r; }));
-  }
-  return { code: v, referrer: match ? (match.name + ' (' + match.building + ')') : 'not recognised' };
-}
+
 
 /* Send parents straight to their section of Help rather than making them
    hunt for it among seventy other questions. */
@@ -13125,7 +13383,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <label class="form-label">Anything else we should know?</label>
             <textarea name="additional_info" class="form-input form-textarea" placeholder="Specific requirements, accessibility needs, questions…"></textarea>
           </div>
-            <div class="form-group"><label class="form-label">Referral code <span style="font-weight:500;color:rgba(255,255,255,.4)">(optional)</span></label><input type="text" name="referral_code" class="form-input" placeholder="If a friend gave you a code, enter it here" style="text-transform:uppercase"></div>
+            <div class="form-group"><label class="form-label">Referral code <span style="font-weight:500;color:rgba(255,255,255,.4)">(optional)</span></label><input type="text" name="referral_code" class="form-input" placeholder="If a friend gave you a code, enter it here" style="text-transform:uppercase" oninput="validateReferralField(this)" onblur="validateReferralField(this)"><span class="ref-check"></span></div>
         </div>
 
         <div class="form-row">
@@ -13331,7 +13589,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="form-row full">
           <div class="form-group"><label class="form-label">Any requirements or questions?</label><textarea name="additional_info" class="form-input form-textarea" placeholder="Accessibility needs, parking, questions…"></textarea></div>
-            <div class="form-group"><label class="form-label">Referral code <span style="font-weight:500;color:rgba(255,255,255,.4)">(optional)</span></label><input type="text" name="referral_code" class="form-input" placeholder="If a friend gave you a code, enter it here" style="text-transform:uppercase"></div>
+            <div class="form-group"><label class="form-label">Referral code <span style="font-weight:500;color:rgba(255,255,255,.4)">(optional)</span></label><input type="text" name="referral_code" class="form-input" placeholder="If a friend gave you a code, enter it here" style="text-transform:uppercase" oninput="validateReferralField(this)" onblur="validateReferralField(this)"><span class="ref-check"></span></div>
         </div>
 
         <div class="form-row">
