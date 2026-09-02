@@ -1516,7 +1516,8 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   opacity:0;transition:opacity .35s ease;
 }
 .rcard:hover .rc-glow{opacity:1}
-.rcard > *:not(.rc-glow){position:relative;z-index:1}
+.rcard > *:not(.rc-glow):not(.rc-best){position:relative;z-index:1}
+.rcard > .rc-best{position:absolute}
 
 /* ── best value ────────────────────────────────────────────── */
 .rc-best{
@@ -1565,17 +1566,26 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 
 /* ── room photos on the price cards ────────────────────────── */
 .rc-photos{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:5px;
+  display:grid;gap:5px;
   margin:-28px -22px 18px;padding:0;
 }
+/* The first photo spans the full width; the remainder share one row
+   beneath it. So the column count is (photos - 1), otherwise the row
+   is short of tiles and leaves a hole. */
 .rc-photos.n1{grid-template-columns:1fr}
-.rc-photos.n2{grid-template-columns:repeat(2,1fr)}
-.rc-photos.n3{grid-template-columns:repeat(3,1fr)}
+.rc-photos.n2{grid-template-columns:1fr}
+.rc-photos.n3{grid-template-columns:repeat(2,1fr)}
+.rc-photos.n4{grid-template-columns:repeat(3,1fr)}
+.rc-photos.n5{grid-template-columns:repeat(4,1fr)}
 .rc-photo{
   position:relative;overflow:hidden;cursor:pointer;
   aspect-ratio:4/3;background:rgba(255,255,255,.04);border:none;padding:0;
 }
+/* a card with photos starts at the image, so drop the top padding */
+.rcard:has(.rc-photos){padding-top:0}
+.rc-photos .rc-photo:first-child{border-radius:17px 17px 0 0}
 .rc-photos .rc-photo:first-child{grid-column:1/-1;aspect-ratio:16/9}
+.rc-photos.n1 .rc-photo:first-child{aspect-ratio:4/3}
 .rc-photo img{
   width:100%;height:100%;object-fit:cover;display:block;
   transition:transform .5s cubic-bezier(.2,.8,.3,1), filter .3s ease;
@@ -10064,9 +10074,9 @@ function renderRoomPhotos(){
     if(existing) existing.remove();
     if(!shots || !shots.length) return;
 
-    const show = shots.slice(0,4);
+    const show = shots.slice(0,5);
     const wrap = document.createElement('div');
-    wrap.className = 'rc-photos n' + Math.min(show.length,4);
+    wrap.className = 'rc-photos n' + Math.min(show.length,5);
     show.forEach(function(ph, i){
       const b = document.createElement('button');
       b.className = 'rc-photo';
