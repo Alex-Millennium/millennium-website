@@ -1601,6 +1601,11 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   display:flex;align-items:center;gap:7px;
 }
 .rc-save b{color:#4ade80;font-weight:800}
+.rc-save.is-applied{
+  background:linear-gradient(90deg,rgba(74,222,128,.2),rgba(74,222,128,.07));
+  border-color:rgba(74,222,128,.45);
+  color:rgba(210,255,225,.95);
+}
 .rcard-row.save span{color:rgba(190,255,215,.75)}
 .rcard-row.save b{color:#4ade80}
 
@@ -1616,6 +1621,92 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
   backdrop-filter:blur(6px);pointer-events:none;
 }
 .rcard:hover .rc-photos .rc-photo:first-child::after{opacity:1;transform:none}
+
+/* ── EPC band, shown only when a rating has been entered ───── */
+.rc-epc{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:10px;font-size:.72rem;font-weight:600;
+  color:rgba(255,255,255,.5);letter-spacing:.02em;
+}
+.rc-epc-band{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:24px;height:22px;padding:0 7px;border-radius:5px;
+  font-size:.76rem;font-weight:800;color:#06210f;
+}
+.epc-a{background:#00a651}.epc-b{background:#4cb847}
+.epc-c{background:#bfd730}.epc-d{background:#fff200;}
+.epc-e{background:#fcb61a}.epc-f{background:#f37021;color:#fff}
+.epc-g{background:#ed1c24;color:#fff}
+
+/* ── guided tour ───────────────────────────────────────────── */
+.tour-btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  width:100%;margin-top:12px;cursor:pointer;
+  border:1px solid rgba(160,80,255,.35);
+  background:rgba(124,58,237,.15);
+  color:rgba(255,255,255,.8);
+  border-radius:10px;padding:9px 12px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.76rem;font-weight:700;transition:var(--trans);
+}
+.tour-btn:hover{background:rgba(124,58,237,.32);border-color:rgba(160,80,255,.6);color:#fff}
+
+.tour{
+  position:fixed;inset:0;z-index:420;display:none;
+  background:#05030f;
+}
+.tour.open{display:block}
+.tour-stage{position:absolute;inset:0;overflow:hidden}
+.tour-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;opacity:0;
+  transition:opacity 1s ease, transform 7s linear;
+  transform:scale(1.06);
+}
+.tour-img.on{opacity:1;transform:scale(1.14)}
+.tour-shade{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,3,15,.72) 0%,transparent 26%,
+             transparent 52%,rgba(5,3,15,.86) 100%);
+}
+.tour-cap{
+  position:absolute;left:0;right:0;bottom:76px;text-align:center;padding:0 24px;
+}
+.tour-cap h4{font-size:1.5rem;font-weight:800;margin:0 0 6px;color:#fff}
+.tour-cap p{font-size:.9rem;color:rgba(255,255,255,.68);margin:0}
+.tour-top{
+  position:absolute;top:0;left:0;right:0;padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.tour-title{font-size:.95rem;font-weight:700;color:#fff}
+.tour-x{
+  width:40px;height:40px;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
+  color:#fff;font-size:1rem;
+}
+.tour-x:hover{background:rgba(255,255,255,.24)}
+.tour-bars{position:absolute;top:0;left:0;right:0;display:flex;gap:4px;padding:10px 14px 0}
+.tour-bar{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
+.tour-bar i{display:block;height:100%;width:0;background:var(--gold-500)}
+.tour-bar.done i{width:100%}
+.tour-bar.live i{animation:tourFill 4.6s linear forwards}
+@keyframes tourFill{from{width:0}to{width:100%}}
+.tour-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:46px;height:46px;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:1.3rem;
+}
+.tour-prev{left:18px}.tour-next{right:18px}
+.tour-foot{
+  position:absolute;bottom:20px;left:0;right:0;
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:0 20px;
+}
+@media(prefers-reduced-motion:reduce){
+  .tour-img{transition:opacity .3s ease;transform:none}
+  .tour-img.on{transform:none}
+  .tour-bar.live i{animation:none;width:100%}
+}
 
 /* ── room photos on the price cards ────────────────────────── */
 .rc-photos{
@@ -3255,6 +3346,7 @@ if(document.readyState === 'loading'){
     <div class="sec-in">
       <div class="sec-hd">
         <h2 class="sec-title">Transparent <span class="gold-text">Pricing</span></h2>
+        <p class="sec-sub">Rent is payable monthly. Termly and annual payment are optional alternatives you can choose if they suit you better — they are never a condition of the tenancy.</p>
       </div>
 
             <!-- Tab buttons -->
@@ -4306,6 +4398,16 @@ if(document.readyState === 'loading'){
               <label class="form-label">Total, 11 months (£)</label>
               <input type="text" class="form-input" id="roomFTotal" placeholder="4,620">
             </div>
+            <div class="form-group">
+              <label class="form-label">EPC rating</label>
+              <select class="form-input form-select" id="roomFEpc">
+                <option value="">Not set — hidden on the card</option>
+                <option value="A">A</option><option value="B">B</option>
+                <option value="C">C</option><option value="D">D</option>
+                <option value="E">E</option><option value="F">F</option>
+                <option value="G">G</option>
+              </select>
+            </div>
           </div>
 
           <p style="font-size:.75rem;color:rgba(255,255,255,.35);margin:-4px 0 14px">
@@ -4734,9 +4836,9 @@ if(document.readyState === 'loading'){
 
         <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay for broadband or internet?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>No, this is fully included in the rent.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you tell me more about the rent-free 12th month offer?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The rent-free 12th month is a loyalty bonus available to returning students who sign for the next academic year. It applies to termly paying students only — if you stay with us and renew your tenancy for the following academic year, your 12th month is rent-free. This offer is not available to students paying monthly or annually in advance.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can you tell me more about the rent-free 12th month offer?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>The rent-free 12th month is a loyalty bonus available to returning students who sign for the next academic year. It applies to students who choose to pay termly — if you stay with us and renew your tenancy for the following academic year, your 12th month is rent-free. This offer is not available to students paying monthly or annually in advance.</p></div></div>
 
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When is the rent due?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>After the September rent has been paid, our rents are due termly as follows: Autumn term rent is due by 1st October; Spring term rent is due by 15th January; Summer rent is due by 23rd April.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>When is the rent due?</span><span class="faq-chevron">▾</span></button><div class="faq-a"><p>Rent is payable <strong>monthly in advance</strong>, on the date set out in your agreement.<br><br>If you would prefer to pay by term, you are welcome to — it is an option rather than a requirement. Students who choose termly payment usually pay by 1st October, 15th January and 23rd April.</p></div></div>
       </div>
 
       <!-- MY ACCOMMODATION -->
@@ -5040,6 +5142,25 @@ if(document.readyState === 'loading'){
   </span><span class="hf-close">✕</span>
 </button>
 
+<!-- guided room tour -->
+<div class="tour" id="tour" role="dialog" aria-label="Room tour">
+  <div class="tour-stage" id="tourStage"></div>
+  <div class="tour-shade"></div>
+  <div class="tour-bars" id="tourBars"></div>
+  <div class="tour-top">
+    <span class="tour-title" id="tourTitle"></span>
+    <button class="tour-x" onclick="closeTour()" aria-label="Close tour">✕</button>
+  </div>
+  <button class="tour-nav tour-prev" onclick="tourStep(-1)" aria-label="Previous">‹</button>
+  <button class="tour-nav tour-next" onclick="tourStep(1)" aria-label="Next">›</button>
+  <div class="tour-cap" id="tourCap"></div>
+  <div class="tour-foot">
+    <button class="btn btn-gold btn-sm" onclick="closeTour();openPrivateAppModal()">Apply for this room</button>
+    <button class="btn btn-sm" onclick="tourToggle()" id="tourPlay"
+            style="background:rgba(255,255,255,.1);color:#fff">⏸ Pause</button>
+  </div>
+</div>
+
 <!-- photo lightbox -->
 <div class="lbox" id="lbox" onclick="if(event.target===this)closeLbox()">
   <button class="lbox-close" onclick="closeLbox()" aria-label="Close">✕</button>
@@ -5327,8 +5448,8 @@ const STUD_FEATURES = [
   {icon:'🛡️', title:'Free Contents Insurance',    desc:'Complimentary contents insurance via Gallagher — fully free. Click to sign up instantly.',link:'https://gallagherassist.ajg.com/forest-road-houses'},
   {icon:'📋', title:'No Agency Fees',             desc:'Zero admin or agency fees — what you see is what you pay.'},
   {icon:'📦', title:'4 Free Storage Boxes',       desc:'Four medium-size storage boxes provided free — perfect for keeping your room tidy or storing over summer.'},
-  {icon:'🎁', title:'1 Month Free',               desc:'Loyalty bonus — sign for the next academic year paying termly and receive your 12th month rent-free.'},
-  {icon:'💸', title:'5% Annual Discount',         desc:'Pay your rent annually and save 5% on your total rent — reducing your costs even further.'},
+  {icon:'🎁', title:'1 Month Free',               desc:'Loyalty bonus — returning students who choose to pay termly and sign for the next academic year receive their 12th month rent-free.'},
+  {icon:'💸', title:'5% Annual Discount',         desc:'Choose to pay annually and save 5% on your total rent. Monthly payment is always available.'},
   {icon:'🔒', title:'Rates Frozen Since 2024',    desc:'Our rent rates have been frozen since 2024 — no unexpected increases, just consistent affordable pricing.'},
   {icon:'🔑', title:'First Refusal for Returners',desc:'Returning students get priority booking — no waiting lists, ever.'},
 ];
@@ -9526,6 +9647,7 @@ function openRoomEditor(idx){
   document.getElementById('roomFT2').value      = r.t2      || '';
   document.getElementById('roomFT3').value      = r.t3      || '';
   document.getElementById('roomFTotal').value   = r.total   || '';
+  if(document.getElementById('roomFEpc')) document.getElementById('roomFEpc').value = r.epc || '';
   ['roomFWeekly','roomFTotal'].forEach(function(id){
     document.getElementById(id).dataset.auto = editing ? '0' : '1';
   });
@@ -9559,6 +9681,7 @@ function saveRoomEdit(){
     t2: val('roomFT2').replace(/[£\s]/g,''),
     t3: val('roomFT3').replace(/[£\s]/g,''),
     total: val('roomFTotal').replace(/[£\s]/g,''),
+    epc: val('roomFEpc'),
     enq: b.name + ' \u2014 ' + name
   };
 
@@ -9988,10 +10111,14 @@ function roomCardHtml(r){
         ' data-yearly="' + esc(yearly) + '">\u00a3' + esc(r.monthly) + '</span>' +
       '<span class="rc-unit">/ month</span>' +
     '</div>' +
+    (r.epc ? '<div class="rc-epc" title="Energy Performance Certificate rating">' +
+        '<span class="rc-epc-band epc-' + esc(String(r.epc).toLowerCase()) + '">' + esc(r.epc) + '</span>' +
+        '<span>EPC rating</span></div>' : '') +
     '<div class="rc-pw" data-monthly="\u00a3' + esc(r.weekly) + ' per week"' +
       ' data-weekly="\u00a3' + esc(r.monthly) + ' per month"' +
       ' data-yearly="' + yearNote + '">\u00a3' + esc(r.weekly) + ' per week</div>' +
-    (total ? '<div class="rc-save">\ud83d\udcb7 Save <b>' + save + '</b> a year paying annually</div>' : '') +
+    (total ? '<div class="rc-save" data-save="' + save + '">' +
+        '<span class="rc-save-txt">\ud83d\udcb7 Save <b>' + save + '</b> a year paying annually</span></div>' : '') +
     '<div class="rc-face">' +
       '<ul class="rc-feats">' + ticks + '</ul>' +
       '<div class="rcard-body"><div class="rcard-rows">' +
@@ -10070,10 +10197,17 @@ function setRoomCycle(cycle, btn){
       });
     });
   }
-  /* the yearly figure already has the discount in it, so the saving pill
-     would be telling the visitor about a discount they are looking at */
+  /* The yearly figure already has the 5% taken off, so on that view the
+     pill states what has been applied rather than what could be saved. */
   document.querySelectorAll('#studentPricing .rc-save').forEach(function(el){
-    el.style.display = (cycle === 'yearly') ? 'none' : '';
+    const amt = el.dataset.save || '';
+    const txt = el.querySelector('.rc-save-txt');
+    if(!txt || !amt) return;
+    el.style.display = '';
+    txt.innerHTML = (cycle === 'yearly')
+      ? '\u2713 5% annual discount applied \u2014 <b>' + amt + '</b> off'
+      : '\ud83d\udcb7 Save <b>' + amt + '</b> a year paying annually';
+    el.classList.toggle('is-applied', cycle === 'yearly');
   });
 }
 
@@ -10196,6 +10330,111 @@ function initRoomCards(){
   animateRoomPrices();
 }
 
+
+/* ============================================================
+   GUIDED ROOM TOUR
+   A slow walk through a room's photos with captions. A true 360
+   tour needs images shot from one pivot point with overlap;
+   these were taken from different standing positions, so
+   stitching them produces a warped result. This gives the
+   useful part of a tour without pretending to be one.
+   ============================================================ */
+let tourShots = [], tourIdx = 0, tourTimer = null, tourPlaying = true, tourRoom = '';
+
+/* Captions describe what the visitor is looking at, in order. */
+const TOUR_CAPTIONS = [
+  {h:'The room',        p:'Furnished and ready to move into'},
+  {h:'Bed and window',  p:'Natural light, radiator and curtains'},
+  {h:'Storage',         p:'Wardrobe, chest of drawers and cupboard'},
+  {h:'Desk and study',  p:'Desk, chair and shelving'},
+  {h:'Another view',    p:''}
+];
+
+function openTour(key){
+  const map = loadRoomPhotos();
+  tourShots = map[key] || [];
+  if(tourShots.length < 2){ showToast('Not enough photos for a tour yet','error'); return; }
+
+  const card = document.getElementById('rc-' + key);
+  tourRoom = card && card.querySelector('.rc-name') ? card.querySelector('.rc-name').textContent.trim() : 'Room tour';
+  document.getElementById('tourTitle').textContent = tourRoom;
+
+  const stage = document.getElementById('tourStage');
+  stage.innerHTML = tourShots.map(function(s, i){
+    return '<img class="tour-img" src="' + (s.lg || s.sm) + '" alt="' + tourRoom + ' photo ' + (i+1) + '">';
+  }).join('');
+
+  const bars = document.getElementById('tourBars');
+  bars.innerHTML = tourShots.map(function(){ return '<div class="tour-bar"><i></i></div>'; }).join('');
+
+  tourIdx = 0;
+  tourPlaying = true;
+  document.getElementById('tourPlay').textContent = '\u23f8 Pause';
+  document.getElementById('tour').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  paintTour();
+  scheduleTour();
+}
+
+function paintTour(){
+  const imgs = document.querySelectorAll('#tourStage .tour-img');
+  imgs.forEach(function(im, i){ im.classList.toggle('on', i === tourIdx); });
+
+  const bars = document.querySelectorAll('#tourBars .tour-bar');
+  bars.forEach(function(b, i){
+    b.classList.remove('live');
+    b.classList.toggle('done', i < tourIdx);
+    if(i === tourIdx && tourPlaying){
+      void b.offsetWidth;          /* restart the fill animation */
+      b.classList.add('live');
+    } else if(i === tourIdx){
+      b.classList.add('done');
+    }
+  });
+
+  const cap = TOUR_CAPTIONS[tourIdx] || {h:'', p:''};
+  document.getElementById('tourCap').innerHTML =
+    '<h4>' + cap.h + '</h4>' + (cap.p ? '<p>' + cap.p + '</p>' : '');
+}
+
+function scheduleTour(){
+  clearTimeout(tourTimer);
+  if(!tourPlaying) return;
+  tourTimer = setTimeout(function(){ tourStep(1); }, 4600);
+}
+
+function tourStep(d){
+  if(!tourShots.length) return;
+  const next = tourIdx + d;
+  if(next >= tourShots.length){ tourIdx = 0; } 
+  else if(next < 0){ tourIdx = tourShots.length - 1; }
+  else { tourIdx = next; }
+  paintTour();
+  scheduleTour();
+}
+
+function tourToggle(){
+  tourPlaying = !tourPlaying;
+  document.getElementById('tourPlay').textContent = tourPlaying ? '\u23f8 Pause' : '\u25b6 Play';
+  paintTour();
+  scheduleTour();
+}
+
+function closeTour(){
+  clearTimeout(tourTimer);
+  document.getElementById('tour').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e){
+  const t = document.getElementById('tour');
+  if(!t || !t.classList.contains('open')) return;
+  if(e.key === 'Escape')     closeTour();
+  if(e.key === 'ArrowRight') tourStep(1);
+  if(e.key === 'ArrowLeft')  tourStep(-1);
+  if(e.key === ' '){ e.preventDefault(); tourToggle(); }
+});
+
 /* ============================================================
    ROOM PHOTOS
    Defaults ship with the file; anything added through the admin
@@ -10257,6 +10496,17 @@ function renderRoomPhotos(){
       wrap.appendChild(b);
     });
     card.insertBefore(wrap, card.firstChild);
+
+    /* a tour only makes sense with more than one photo */
+    if(shots.length > 1 && !card.querySelector('.tour-btn')){
+      const t = document.createElement('button');
+      t.className = 'tour-btn';
+      t.type = 'button';
+      t.innerHTML = '\u25b6 Take a tour \u00b7 ' + shots.length + ' photos';
+      t.onclick = function(e){ e.stopPropagation(); openTour(key); };
+      const hint = card.querySelector('.rc-flip-hint');
+      if(hint) card.insertBefore(t, hint); else card.appendChild(t);
+    }
   });
 }
 
