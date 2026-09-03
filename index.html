@@ -3960,7 +3960,7 @@ if(document.readyState === 'loading'){
           </div>
           <div class="form-group">
             <label class="form-label">Your building *</label>
-            <select class="form-input form-select" id="refBuilding">
+            <select class="form-input form-select" id="refBuilding" onchange="fillRefRoomOptions()">
               <option value="">Choose…</option>
               <option value="Forest Road House">Forest Road House</option>
               <option value="Candan House">Candan House</option>
@@ -3969,9 +3969,20 @@ if(document.readyState === 'loading'){
               <option value="Private Rental">Private rental</option>
             </select>
           </div>
+          <div class="form-group" id="refRoomWrap">
+            <label class="form-label">Your room *</label>
+            <select class="form-input form-select" id="refRoomSel" style="display:none">
+              <option value="">Choose a building first…</option>
+            </select>
+            <input type="text" class="form-input" id="refRoomFree" placeholder="e.g. Room 12" style="display:none">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your phone number *</label>
+            <input type="tel" class="form-input" id="refPhone" placeholder="So we can reach you about your reward">
+          </div>
           <div class="form-group">
             <label class="form-label">Your email *</label>
-            <input type="email" class="form-input" id="refEmail" placeholder="So we can reach you about your reward">
+            <input type="email" class="form-input" id="refEmail" placeholder="We'll email a copy of your code here too">
           </div>
 
           <button class="btn btn-gold" style="width:100%" onclick="generateReferral()" id="refBtn">
@@ -5212,6 +5223,10 @@ if(document.readyState === 'loading'){
                 <option value="154 Norwich Road, Ipswich">154 Norwich Road, Ipswich</option>
                 <option value="Private Rental">Private rental</option>
               </select></div>
+            <div class="form-group"><label class="form-label">Room</label>
+              <input type="text" class="form-input" id="mrefRoom" placeholder="e.g. Room 12"></div>
+            <div class="form-group"><label class="form-label">Phone</label>
+              <input type="tel" class="form-input" id="mrefPhone" placeholder="Optional"></div>
             <div class="form-group"><label class="form-label">Email</label>
               <input type="email" class="form-input" id="mrefEmail" placeholder="Optional"></div>
           </div>
@@ -10082,7 +10097,7 @@ const HELP_KB=[
   {id:"university",cat:"Locations",q:{en:"Are you near the University of Essex?"},k:["university of essex", "uni", "campus", "near the university", "walk to uni", "distance to campus", "colchester campus"],a:{en:"All three of our Colchester student complexes are in the CO4 area, close to the University of Essex Colchester campus.<br><br>You can see each building's exact position on the map on our Student Accommodation page."},go:{p:"student",a:"locationsSection",t:"\ud83d\udccd See the maps"}},
   {id:"viewing",cat:"Viewings",q:{en:"Can I view a room first?"},k:["view", "viewing", "see the room", "look around", "visit the property", "tour", "book a viewing", "arrange a viewing", "see it first"],a:{en:"Yes. Viewings are arranged directly with the office \u2014 call <b>01206 500202</b> or email <b>enquiries@forestrd.co.uk</b> and we'll agree a date and time.<br><br>Viewings take place during office hours, Monday to Saturday between 9:00am and 6:00pm."},go:{p:"contact",a:null,t:"\u2709\ufe0f Request a viewing"}},
   {id:"remote",cat:"Viewings",q:{en:"Can I view from overseas?"},k:["overseas", "abroad", "from another country", "cant come to view", "remote viewing", "video", "photos", "virtual", "before i arrive in the uk"],a:{en:"Yes. If you're overseas and can't attend in person, we can send <b>photos and videos</b> of the room where they're available.<br><br>Just email <b>enquiries@forestrd.co.uk</b> telling us which building and room type you're interested in."},go:{p:"contact",a:null,t:"\u2709\ufe0f Ask for photos"}},
-  {id:"apply",cat:"Applying",q:{en:"How do I apply?"},k:["how do i apply", "application", "apply for a room", "sign up", "book a room", "reserve", "get a room", "start an application", "how do i book", "how to book", "booking", "how do i book a room", "secure a room", "reserve a room"],a:{en:"Here's everything you'll need:<br><br><b>1. Complete the application form</b> \u2014 name, contact details, and your preferred room.<br><b>2. ID</b> \u2014 passport or driving licence.<br><b>3. Right-to-rent documents</b> \u2014 passport and visa, or a Home Office share code. A CAS letter alone isn't enough.<br><b>4. Proof of study</b> \u2014 your enrolment certificate or acceptance letter.<br><b>5. A guarantor</b> \u2014 not required for students.<br><b>6. First month's rent</b> \u2014 payable in advance once the agreement is signed. There's no tenancy deposit.<br><br>Once we have everything, keys are collected from the office during opening hours \u2014 <b>Monday to Saturday, 9am to 6pm</b>.<br><br>If you'd rather talk it through first, call <b>01206 500202</b> during office hours."},go:{p:"student",a:null,t:"\u270d\ufe0f Start an application"}},
+  {id:"apply",cat:"Applying",q:{en:"How do I apply?"},k:["how do i apply", "application", "apply for a room", "sign up", "book a room", "reserve", "get a room", "start an application", "how do i book", "how to book", "how can i book", "booking", "book", "how do i book a room", "secure a room", "reserve a room", "hold a room", "confirm a room"],a:{en:"To secure a room, you'll need:<br><br><b>1. Complete the application form</b> \u2014 name, contact details, and your preferred room.<br><b>2. ID</b> \u2014 passport or driving licence.<br><b>3. Right-to-rent documents</b> \u2014 passport and visa, or a Home Office share code. A CAS letter alone isn't enough.<br><b>4. Proof of study</b> \u2014 your enrolment certificate or acceptance letter.<br><b>5. A guarantor</b> \u2014 not required for students.<br><b>6. Your first month's rent</b> \u2014 as we don't take a tenancy deposit or require a guarantor, we ask for the first month's rent in advance once your agreement is signed, to secure the room. <b>This is not a deposit</b> \u2014 it is rent, and it is applied to your account as rent from the date you collect your keys and move in.<br><br>Once everything is in place, keys are collected from the office during opening hours \u2014 <b>Monday to Saturday, 9am to 6pm</b>.<br><br>If you'd rather talk it through first, call <b>01206 500202</b> during office hours."},go:{p:"student",a:null,t:"\u270d\ufe0f Start an application"}},
   {id:"docs",cat:"Applying",q:{en:"What documents do I need?"},k:["documents", "paperwork", "what do i need to provide", "id", "identification", "passport", "proof", "right to rent"],a:{en:"For a student room we'll need:<br>\u2022 <b>Photo ID</b> \u2014 passport or driving licence<br>\u2022 <b>Proof of your right to rent</b> in the UK \u2014 passport and visa, or a Home Office share code<br>\u2022 <b>An enrolment certificate</b> from your university confirming full-time study<br><br>Please note a <b>CAS letter on its own isn't enough</b> for the right-to-rent check \u2014 we'll need your passport and visa as well."},go:{p:"faq",a:null,t:"\u2753 More in Help"}},
   {id:"guarantor",cat:"Applying",q:{en:"Do I need a guarantor?"},k:["guarantor", "guarantee", "someone to guarantee", "cosign", "co-signer", "parent sign", "uk guarantor"],a:{en:"<b>Students:</b> no guarantor is required.<br><br><b>Private rentals:</b> we don't usually ask for one. A guarantor may be requested where an applicant doesn't satisfy the credit check \u2014 this is decided case by case."},go:{p:"faq",a:null,t:"\u2753 More in Help"}},
   {id:"fees",cat:"Applying",q:{en:"Are there any agency fees?"},k:["agency fee", "admin fee", "application fee", "hidden costs", "extra charges to apply", "cost to apply"],a:{en:"No. There are <b>no agency or admin fees</b> to apply.<br><br>There's also no tenancy deposit \u2014 though the first month's rent is payable in advance once the agreement is signed."},go:{p:"student",a:"studentPricing",t:"\ud83d\udcb7 See pricing"}},
@@ -10918,8 +10933,10 @@ function renderReferralAdmin(){
     return '<div class="ref-row"' + (r.suspended ? ' style="opacity:.55"' : '') + '>' +
       '<code>' + esc(r.code) + '</code>' +
       '<span style="flex:1;min-width:170px;font-size:.85rem">' + esc(r.name) +
-        '<span style="color:rgba(255,255,255,.4);font-size:.76rem"> \u00b7 ' + esc(r.building) + '</span>' +
+        '<span style="color:rgba(255,255,255,.4);font-size:.76rem"> \u00b7 ' + esc(r.building) +
+          (r.room ? ' \u00b7 ' + esc(r.room) : '') + '</span>' +
         (r.verified ? '<span style="color:#4ade80;font-size:.7rem"> \u2713 issued in person</span>' : '') +
+        (r.phone ? '<br><span style="color:rgba(255,255,255,.45);font-size:.75rem">\ud83d\udcde ' + esc(r.phone) + '</span>' : '') +
         (r.usedBy ? '<br><span style="color:rgba(255,255,255,.45);font-size:.75rem">Used by ' +
           esc(r.usedBy) + ' on ' + new Date(r.usedAt).toLocaleDateString('en-GB') + '</span>' : '') +
       '</span>' +
@@ -10939,18 +10956,22 @@ function renderReferralAdmin(){
 function issueReferralManually(){
   const name  = (document.getElementById('mrefName').value || '').trim();
   const bldg  = document.getElementById('mrefBuilding').value;
+  const room  = (document.getElementById('mrefRoom').value || '').trim();
+  const phone = (document.getElementById('mrefPhone').value || '').trim();
   const email = (document.getElementById('mrefEmail').value || '').trim();
   if(!name){ showToast('Enter a name','error'); return; }
 
   const code = makeRefCode(name, bldg);
   const list = loadReferrals();
-  list.unshift({ code:code, name:name, building:bldg, email:email,
+  list.unshift({ code:code, name:name, building:bldg, room:room, phone:phone, email:email,
                  created:new Date().toISOString(), status:'pending',
                  usedBy:'', usedEmail:'', usedAt:'', suspended:false,
                  verified:true, source:'office' });
   saveReferrals(list);
   document.getElementById('mrefOut').textContent = code;
   document.getElementById('mrefName').value = '';
+  document.getElementById('mrefRoom').value = '';
+  document.getElementById('mrefPhone').value = '';
   document.getElementById('mrefEmail').value = '';
   renderReferralAdmin();
   showToast('Code ' + code + ' issued','success');
@@ -11007,9 +11028,9 @@ function deleteReferral(i){
 function exportReferrals(){
   const list = loadReferrals();
   if(!list.length){ showToast('Nothing to export yet','error'); return; }
-  const rows = [['Code','Name','Building','Email','Created','Status','Used by','Used on','Suspended','Issued']].concat(
+  const rows = [['Code','Name','Building','Room','Phone','Email','Created','Status','Used by','Used on','Suspended','Issued']].concat(
     list.map(function(r){
-      return [r.code, r.name, r.building, r.email,
+      return [r.code, r.name, r.building, r.room || '', r.phone || '', r.email,
               new Date(r.created).toLocaleString('en-GB'), r.status,
               r.usedBy || '', r.usedAt ? new Date(r.usedAt).toLocaleString('en-GB') : '',
               r.suspended ? 'yes' : 'no', r.source || 'website'];
@@ -11730,13 +11751,49 @@ function makeRefCode(name, building){
   return b + '-' + (first || 'REF') + '-' + n;
 }
 
+
+/* Colchester rooms come from the live room store, so the list can never
+   drift out of date with what is actually on the pricing page. Ipswich
+   and private rentals are not in that store, so those get free text. */
+function fillRefRoomOptions(){
+  const bldg = document.getElementById('refBuilding').value;
+  const sel  = document.getElementById('refRoomSel');
+  const free = document.getElementById('refRoomFree');
+  sel.style.display = 'none'; free.style.display = 'none';
+  free.value = ''; sel.innerHTML = '';
+  if(!bldg) return;
+
+  const map = { 'Forest Road House':'frh', 'Candan House':'can', 'Greenstead House':'grn' };
+  const key = map[bldg];
+  if(key){
+    const rooms = (loadRooms()[key] || {}).rooms || [];
+    sel.innerHTML = '<option value="">Choose your room…</option>' +
+      rooms.map(function(r){ return '<option value="' + esc(r.name) + '">' + esc(r.name) + '</option>'; }).join('');
+    sel.style.display = '';
+  } else {
+    free.style.display = '';
+  }
+}
+
+function currentRefRoom(){
+  const sel = document.getElementById('refRoomSel');
+  const free = document.getElementById('refRoomFree');
+  if(sel.style.display !== 'none') return sel.value;
+  return (free.value || '').trim();
+}
+
 async function generateReferral(){
   const name  = (document.getElementById('refName').value || '').trim();
   const bldg  = document.getElementById('refBuilding').value;
+  const room  = currentRefRoom();
+  const phone = (document.getElementById('refPhone').value || '').trim();
   const email = (document.getElementById('refEmail').value || '').trim();
 
-  if(!name || !bldg || !email){ showToast('Please fill in all three fields','error'); return; }
+  if(!name || !bldg || !room || !phone || !email){
+    showToast('Please fill in all the fields, including your room','error'); return;
+  }
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showToast('Please enter a valid email address','error'); return; }
+  if(!/^[0-9+()\s-]{7,}$/.test(phone)){ showToast('Please enter a valid phone number','error'); return; }
 
   const btn = document.getElementById('refBtn');
   btn.textContent = 'Creating\u2026'; btn.disabled = true;
@@ -11759,7 +11816,7 @@ async function generateReferral(){
   }
 
   const code = makeRefCode(name, bldg);
-  const rec  = { code:code, name:name, building:bldg, email:email,
+  const rec  = { code:code, name:name, building:bldg, room:room, phone:phone, email:email,
                  created:new Date().toISOString(), status:'pending',
                  usedBy:'', usedEmail:'', usedAt:'', suspended:false,
                  verified:false, source:'website' };
@@ -11772,6 +11829,8 @@ async function generateReferral(){
     data.append('Referral code', code);
     data.append('Resident', name);
     data.append('Building', bldg);
+    data.append('Room', room);
+    data.append('Phone', phone);
     data.append('Email', email);
     data.append('Created', new Date().toLocaleString('en-GB'));
     data.append('Note', 'This resident has generated a referral code. It will appear on any application that uses it.');
