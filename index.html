@@ -3960,7 +3960,7 @@ if(document.readyState === 'loading'){
           </div>
           <div class="form-group">
             <label class="form-label">Your building *</label>
-            <select class="form-input form-select" id="refBuilding" onchange="fillRefRoomOptions()">
+            <select class="form-input form-select" id="refBuilding">
               <option value="">Choose…</option>
               <option value="Forest Road House">Forest Road House</option>
               <option value="Candan House">Candan House</option>
@@ -3970,11 +3970,11 @@ if(document.readyState === 'loading'){
             </select>
           </div>
           <div class="form-group" id="refRoomWrap">
-            <label class="form-label">Your room *</label>
-            <select class="form-input form-select" id="refRoomSel" style="display:none">
-              <option value="">Choose a building first…</option>
-            </select>
-            <input type="text" class="form-input" id="refRoomFree" placeholder="e.g. Room 12" style="display:none">
+            <label class="form-label">Your room number *</label>
+            <input type="text" class="form-input" id="refRoomFree" placeholder="e.g. Room 12">
+            <p style="font-size:.72rem;color:rgba(255,255,255,.35);margin:6px 0 0">
+              The number on your own door, not the room type — this is what lets us check the code against our records.
+            </p>
           </div>
           <div class="form-group">
             <label class="form-label">Your phone number *</label>
@@ -11752,34 +11752,13 @@ function makeRefCode(name, building){
 }
 
 
-/* Colchester rooms come from the live room store, so the list can never
-   drift out of date with what is actually on the pricing page. Ipswich
-   and private rentals are not in that store, so those get free text. */
-function fillRefRoomOptions(){
-  const bldg = document.getElementById('refBuilding').value;
-  const sel  = document.getElementById('refRoomSel');
-  const free = document.getElementById('refRoomFree');
-  sel.style.display = 'none'; free.style.display = 'none';
-  free.value = ''; sel.innerHTML = '';
-  if(!bldg) return;
-
-  const map = { 'Forest Road House':'frh', 'Candan House':'can', 'Greenstead House':'grn' };
-  const key = map[bldg];
-  if(key){
-    const rooms = (loadRooms()[key] || {}).rooms || [];
-    sel.innerHTML = '<option value="">Choose your room…</option>' +
-      rooms.map(function(r){ return '<option value="' + esc(r.name) + '">' + esc(r.name) + '</option>'; }).join('');
-    sel.style.display = '';
-  } else {
-    free.style.display = '';
-  }
-}
-
+/* A room TYPE ("Single Room") is shared by every tenant in that kind of
+   room, so it can't verify any one person. A room NUMBER identifies a
+   specific tenancy and can be checked against a rent roll — but numbered
+   rooms are not data the site tracks, so this is free text rather than a
+   list pulled from the room store. */
 function currentRefRoom(){
-  const sel = document.getElementById('refRoomSel');
-  const free = document.getElementById('refRoomFree');
-  if(sel.style.display !== 'none') return sel.value;
-  return (free.value || '').trim();
+  return (document.getElementById('refRoomFree').value || '').trim();
 }
 
 async function generateReferral(){
