@@ -1692,6 +1692,10 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .tour-top{
   position:absolute;top:0;left:0;right:0;padding:20px 24px;
   display:flex;align-items:center;justify-content:space-between;gap:14px;
+  /* must sit above .tour-intro (z-index:4) — without this the title
+     card intercepted every click on the close button until it had
+     already been dismissed */
+  z-index:5;
 }
 .tour-title{font-size:.95rem;font-weight:700;color:#fff}
 .tour-x{
@@ -2143,11 +2147,14 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .walk-pan.moving{transition:transform .72s cubic-bezier(.5,0,.75,.3)}
 .walk-node img.walk-photo{
   position:absolute;top:50%;left:50%;
-  /* 108%, not 126%: the old figure meant roughly a 2.5x upscale on a
-     laptop screen, which is what made the walkthrough look soft */
-  width:108%;height:108%;
+  /* contain, not cover: these are portrait photos in a landscape
+     viewport. cover forced a ~1.5x upscale AND cropped away most of the
+     photo's height to fill the screen width. contain shows the whole
+     photo at native resolution; the blurred backdrop fills the
+     letterbox space instead of the photo being cut into. */
+  width:104%;height:104%;
   transform:translate(-50%,-50%);
-  object-fit:cover;
+  object-fit:contain;
 }
 .walk-node img.walk-blur{
   position:absolute;inset:-8%;width:116%;height:116%;
@@ -12213,7 +12220,7 @@ function wireWalkDrag(){
   walkWired = true;
   const stage = document.getElementById('walkStage');
   const st = { down:false, x0:0, y0:0, dx:0, dy:0, bx:0, by:0 };
-  const LIMIT = 26;   /* matches the 108% overspill */
+  const LIMIT = 14;   /* matches the smaller 104% overspill under contain */
 
   const active = function(){
     const el = document.querySelector('#walkStage .walk-node.on .walk-pan');
