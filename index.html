@@ -6870,6 +6870,27 @@ function refreshCurrentPage(){
 /* ============================================================
    PAGE ROUTER
 ============================================================ */
+
+/* ============================================================
+   URL ROUTING
+   The site is a single HTML file with pages shown and hidden by
+   JavaScript, so the address bar never changed and the back
+   button simply left the site. This gives each page its own
+   address (#student, #ipswich, ...) and real back/forward
+   history, without splitting the file into separate pages.
+   ============================================================ */
+const MI_PAGES = ['home','student','ipswich','private','payments','about','faq','contact','admin'];
+let miRouting = false;   /* true while responding to browser navigation, not a click */
+
+/* Back / forward button */
+window.addEventListener('popstate', function(){
+  const id = (location.hash || '').slice(1) || 'home';
+  const target = MI_PAGES.indexOf(id) > -1 ? id : 'home';
+  miRouting = true;
+  showPage(target);
+  miRouting = false;
+});
+
 function showPage(id){
   // Hide all pages
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -6941,6 +6962,16 @@ function showPage(id){
 
   // Trigger scroll animations
   setTimeout(triggerFadeIns, 120);
+
+  /* Keep the address bar and the back button in step with which page is
+     showing. Guarded by miRouting so that responding to the back button
+     (popstate, below) does not turn around and push a new entry itself. */
+  if(!miRouting){
+    const desiredHash = (id === 'home') ? '' : ('#' + id);
+    if(location.hash !== desiredHash){
+      history.pushState({miPage:id}, '', location.pathname + location.search + desiredHash);
+    }
+  }
 }
 
 /* Navigate to a page and then scroll to a specific element on it (See Prices buttons) */
@@ -14216,7 +14247,16 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     if(typeof renderTestimonialsOnSite==='function') renderTestimonialsOnSite();
   } catch(e){ console.error('reviews render failed', e); }
-  showPage('home');
+  /* Land on whatever page a direct link or bookmark points at, rather
+     than always forcing home — that used to override any #hash in the
+     URL a moment after the page loaded. */
+  (function(){
+    const hid = (location.hash || '').slice(1);
+    const target = (hid && typeof MI_PAGES !== 'undefined' && MI_PAGES.indexOf(hid) > -1) ? hid : 'home';
+    miRouting = true;
+    showPage(target);
+    miRouting = false;
+  })();
   /* Safety net: re-run the home renderers once layout has settled.
      Each is isolated so one failure cannot take the others down. */
   setTimeout(()=>{
