@@ -1796,30 +1796,6 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .finder-result p{font-size:.86rem;color:rgba(255,255,255,.6);margin:0 0 20px;line-height:1.6}
 
 /* ══════════════════════════════════════════════════════════
-   LOCATIONS AT A GLANCE (home page)
-   ══════════════════════════════════════════════════════════ */
-.loc-glance-tabs{
-  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px;
-}
-.loc-glance-tabs button{
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(255,255,255,.05);
-  color:rgba(255,255,255,.65);
-  border-radius:100px;padding:9px 16px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:.8rem;font-weight:700;cursor:pointer;transition:var(--trans);
-}
-.loc-glance-tabs button.on{background:var(--gold-500);border-color:var(--gold-500);color:#1a1200}
-.loc-glance-tabs button:hover:not(.on){border-color:rgba(240,180,41,.5);color:#fff}
-.loc-glance-map{
-  max-width:900px;margin:0 auto;height:340px;
-  border-radius:16px;overflow:hidden;
-  border:1px solid rgba(160,80,255,.22);
-}
-.loc-glance-map iframe{width:100%;height:100%;border:none;display:block}
-@media(max-width:600px){.loc-glance-map{height:260px}}
-
-/* ══════════════════════════════════════════════════════════
    COMPARE STRIP
    ══════════════════════════════════════════════════════════ */
 .cmp-strip{
@@ -1862,37 +1838,6 @@ button{font-family:'Plus Jakarta Sans',sans-serif}
 .why-ico{font-size:1.6rem;margin-bottom:12px;display:block}
 .why-card h4{font-size:.98rem;font-weight:700;margin:0 0 8px;color:#fff}
 .why-card p{font-size:.84rem;line-height:1.6;color:rgba(255,255,255,.6);margin:0}
-
-/* ══════════════════════════════════════════════════════════
-   TRUST BAR
-   ══════════════════════════════════════════════════════════ */
-.trust-bar{
-  max-width:1100px;margin:0 auto;padding:0 24px;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
-  background:rgba(255,255,255,.08);
-  border-radius:16px;overflow:hidden;
-  border:1px solid rgba(160,80,255,.2);
-}
-.trust-item{
-  background:rgba(10,7,32,.72);
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-  padding:22px 16px;text-align:center;
-}
-.trust-num{
-  font-size:1.7rem;font-weight:800;line-height:1;
-  background:linear-gradient(180deg,#ffd97a,var(--gold-500));
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:var(--gold-500);
-}
-.trust-lab{
-  font-size:.7rem;font-weight:600;letter-spacing:.03em;
-  color:rgba(255,255,255,.55);margin-top:6px;line-height:1.4;
-}
-@media(max-width:700px){
-  .trust-bar{grid-template-columns:repeat(2,1fr)}
-  .trust-item{padding:18px 12px}
-  .trust-num{font-size:1.4rem}
-}
 
 /* ══════════════════════════════════════════════════════════
    REFERRAL SCHEME
@@ -3773,16 +3718,6 @@ if(document.readyState === 'loading'){
     </div>
   </section>
 
-  <!-- TRUST BAR -->
-  <section class="section" style="padding-top:28px;padding-bottom:0">
-    <div class="trust-bar fade-in">
-      <div class="trust-item"><div class="trust-num">27+</div><div class="trust-lab">Years family-run</div></div>
-      <div class="trust-item"><div class="trust-num">4</div><div class="trust-lab">Buildings across Colchester &amp; Ipswich</div></div>
-      <div class="trust-item"><div class="trust-num">£0</div><div class="trust-lab">Deposit on any room</div></div>
-      <div class="trust-item"><div class="trust-num">2024</div><div class="trust-lab">Rates frozen since</div></div>
-    </div>
-  </section>
-
   <!-- GYM COMING SOON BANNER -->
   <section class="section bg-dark" style="padding:40px 24px">
     <div class="sec-in">
@@ -3815,8 +3750,8 @@ if(document.readyState === 'loading'){
   <section class="section bg-base">
     <div class="sec-in">
       <div class="sec-hd">
-        <div class="sec-tag">Not Sure Where to Look?</div>
-        <h2 class="sec-title">Find your <span class="gold-text">room</span> in 3 questions</h2>
+        <div class="sec-tag">Looking for a Place?</div>
+        <h2 class="sec-title">What are you <span class="gold-text">looking for?</span></h2>
       </div>
 
       <div class="finder fade-in">
@@ -3825,10 +3760,11 @@ if(document.readyState === 'loading'){
         </div>
 
         <div class="finder-step on" id="fstep1">
-          <div class="finder-q">Are you a student, or looking for a professional let?</div>
+          <div class="finder-q">Are you a student, working, or looking for a home to rent?</div>
           <div class="finder-opts">
             <button onclick="finderPick('who','student')"><span>🎓</span> I'm a full-time student</button>
-            <button onclick="finderPick('who','pro')"><span>💼</span> I'm working / not a student</button>
+            <button onclick="finderPick('who','room')"><span>🏠</span> I'm working, looking for a room</button>
+            <button onclick="finderPick('who','home')"><span>🔑</span> I'm looking for a home to rent</button>
           </div>
         </div>
 
@@ -3850,28 +3786,6 @@ if(document.readyState === 'loading'){
           </div>
           <button class="finder-back" onclick="finderReset()">← Start again</button>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOCATIONS AT A GLANCE -->
-  <section class="section bg-dark">
-    <div class="sec-in">
-      <div class="sec-hd">
-        <div class="sec-tag">Where We Are</div>
-        <h2 class="sec-title">Four buildings, <span class="gold-text">two towns</span></h2>
-      </div>
-      <div class="loc-glance-tabs">
-        <button class="on" onclick="glanceMap('frh',this)">Forest Road House</button>
-        <button onclick="glanceMap('can',this)">Candan House</button>
-        <button onclick="glanceMap('grn',this)">Greenstead House</button>
-        <button onclick="glanceMap('ips',this)">Ipswich</button>
-      </div>
-      <div class="loc-glance-map fade-in">
-        <iframe id="glanceFrame"
-          src="https://maps.google.com/maps?q=Forest+Road+House,+Forest+Road,+Colchester,+CO4+3XA,+UK&output=embed&hl=en"
-          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          title="Location map"></iframe>
       </div>
     </div>
   </section>
@@ -9159,6 +9073,25 @@ async function submitPrivateApp(e){
       fieldPair('Number of Occupants', F['Number of Occupants'], 'Preferred Contact Time', F['Preferred Contact Time']);
       fieldPair('Pets', F['Pets'], 'Smoker', F['Smoker']);
 
+      /* ═══════ REFERRAL (only if a code was actually given) ═══════ */
+      if(F['REFERRAL CODE'] && F['REFERRAL CODE'] !== 'None given'){
+        sectionTitle('Referral');
+        doc.setFillColor(240,250,244); doc.setDrawColor(46,160,67); doc.setLineWidth(0.35);
+        const refBoxH = 12;
+        doc.roundedRect(M, y, contentW, refBoxH, 1.5, 1.5, 'FD');
+        doc.setTextColor(20,110,50); doc.setFontSize(6); doc.setFont('helvetica','bold');
+        doc.text('REFERRAL CODE', M+4, y+4.5);
+        doc.setTextColor(15,15,15); doc.setFontSize(9); doc.setFont('helvetica','bold');
+        doc.text(F['REFERRAL CODE'], M+4, y+9);
+        doc.setTextColor(20,110,50); doc.setFontSize(6); doc.setFont('helvetica','bold');
+        doc.text('REFERRED BY', M+halfW+8, y+4.5);
+        doc.setTextColor(15,15,15); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+        const refLines = doc.splitTextToSize(F['REFERRED BY'], halfW-4);
+        doc.text(refLines.slice(0,2), M+halfW+8, y+9);
+        y += refBoxH + 4;
+      }
+
+
       /* ═══════ REFERENCES + EMERGENCY ═══════ */
       sectionTitle('References & Emergency Contact');
       fieldPair('Previous Landlord Name', F['Previous Landlord Name'], 'Landlord Contact', F['Previous Landlord Contact']);
@@ -9250,7 +9183,7 @@ async function submitPrivateApp(e){
 
   /* Build summary text and send via PHP backend */
   const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
-  let emailSent = false;
+  let attachEmailOk = false;   /* did the PHP email with PDF/ID/CAS attachments succeed? */
 
   try {
     const fd = new FormData();
@@ -9293,7 +9226,7 @@ async function submitPrivateApp(e){
     try{
       const json = JSON.parse(text);
       console.log('PHP result:', json);
-      if(json.success) emailSent = true;
+      if(json.success) attachEmailOk = true;
     }catch(e){ console.warn('PHP response parse error:', e, text); }
   } catch(err){ console.warn('PHP send error:', err); }
 
@@ -9301,17 +9234,23 @@ async function submitPrivateApp(e){
   try {
     const w3data = new FormData();
     w3data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
-    w3data.append('subject', '['+new Date().toISOString().slice(0,10)+'] Private Rental Application: '+applicantName);
+    w3data.append('subject',
+      (attachEmailOk ? '' : '\u26a0\ufe0f NO ATTACHMENTS \u2014 ') +
+      '['+new Date().toISOString().slice(0,10)+'] Private Rental Application: '+applicantName);
     w3data.append('from_name', 'Millennium Investments Website');
+    w3data.append('ATTACHMENTS EMAIL',
+      attachEmailOk
+        ? 'Sent successfully \u2014 PDF, ID and CAS attached separately.'
+        : '\u26a0\ufe0f FAILED to send. This applicant\u2019s PDF, ID and CAS have NOT arrived by email. Contact them directly to collect these documents.');
     w3data.append('message', summary);
     fields.filter(f=>f.value).forEach(f=>w3data.append(f.label, f.value));
     const w3res = await fetch('https://api.web3forms.com/submit', {method:'POST', body:w3data});
     const w3json = await w3res.json();
     console.log('Web3Forms result:', w3json);
-    if(w3json.success) emailSent = true;
+    if(w3json.success) console.log('Web3Forms backup confirmed delivered');
   } catch(err){ console.warn('Web3Forms error:', err); }
 
-  console.log('Email sent:', emailSent);
+  console.log('PHP/attachments email OK:', attachEmailOk);
 
   /* Show success */
   form.style.display='none';
@@ -9534,6 +9473,25 @@ async function submitStudentApp(e){
       fieldPair('Preferred Complex', F['Preferred Complex'], 'Room Type', F['Room Type']);
       fieldPair('Move-In Date', F['Move-In Date'], 'Preferred Contact Time', F['Preferred Contact Time']);
 
+      /* ═══════ REFERRAL (only if a code was actually given) ═══════ */
+      if(F['REFERRAL CODE'] && F['REFERRAL CODE'] !== 'None given'){
+        sectionTitle('Referral');
+        doc.setFillColor(240,250,244); doc.setDrawColor(46,160,67); doc.setLineWidth(0.35);
+        const refBoxH = 12;
+        doc.roundedRect(M, y, contentW, refBoxH, 1.5, 1.5, 'FD');
+        doc.setTextColor(20,110,50); doc.setFontSize(6); doc.setFont('helvetica','bold');
+        doc.text('REFERRAL CODE', M+4, y+4.5);
+        doc.setTextColor(15,15,15); doc.setFontSize(9); doc.setFont('helvetica','bold');
+        doc.text(F['REFERRAL CODE'], M+4, y+9);
+        doc.setTextColor(20,110,50); doc.setFontSize(6); doc.setFont('helvetica','bold');
+        doc.text('REFERRED BY', M+halfW+8, y+4.5);
+        doc.setTextColor(15,15,15); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+        const refLines = doc.splitTextToSize(F['REFERRED BY'], halfW-4);
+        doc.text(refLines.slice(0,2), M+halfW+8, y+9);
+        y += refBoxH + 4;
+      }
+
+
       /* ═══════ EMERGENCY CONTACT ═══════ */
       sectionTitle('Emergency Contact');
       fieldPair('Emergency Name', F['Emergency Name'], 'Emergency Relation', F['Emergency Relation']);
@@ -9618,7 +9576,7 @@ async function submitStudentApp(e){
 
   /* Send to PHP using FormData — proper multipart upload */
   const summary = fields.filter(f=>f.value).map(f=>f.label+': '+f.value).join('\n');
-  let emailSent = false;
+  let attachEmailOk = false;   /* did the PHP email with PDF/ID/CAS attachments succeed? */
 
   try {
     const fd = new FormData();
@@ -9662,7 +9620,7 @@ async function submitStudentApp(e){
     try{
       const json = JSON.parse(text);
       console.log('PHP result:', json);
-      if(json.success) emailSent = true;
+      if(json.success) attachEmailOk = true;
     }catch(e){ console.warn('PHP response parse error:', e, text); }
   } catch(err){ console.warn('PHP send error:', err); }
 
@@ -9670,17 +9628,23 @@ async function submitStudentApp(e){
   try {
     const w3data = new FormData();
     w3data.append('access_key', '04f55b48-c566-4230-8242-332ccf0a3dfb');
-    w3data.append('subject', '['+new Date().toISOString().slice(0,10)+'] Student Application: '+applicantName);
+    w3data.append('subject',
+      (attachEmailOk ? '' : '\u26a0\ufe0f NO ATTACHMENTS \u2014 ') +
+      '['+new Date().toISOString().slice(0,10)+'] Student Application: '+applicantName);
     w3data.append('from_name', 'Millennium Investments Website');
+    w3data.append('ATTACHMENTS EMAIL',
+      attachEmailOk
+        ? 'Sent successfully \u2014 PDF, ID and CAS attached separately.'
+        : '\u26a0\ufe0f FAILED to send. This applicant\u2019s PDF, ID and CAS have NOT arrived by email. Contact them directly to collect these documents.');
     w3data.append('message', summary);
     fields.filter(f=>f.value).forEach(f=>w3data.append(f.label, f.value));
     const w3res = await fetch('https://api.web3forms.com/submit', {method:'POST', body:w3data});
     const w3json = await w3res.json();
     console.log('Web3Forms result:', w3json);
-    if(w3json.success) emailSent = true;
+    if(w3json.success) console.log('Web3Forms backup confirmed delivered');
   } catch(err){ console.warn('Web3Forms error:', err); }
 
-  console.log('Email sent:', emailSent);
+  console.log('PHP/attachments email OK:', attachEmailOk);
 
   /* Show success — no PDF download */
   form.style.display='none';
@@ -12276,13 +12240,15 @@ function finderShow(id){
 function finderPick(key, val){
   finderState[key] = val;
   if(key === 'who'){
-    finderProgress(2);
-    if(val === 'pro'){
-      /* professionals skip straight to a result — Ipswich or Private */
+    if(val === 'student'){
+      /* only the student path has a second question — the other two
+         offerings are single buildings/one type of let, so there is
+         nothing more useful to ask */
+      finderProgress(2);
+      finderShow('fstep2');
+    } else {
       finderProgress(3);
       finderResolve();
-    } else {
-      finderShow('fstep2');
     }
   } else if(key === 'want'){
     finderProgress(3);
@@ -12294,11 +12260,16 @@ function finderResolve(){
   const who = finderState.who, want = finderState.want;
   let page, title, sub, label;
 
-  if(who === 'pro'){
+  if(who === 'room'){
     page = 'ipswich';
     title = 'Ipswich Rooms could be right for you';
-    sub = 'Open to everyone, no deposit, no guarantor, and a weekly licence with just 7 days\u2019 notice \u2014 or browse our private rentals if you\u2019d prefer a whole home.';
+    sub = 'Open to everyone, no deposit, no guarantor, and a weekly licence with just 7 days\u2019 notice.';
     label = 'See Ipswich rooms';
+  } else if(who === 'home'){
+    page = 'private';
+    title = 'Take a look at our Private Rentals';
+    sub = 'Whole homes across Essex, Suffolk, London and South Wales \u2014 no deposit, and a guarantor isn\u2019t usually required.';
+    label = 'See private rentals';
   } else if(want === 'cheap'){
     page = 'student';
     title = 'Start with our Student Accommodation pricing';
@@ -12311,8 +12282,8 @@ function finderResolve(){
     label = 'See en-suite rooms';
   } else {
     page = 'ipswich';
-    title = 'Ipswich Rooms suit flexibility best';
-    sub = 'A weekly licence with just 7 days\u2019 notice, rather than a fixed-term tenancy \u2014 the most flexible option we offer.';
+    title = 'Ipswich Rooms offer more flexibility';
+    sub = 'Open to everyone, including students \u2014 a weekly licence with just 7 days\u2019 notice instead of a fixed tenancy.';
     label = 'See Ipswich rooms';
   }
 
@@ -12336,28 +12307,6 @@ function finderReset(){
   finderState = {};
   finderProgress(0);
   finderShow('fstep1');
-}
-
-/* ============================================================
-   HOME — LOCATIONS AT A GLANCE
-   Google's free embed API takes one query, not multiple pins, so
-   this reuses the tab-and-swap pattern already used on the
-   Student Accommodation locations section.
-   ============================================================ */
-const GLANCE_MAPS = {
-  frh: 'https://maps.google.com/maps?q=Forest+Road+House,+Forest+Road,+Colchester,+CO4+3XA,+UK&output=embed&hl=en',
-  can: 'https://maps.google.com/maps?q=Forest+Road,+Colchester,+CO4+3XA,+UK&output=embed&hl=en',
-  grn: 'https://maps.google.com/maps?q=Greenstead+Road,+Colchester,+CO4,+Essex,+UK&output=embed&hl=en',
-  ips: 'https://maps.google.com/maps?q=154+Norwich+Road,+Ipswich,+IP1+2PT,+UK&output=embed&hl=en'
-};
-
-function glanceMap(key, btn){
-  const frame = document.getElementById('glanceFrame');
-  if(frame && GLANCE_MAPS[key]) frame.src = GLANCE_MAPS[key];
-  if(btn){
-    const row = btn.closest('.loc-glance-tabs');
-    if(row) row.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b === btn); });
-  }
 }
 
 /* ============================================================
